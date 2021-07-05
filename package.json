@@ -1,0 +1,27 @@
+{
+  "name": "wettr",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "analysis": "windicss-analysis"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "1.0.0-next.9",
+    "svelte": "^3.37.0",
+    "svelte-preprocess": "^4.7.2",
+    "svelte-windicss-preprocess": "^4.0.11",
+    "typescript": "^4.2.4",
+    "vite": "^2.2.3",
+    "windicss": "^3.1.4",
+    "windicss-analysis": "^0.3.4"
+  },
+  "dependencies": {
+    "@mdi/js": "^5.9.55",
+    "chart.js": "^3.4.1",
+    "chartjs-adapter-date-fns": "^2.0.0",
+    "chartjs-plugin-annotation": "^1.0.2",
+    "date-fns": "^2.22.1"
+  }
+}
