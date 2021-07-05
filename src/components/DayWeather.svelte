@@ -198,7 +198,7 @@
           <span class="text-lg">{formattedDay[i].weekday}</span>
         </div>
 
-        <div class="flex pt-1 children:w-7 space-x-3">
+        <div class="flex mt-2.5 children:w-7 space-x-3">
           <div><WeatherIcon icon={morning.icon} /></div>
           <div><WeatherIcon icon={noon.icon} /></div>
           <div><WeatherIcon icon={evening.icon} /></div>
