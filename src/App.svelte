@@ -2,9 +2,9 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
- // import { getSunriseSunset } from './logic/time'
+  // import { getSunriseSunset } from './logic/time'
 
- // let sunTimes = getSunriseSunset(new Date('2021-05-03T12:00Z'), 48.14, 11.58)
+  // let sunTimes = getSunriseSunset(new Date('2021-05-03T12:00Z'), 48.14, 11.58)
 </script>
 
 <main
@@ -15,7 +15,13 @@
   <div><DayWeather /></div>
 </main>
 <footer class="bg-gray-200 p-3 mt-5 text-sm text-center text-gray-500">
-  Quelle: <a class="no-underline text-gray-800" href="https://www.dwd.de">Deutscher Wetterdienst</a>
+  Quelle: <a class="no-underline text-gray-800" href="https://www.dwd.de"
+    >Deutscher Wetterdienst</a
+  ><br />
+  via
+  <a class="no-underline text-gray-800" href="https://brightsky.dev"
+    >brightsky.dev</a
+  >
 </footer>
 
 <style>
