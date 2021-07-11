@@ -53,9 +53,10 @@
     place = suggestion
     closeSuggestions()
     inputElement.blur()
-    const coordinates = getLocationCoordinates(place)
-    if (coordinates) {
+    const coordinates = getLocationCoordinates(suggestion)
+    if (!!coordinates) {
       pushHistory(place)
+      console.log('push' + place)
       $locationCoordinates = coordinates
     }
     console.log('load for ' + place)

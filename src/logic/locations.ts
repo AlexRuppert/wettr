@@ -8,10 +8,10 @@ export interface Coordinates {
 export const locations = locationList.map(l => {
   const split = l.split('|')
   return {
-    name: split[0],
-    lat: split[1],
-    lon: split[2],
-    search: split[0]
+    name: split[2],
+    lat: split[0],
+    lon: split[1],
+    search: split[2]
       .split(/,|( bei )|( am )|( in )/)[0]
       .trim()
       .toLowerCase(),
@@ -24,10 +24,11 @@ export function filterLocations(search: string, maxResults = 5) {
   return locations.filter(l => l.search.includes(search)).slice(0, maxResults).map(s => s.name)
 }
 
-export function getLocationCoordinates(city: string) {
-  if (city.trim().length === 0) return null
+export function getLocationCoordinates(place: string) {
+  console.log(place)
+  if (place.trim().length === 0) return null
 
-  const result = locations.find(l => l.name === city)
+  const result = locations.find(l => l.name === place)
   if (result) {
     return { lat: +result.lat, lon: +result.lon } as Coordinates
   }
