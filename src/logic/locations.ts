@@ -21,11 +21,13 @@ export const locations = locationList.map(l => {
 export function filterLocations(search: string, maxResults = 5) {
   search = search.trim().toLowerCase()
   if (search.length <= 0) return []
-  return locations.filter(l => l.search.includes(search)).slice(0, maxResults).map(s => s.name)
+  return locations
+    .filter(l => l.search.includes(search))
+    .slice(0, maxResults)
+    .map(s => s.name)
 }
 
 export function getLocationCoordinates(place: string) {
-  console.log(place)
   if (place.trim().length === 0) return null
 
   const result = locations.find(l => l.name === place)
@@ -57,9 +59,7 @@ export function getGeolocationCoordinates(successCallback) {
         const dist = distance(latitude, longitude, +location.lat, +location.lon)
         if (dist < closestDistance) {
           closestDistance = dist
-
           closestCity = location.name
-          console.log(closestCity)
         }
       }
 

@@ -56,10 +56,8 @@
     const coordinates = getLocationCoordinates(suggestion)
     if (!!coordinates) {
       pushHistory(place)
-      console.log('push' + place)
       $locationCoordinates = coordinates
     }
-    console.log('load for ' + place)
   }
   function openSuggestions() {
     openedSuggestions = true

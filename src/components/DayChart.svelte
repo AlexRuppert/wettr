@@ -24,9 +24,9 @@
     annotationPlugin
   )
 
-  let canvas
+  let canvas: HTMLCanvasElement
   let mounted = false
-  let chart
+  let chart: Chart
 
   const COLORS = {
     tick: '#aaa',
@@ -88,7 +88,7 @@
   onMount(() => {
     mounted = true
   })
-
+  console.dir(weather)
   $: {
     if (mounted) {
       const annotations: { sunset?: any; sunrise?: any } = {}
@@ -111,7 +111,7 @@
         pointRadius: 0,
         borderWidth: 1,
       }
-
+      chart?.destroy()
       chart = new Chart(canvas, {
         type: 'line',
         data: {

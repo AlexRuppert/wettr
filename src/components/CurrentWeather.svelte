@@ -13,7 +13,7 @@
   $: weather = $currentWeatherData
 </script>
 
-<div class="flex flex-nowrap tabular-nums">
+<div class="flex flex-nowrap tabular-nums pt-3">
   <div class="w-32 h-32 -mt-3">
     <WeatherIcon icon={weather.icon} />
   </div>

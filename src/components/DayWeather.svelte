@@ -2,7 +2,6 @@
   import type { WeatherDataType } from 'src/logic/weatherTypes'
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
-  import SvgIcon from './icons/SvgIcon.svelte'
   import WeatherIcon from './icons/WeatherIcon.svelte'
 
   let weather: {
@@ -16,7 +15,9 @@
     dayLight: any
     data: WeatherDataType[]
   }[]
-  $: weather = $weatherData
+  $: {
+    weather = $weatherData
+  }
 
   let formattedDay
   $: formattedDay = weather.map(w => {
@@ -43,7 +44,7 @@
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
 
-        <div class="flex mt-2.5 children:w-7 space-x-3">
+        <div class="flex mt-2.5 children:w-8 space-x-4">
           <div><WeatherIcon icon={morning.icon} /></div>
           <div><WeatherIcon icon={noon.icon} /></div>
           <div><WeatherIcon icon={evening.icon} /></div>

@@ -5,9 +5,10 @@ import type {
   DayWeatherDataType,
   WeatherIconType,
 } from './weatherTypes'
-import { currentWeatherData } from '../stores/store'
+import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
 const ENDPOINT = 'https://api.brightsky.dev/'
+const MS_IN_HOUR = 1000 * 60 * 60
 let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
 
@@ -26,7 +27,47 @@ export default class Weather {
     return result
   }
 
-  static async getWeather(lat: number, lon: number, days: 3) {}
+  static formatTimeZoneOffset(date = new Date()) {
+    let tzo = -date.getTimezoneOffset(),
+      dif = tzo >= 0 ? '+' : '-'
+    const pad = t => {
+      const normalized = Math.floor(Math.abs(t))
+      return (normalized < 10 ? '0' : '') + normalized
+    }
+    return dif + pad(tzo / 60) + ':' + pad(tzo % 60)
+  }
+
+  static addTimePortion(date = new Date(), beforeMidnight = false) {
+    return (
+      (beforeMidnight ? 'T23:59:00' : 'T00:00:00') +
+      Weather.formatTimeZoneOffset(date)
+    )
+  }
+  static dateToDateTime(date = new Date(), beforeMidnight = false) {
+    return (
+      new Intl.DateTimeFormat('eu').format(date).replace(/\//g, '-') +
+      Weather.addTimePortion(date, beforeMidnight)
+    )
+  }
+  static async getWeather(lat: number, lon: number, days = 3) {
+    const now = new Date()
+    const future = new Date(now.getTime() + MS_IN_HOUR * 24 * days - 10)
+
+    weatherUrl.search = new URLSearchParams({
+      lat: lat.toString(),
+      lon: lon.toString(),
+      days: days.toString(),
+      date: Weather.dateToDateTime(now),
+      last_date: Weather.dateToDateTime(future, true),
+    }).toString()
+    const result = this.processWeatherData(
+      await (await fetch(weatherUrl.toString())).json(),
+      lat,
+      lon
+    )
+    weatherData.set(result)
+    return result
+  }
 
   static getCurrentWeatherDummy() {
     const tempCurrentWeatherData = {
@@ -1908,7 +1949,7 @@ export default class Weather {
             temperature: Math.abs(
               (time.temperature - min) / (Math.abs(max) - Math.abs(min))
             ),
-            precipitation: Math.min(Math.pow(time.precipitation, 1), 3)/3,
+            precipitation: Math.min(Math.pow(time.precipitation, 1), 3) / 3,
             sunniness: 1 - time.cloudCover / 100,
           }
         }),
@@ -1921,7 +1962,7 @@ export default class Weather {
           hours: getHours(v.timestamp),
         }))
 
-        const day = new Date(key)
+        const day = new Date(key)        
         const dayTimes = []
         const morningTimes = []
         const noonTimes = []
