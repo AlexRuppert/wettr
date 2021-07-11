@@ -40,7 +40,7 @@
       <div class="flex justify-between">
         <div class="text-3xl pl-2 w-28">
           <span>{formattedDay[i].day}</span>
-          <span class="text-lg">{formattedDay[i].weekday}</span>
+          <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
 
         <div class="flex mt-2.5 children:w-7 space-x-3">
