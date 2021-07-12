@@ -5,10 +5,13 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "analysis": "windicss-analysis"
+    "analysis": "windicss-analysis",
+    "prebuild": "rm -r gh-pages || mkdir gh-pages",
+    "gh": "node publish.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.9",
+    "gh-pages": "^3.2.3",
     "svelte": "^3.37.0",
     "svelte-preprocess": "^4.7.2",
     "svelte-windicss-preprocess": "^4.0.11",

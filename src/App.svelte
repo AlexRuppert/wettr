@@ -8,10 +8,10 @@
 </script>
 
 <main
-  class="max-w-md m-auto mt-2 grid grid-cols-1 gap-3 children:(shadow-md rounded-md p-3 bg-white)"
+  class="max-w-md m-auto mt-2 grid grid-cols-1 gap-3"
 >
-  <div><Location /></div>
-  <div><CurrentWeather /></div>
+  <div class="shadow-md rounded-md p-3 bg-white"><Location /></div>
+  <div class="shadow-md rounded-md p-3 bg-white"><CurrentWeather /></div>
   <div><DayWeather /></div>
 </main>
 <footer class="bg-gray-200 p-3 mt-5 text-sm text-center text-gray-500">

@@ -17,6 +17,7 @@
   import SvgIcon from './SvgIcon.svelte'
   import type { WeatherIconType } from '../../logic/weatherTypes'
   export let icon: WeatherIconType
+  export let color: string = '#444'
 
   function mapIconToPath(icon: WeatherIconType) {
     return {
@@ -38,4 +39,4 @@
   $: path = mapIconToPath(icon)
 </script>
 
-<SvgIcon d={path} />
+<SvgIcon d={path} fill={color} />

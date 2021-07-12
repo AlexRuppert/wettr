@@ -6,9 +6,7 @@
 
   let weather: {
     day: Date
-    morning: any
-    noon: any
-    evening: any
+    dayParts: any
     max: any
     min: any
     dayGraph: any
@@ -35,32 +33,25 @@
   })
 </script>
 
-<div class="flex flex-col flex-nowrap tabular-nums font-thin">
-  {#each weather as { day, morning, noon, evening, max, min }, i (day)}
-    <div class="border-b last:(border-b-0)">
+<div class="flex flex-col flex-nowrap tabular-nums font-light space-y-3 ">
+  {#each weather as { day, dayParts, max, min }, i (day)}
+    <div class="shadow-md rounded-md bg-white p-2">
       <div class="flex justify-between">
-        <div class="text-3xl pl-2 w-28">
+        <div class="text-3xl pl-1 w-28">
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
-
-        <div class="flex mt-2.5 children:w-8 space-x-4">
-          <div><WeatherIcon icon={morning.icon} /></div>
-          <div><WeatherIcon icon={noon.icon} /></div>
-          <div><WeatherIcon icon={evening.icon} /></div>
+        <div class="flex children:(w-8 flex pt-2 items-center) space-x-4 ">
+          {#each dayParts as {icon, color }}
+            <div><WeatherIcon {icon} {color} /></div>
+          {/each}
         </div>
-        <div class="text-3xl pl-2 w-28 text-right">
+        <div class="text-3xl w-28 text-right">
           <span class="text-lg">{min.temperature}°</span>
           <span class="font-normal">{max.temperature}°</span>
         </div>
       </div>
-
       <DayChart weather={weather[i]} />
-      {#if i < weather.length - 1}
-        <div
-          class="-mx-3 mt-3 mb-5 border-0 border-b border-solid border-gray-300"
-        />
-      {/if}
     </div>
   {/each}
 </div>

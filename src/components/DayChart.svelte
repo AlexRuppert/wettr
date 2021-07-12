@@ -32,9 +32,9 @@
     tick: '#aaa',
     grid: '#f0f0f0',
     night: '#444464' + '10',
-    temperature: '#FF3B1D',
+    temperature: '#444444',
     precipitation: '#0066ED',
-    sunniness: '#FFCE4C',
+    sunniness: '#FFB901',
   }
   const grid = {
     display: true,
@@ -109,7 +109,7 @@
       const commonData = {
         tension: 0.3,
         pointRadius: 0,
-        borderWidth: 1,
+        borderWidth: 1.5,
       }
       chart?.destroy()
       chart = new Chart(canvas, {
@@ -123,7 +123,9 @@
               })),
               borderColor: COLORS.temperature,
               borderDash: [1, 2],
+
               ...commonData,
+              borderWidth: 2
             },
             {
               data: weather.dayGraph.map(d => ({
