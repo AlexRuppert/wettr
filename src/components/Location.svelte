@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mdiCrosshairsGps, mdiReload } from '@mdi/js'
+  import { mdiCrosshairsGps, mdiPlaylistEdit, mdiReload } from '@mdi/js'
   import SvgIcon from './icons/SvgIcon.svelte'
   import {
     filterLocations,
@@ -15,8 +15,10 @@
   let coordinateString = ''
   let suggestions: string[]
   $: {
-    suggestions = filterLocations(place)
-    if (suggestions.length <= 0) suggestions = getHistory()
+    if (place.length <= 0) {
+      const history = getHistory()
+      suggestions = history.length > 0 ? history : filterLocations(place)
+    } else suggestions = filterLocations(place)
     selectedSuggestion = 0
   }
 

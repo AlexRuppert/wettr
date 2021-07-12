@@ -20,7 +20,7 @@ export const locations = locationList.map(l => {
 
 export function filterLocations(search: string, maxResults = 5) {
   search = search.trim().toLowerCase()
-  if (search.length <= 0) return []
+  if(search.length<=0) return ['Berlin', 'München', 'Düsseldorf', 'Hamburg', 'Stuttgart']
   return locations
     .filter(l => l.search.includes(search))
     .slice(0, maxResults)

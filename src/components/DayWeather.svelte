@@ -33,7 +33,7 @@
   })
 </script>
 
-<div class="flex flex-col flex-nowrap tabular-nums font-light space-y-3 ">
+<div class="flex flex-col flex-nowrap tabular-nums font-light space-y-2 ">
   {#each weather as { day, dayParts, max, min }, i (day)}
     <div class="shadow-md rounded-md bg-white p-2">
       <div class="flex justify-between">

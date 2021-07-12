@@ -13,18 +13,14 @@
   $: weather = $currentWeatherData
 </script>
 
-<div class="flex flex-nowrap tabular-nums pt-3">
+<div
+  class="flex flex-nowrap tabular-nums pt-3"
+  class:opacity-0={Object.keys(weather).length <= 0}
+>
   <div class="w-32 h-32 -mt-3">
     <WeatherIcon icon={weather.icon} />
   </div>
-  <div class="flex flex-col">
-    <div class="mt-2 flex">
-      <div class="w-30 font-thin text-7xl text-right">
-        {weather.temperature}
-      </div>
-      <div class="mt-1.8 text-3xl">°</div>
-    </div>
-  </div>
+
   <div class="ml-6 mt-5 flex flex-col">
     <div class="flex justify-between">
       <div class="w-7">
@@ -48,5 +44,11 @@
       </span>
       <span class="w-10 text-xs pt-2 text-right"> km/h</span>
     </div>
+  </div>
+  <div class="flex pt-2">
+    <div class="w-30 font-thin text-7xl text-right">
+      {weather.temperature}
+    </div>
+    <div class="mt-1 text-3xl">°</div>
   </div>
 </div>
