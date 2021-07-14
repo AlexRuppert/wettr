@@ -6,7 +6,6 @@ export const currentWeatherData = writable({})
 export const weatherData = writable([])
 locationCoordinates.subscribe(async ({ lat, lon }) => {
   if (lat !== 0 || lon !== 0) {
-    console.log(lat, lon)
     currentWeatherData.set(Weather.getCurrentWeatherDummy())
     weatherData.set(await Weather.getWeatherDummy())
   }

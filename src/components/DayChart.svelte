@@ -29,7 +29,7 @@
   let chart: Chart
 
   const COLORS = {
-    tick: '#aaa',
+    tick: '#999',
     grid: '#f0f0f0',
     night: '#444464' + '10',
     temperature: '#444444',
@@ -88,7 +88,6 @@
   onMount(() => {
     mounted = true
   })
-  console.dir(weather)
   $: {
     if (mounted) {
       const annotations: { sunset?: any; sunrise?: any } = {}

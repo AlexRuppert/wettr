@@ -14,7 +14,7 @@
   <div class="shadow-md rounded-md p-2 bg-white"><CurrentWeather /></div>
   <div><DayWeather /></div>
 </main>
-<footer class="bg-gray-200 p-3 mt-5 text-sm text-center text-gray-500">
+<footer class="bg-gray-200 py-10 mt-5 text-sm text-center text-gray-500">
   Quelle: <a class="no-underline text-gray-800" href="https://www.dwd.de"
     >Deutscher Wetterdienst</a
   ><br />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mdiCrosshairsGps, mdiPlaylistEdit, mdiReload } from '@mdi/js'
+  import { mdiCrosshairsGps, mdiReload } from '@mdi/js'
   import SvgIcon from './icons/SvgIcon.svelte'
   import {
     filterLocations,
@@ -77,6 +77,7 @@
 
   onMount(() => {
     selectSuggestion(getHistory()?.[0] ?? '')
+    console.dir(mdiCrosshairsGps)
   })
 
   function reload() {}
@@ -84,11 +85,7 @@
 
 <div class="relative">
   <div class="flex space-x-3 flex-row">
-    <button
-      class="button"
-      class:hidden={!navigator.geolocation}
-      on:click={getGeoLocation}
-    >
+    <button class="button" on:click={getGeoLocation}>
       <SvgIcon d={mdiCrosshairsGps} dim={{ w: 24, h: 24 }} />
     </button>
     <div class="relative flex-1">
@@ -142,7 +139,7 @@
 
 <style>
   .button {
-    @apply bg-transparent hover:bg-blue-gray-100 rounded border-none w-10 h-10 cursor-pointer flex items-center;
+    @apply bg-transparent hover:bg-blue-gray-100 rounded border-none w-10 h-10 cursor-pointer flex items-center p-1;
   }
 
   .menu-item {
