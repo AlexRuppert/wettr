@@ -3311,7 +3311,8 @@ export default class Weather {
             temperature: Math.abs(
               (time.temperature - min) / (Math.abs(max) - Math.abs(min))
             ),
-            precipitation: Math.min(Math.pow(time.precipitation, 2), 4) / 4,
+            precipitation:
+              Math.min(Math.pow(Math.sqrt(time.precipitation) * 1.7, 2), 6) / 6,
             sunniness: 1 - time.cloudCover / 100,
           }
         }),

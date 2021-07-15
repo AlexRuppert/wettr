@@ -49,7 +49,7 @@
     </div>
   </div>
   <div class="flex">
-    <div class="w-30 font-extralight text-7xl text-right self-center">
+    <div class="w-30 text-7xl font-light text-right self-center">
       {weather.temperature}
     </div>
     <div class="-mt-7 text-3xl self-center">°</div>

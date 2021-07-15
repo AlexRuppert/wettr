@@ -68,6 +68,7 @@
     coordinateString = ''
   }
   function getGeoLocation() {
+    closeSuggestions()
     getGeolocationCoordinates(({ closestCity, coordinates }) => {
       place = `Nahe ${closestCity}`
       coordinateString = `${coordinates.lat}, ${coordinates.lon}`
@@ -77,18 +78,19 @@
 
   onMount(() => {
     selectSuggestion(getHistory()?.[0] ?? '')
-    console.dir(mdiCrosshairsGps)
   })
-
-  function reload() {}
 </script>
 
 <div class="relative">
-  <div class="flex space-x-3 flex-row">
-    <button class="button" on:click={getGeoLocation}>
+  <div>
+    <button
+      class="button absolute z-50"
+      class:hidden={!openedSuggestions}
+      on:click={getGeoLocation}
+    >
       <SvgIcon d={mdiCrosshairsGps} dim={{ w: 24, h: 24 }} />
     </button>
-    <div class="relative flex-1">
+    <div class="relative">
       <input
         id="location"
         type="text"
@@ -102,15 +104,12 @@
         on:click={openSuggestions}
       />
       <div
-        class="absolute text-gray-500 left-0 right-0 text-center -bottom-2 pointer-events-none text-xs"
+        class="absolute text-gray-500 left-0 right-0 text-center -bottom-1 pointer-events-none text-xs"
       >
         {coordinateString}
       </div>
       <label for="location" class="hidden">Ort</label>
     </div>
-    <button class="button" on:click={reload}>
-      <SvgIcon d={mdiReload} dim={{ w: 24, h: 24 }} />
-    </button>
   </div>
   <div
     class="opacity-0 fixed inset-0"

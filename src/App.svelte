@@ -8,11 +8,11 @@
 </script>
 
 <main
-  class="max-w-md m-auto mt-2 grid grid-cols-1 gap-2"
+  class="max-w-md mt-1 m-auto grid grid-cols-1 gap-1 children:(mx-1)"
 >
-  <div class="shadow-md rounded-md p-2 bg-white"><Location /></div>
+  <div class="shadow-md rounded-md p-1 bg-white"><Location /></div>
   <div class="shadow-md rounded-md p-2 bg-white"><CurrentWeather /></div>
-  <div><DayWeather /></div>
+  <div ><DayWeather /></div>
 </main>
 <footer class="bg-gray-200 py-10 mt-5 text-sm text-center text-gray-500">
   Quelle: <a class="no-underline text-gray-800" href="https://www.dwd.de"

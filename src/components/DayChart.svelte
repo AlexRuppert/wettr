@@ -106,9 +106,9 @@
         annotations.sunset = { ...dayLightAnnotation, ...sunset }
 
       const commonData = {
-        tension: 0.3,
+        tension: 0.25,
         pointRadius: 0,
-        borderWidth: 1.5,
+        borderWidth: 1,
       }
       chart?.destroy()
       chart = new Chart(canvas, {
@@ -124,7 +124,7 @@
               borderDash: [1, 2],
 
               ...commonData,
-              borderWidth: 2
+              borderWidth: 1.5
             },
             {
               data: weather.dayGraph.map(d => ({
