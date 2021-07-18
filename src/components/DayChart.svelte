@@ -124,14 +124,14 @@
                 y: d.temperature,
               })),
               borderColor: COLORS.temperature,
-              borderDash: [1, 2],
-
               ...commonData,
-
-              borderWidth: 1.5,
+              borderDash: [1, 2],
+              borderWidth: 1,
               pointRadius: function (context) {
-                return (context.dataIndex % 2) * 0.5
+                return (context.dataIndex % 2) * 1.2
               },
+              pointBackgroundColor: '#fff',
+              pointBorderColor: '#505050',
               datalabels: {
                 display: function (context) {
                   return context.dataIndex % 2 === 0 ? false : 'auto'
@@ -139,14 +139,17 @@
                 align: function (context) {
                   const index = context.dataIndex
                   const value = (context.dataset.data[index] as { y: number }).y
-                  return value < 0.5 ? 'top' : 'bottom'
+                  return value < 0.5 ? 210 : 150
                 },
-                offset: 1,
+                offset: 0.01,
+                padding: 2,
                 formatter: function (value) {
                   const l = weather.min.temperature
                   const r = weather.max.temperature
-                  return l + value.y * (r - l) + '°'
+                  return l + value.y * (r - l)
                 },
+                backgroundColor: '#ffffff'+'a0',
+                borderRadius: 10,
                 font: { size: 10, weight: 400 },
               },
             },
