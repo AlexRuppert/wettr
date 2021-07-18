@@ -11,6 +11,7 @@
     Filler,
   } from 'chart.js'
   import annotationPlugin from 'chartjs-plugin-annotation'
+  import chartDataLabels from 'chartjs-plugin-datalabels'
   import 'chartjs-adapter-date-fns'
 
   Chart.register(
@@ -21,7 +22,8 @@
     CategoryScale,
     Filler,
     TimeScale,
-    annotationPlugin
+    annotationPlugin,
+    chartDataLabels
   )
 
   let canvas: HTMLCanvasElement
@@ -62,6 +64,7 @@
           color: COLORS.tick,
           font: {
             size: 10,
+            weight: 400,
           },
         },
         grid,
@@ -124,7 +127,28 @@
               borderDash: [1, 2],
 
               ...commonData,
-              borderWidth: 1.5
+
+              borderWidth: 1.5,
+              pointRadius: function (context) {
+                return (context.dataIndex % 2) * 0.5
+              },
+              datalabels: {
+                display: function (context) {
+                  return context.dataIndex % 2 === 0 ? false : 'auto'
+                },
+                align: function (context) {
+                  const index = context.dataIndex
+                  const value = (context.dataset.data[index] as { y: number }).y
+                  return value < 0.5 ? 'top' : 'bottom'
+                },
+                offset: 1,
+                formatter: function (value) {
+                  const l = weather.min.temperature
+                  const r = weather.max.temperature
+                  return l + value.y * (r - l) + '°'
+                },
+                font: { size: 10, weight: 400 },
+              },
             },
             {
               data: weather.dayGraph.map(d => ({
@@ -155,6 +179,9 @@
           plugins: {
             annotation: {
               annotations: { ...annotations },
+            },
+            datalabels: {
+              display: false,
             },
           },
         },
