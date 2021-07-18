@@ -6,7 +6,6 @@
     "build": "vite build",
     "serve": "vite preview",
     "analysis": "windicss-analysis",
-    "prebuild": "rm -r gh-pages || mkdir gh-pages",
     "gh": "node publish.js"
   },
   "devDependencies": {

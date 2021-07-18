@@ -55,9 +55,18 @@
   function updateCoordinates(place, coordinates) {
     $locationCoordinates = coordinates
     pushHistory(place)
-
     const urlSearchParams = new URLSearchParams(window.location.search)
     urlSearchParams.set('location', place)
+    const newUrl =
+      window.location.origin +
+      window.location.pathname +
+      '?' +
+      urlSearchParams.toString() +
+      '#' +
+      window.location.hash
+    console.log(newUrl, urlSearchParams.toString())
+    if (newUrl !== window.location.toString())
+      window.history.pushState({}, '', newUrl)
   }
   function selectSuggestion(suggestion) {
     place = suggestion
@@ -79,25 +88,27 @@
     getGeolocationCoordinates(({ closestCity, coordinates }) => {
       place = `Nahe ${closestCity}`
       coordinateString = `${coordinates.lat}, ${coordinates.lon}`
-      updateCoordinates(place, coordinates)
+      updateCoordinates(closestCity, coordinates)
     })
   }
 
   onMount(() => {
-    selectSuggestion(getHistory()?.[0] ?? '')
     const urlSearchParams = new URLSearchParams(window.location.search)
     const params = Object.fromEntries(urlSearchParams.entries())
+
     if (params.location) {
       selectSuggestion(params.location)
+    } else {
+      selectSuggestion(getHistory()?.[0] ?? '')
     }
   })
 </script>
 
-<div class="relative">
+<div class="relative shadow-md rounded-md p-1 bg-white">
   <div>
     <button
-      class="button absolute z-50"
-      class:hidden={!openedSuggestions}
+      class="button absolute transition-opacity z-50"
+      class:opacity-0={!openedSuggestions}
       on:click={getGeoLocation}
     >
       <SvgIcon d={mdiCrosshairsGps} dim={{ w: 24, h: 24 }} />
@@ -124,15 +135,13 @@
     </div>
   </div>
   <div
-    class="opacity-0 fixed inset-0"
+    class="opacity-0 fixed inset-0 z-10"
     class:hidden={!openedSuggestions}
     on:click={() => closeSuggestions()}
   />
   <div
-    class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 outline-none z-20"
-    class:hidden={!openedSuggestions}
-    role="menu"
-    aria-orientation="vertical"
+    class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 outline-none z-20 transform origin-top transition-transform"
+    class:scale-0={!openedSuggestions}
   >
     <div class="py-1 shadow-lg">
       {#each suggestions as entry, i}
@@ -155,5 +164,8 @@
 
   .menu-item {
     @apply text-gray-700 block px-4 py-2 text-sm no-underline text-lg font-semibold;
+  }
+  input {
+    -webkit-tap-highlight-color: transparent;
   }
 </style>

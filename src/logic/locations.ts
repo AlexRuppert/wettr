@@ -27,13 +27,12 @@ export const locations = (() => {
         lat,
         lon: num,
         search: name
-          .split(/,|( bei )|( am )|( in )/)[0]
+          .split(/,|(\sbei|am|in\s)/)[0]
           .trim()
           .toLowerCase(),
       })
     }
   }
-  console.dir(locations)
   return locations
 })()
 
