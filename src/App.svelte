@@ -2,9 +2,9 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
-  // import { getSunriseSunset } from './logic/time'
+  
 
-  // let sunTimes = getSunriseSunset(new Date('2021-05-03T12:00Z'), 48.14, 11.58)
+
 </script>
 
 <main

@@ -5,22 +5,42 @@ export interface Coordinates {
   lon: number
 }
 
-export const locations = locationList.map(l => {
-  const split = l.split('|')
-  return {
-    name: split[2],
-    lat: split[0],
-    lon: split[1],
-    search: split[2]
-      .split(/,|( bei )|( am )|( in )/)[0]
-      .trim()
-      .toLowerCase(),
+export const locations = (() => {
+  const minLat = +locationList[0]
+  const minLon = +locationList[1]
+  const coordinatesString = locationList[2] as string
+  const places = (locationList[3] as string).split('|')
+  const locations = []
+  let lat = 0
+  for (let i = 0; i < coordinatesString.length / 3; i++) {
+    const buffer = coordinatesString.substr(i * 3, 3)
+    let num = +buffer / 100
+    if (i % 2 === 0) {
+      //lat
+      num += minLat
+      lat = num
+    } else {
+      num += minLon
+      let name = places[Math.floor(i / 2)]
+      locations.push({
+        name,
+        lat,
+        lon: num,
+        search: name
+          .split(/,|( bei )|( am )|( in )/)[0]
+          .trim()
+          .toLowerCase(),
+      })
+    }
   }
-})
+  console.dir(locations)
+  return locations
+})()
 
 export function filterLocations(search: string, maxResults = 5) {
   search = search.trim().toLowerCase()
-  if(search.length<=0) return ['Berlin', 'München', 'Düsseldorf', 'Hamburg', 'Stuttgart']
+  if (search.length <= 0)
+    return ['Berlin', 'München', 'Düsseldorf', 'Hamburg', 'Stuttgart']
   return locations
     .filter(l => l.search.includes(search))
     .slice(0, maxResults)

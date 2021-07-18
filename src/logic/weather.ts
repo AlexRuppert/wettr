@@ -9,6 +9,7 @@ import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
+const DUMMY_DELAY = 500
 let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
 
@@ -69,7 +70,7 @@ export default class Weather {
     return result
   }
 
-  static getCurrentWeatherDummy() {
+  static async getCurrentWeatherDummy(...arg) {
     const tempCurrentWeatherData = {
       weather: {
         source_id: 18377,
@@ -118,10 +119,17 @@ export default class Weather {
       ],
     } as RawCurrentWeatherDataType
 
-    return this.processCurrentWeatherData(tempCurrentWeatherData)
+    const processedWeatherData = this.processCurrentWeatherData(
+      tempCurrentWeatherData
+    )
+    return new Promise<typeof processedWeatherData>(resolve =>
+      setTimeout(() => {
+        resolve(processedWeatherData)
+      }, DUMMY_DELAY)
+    )
   }
 
-  static getWeatherDummy() {
+  static async getWeatherDummy(...arg) {
     const tempWeatherData = {
       weather: [
         {
@@ -3191,7 +3199,18 @@ export default class Weather {
         },
       ],
     } as RawDayWeatherDataType
-    return this.processWeatherData(tempWeatherData, 48.136, 11.577)
+
+    const processedWeatherData = this.processWeatherData(
+      tempWeatherData,
+      48.136,
+      11.577
+    )
+
+    return new Promise<typeof processedWeatherData>(resolve =>
+      setTimeout(() => {
+        resolve(processedWeatherData)
+      }, DUMMY_DELAY + 200)
+    )
   }
 
   static processCurrentWeatherData(
@@ -3203,7 +3222,7 @@ export default class Weather {
       cloudCover: weather.cloud_cover,
       condition: weather.condition,
       dewPoint: weather.dew_point,
-      precipitation: weather.precipitation_10,
+      precipitation: weather.precipitation_60,
       pressureMsl: weather.pressure_msl,
       relativeHumidity: weather.relative_humidity,
       visibility: weather.visibility,

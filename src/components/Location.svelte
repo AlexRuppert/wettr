@@ -51,14 +51,21 @@
   function closeSuggestions() {
     openedSuggestions = false
   }
+
+  function updateCoordinates(place, coordinates) {
+    $locationCoordinates = coordinates
+    pushHistory(place)
+
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    urlSearchParams.set('location', place)
+  }
   function selectSuggestion(suggestion) {
     place = suggestion
     closeSuggestions()
     inputElement.blur()
     const coordinates = getLocationCoordinates(suggestion)
     if (!!coordinates) {
-      pushHistory(place)
-      $locationCoordinates = coordinates
+      updateCoordinates(place, coordinates)
     }
   }
   function openSuggestions() {
@@ -72,12 +79,17 @@
     getGeolocationCoordinates(({ closestCity, coordinates }) => {
       place = `Nahe ${closestCity}`
       coordinateString = `${coordinates.lat}, ${coordinates.lon}`
-      $locationCoordinates = coordinates
+      updateCoordinates(place, coordinates)
     })
   }
 
   onMount(() => {
     selectSuggestion(getHistory()?.[0] ?? '')
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const params = Object.fromEntries(urlSearchParams.entries())
+    if (params.location) {
+      selectSuggestion(params.location)
+    }
   })
 </script>
 
