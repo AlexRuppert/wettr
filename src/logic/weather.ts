@@ -3352,7 +3352,7 @@ export default class Weather {
         const dayLight = getSunriseSunset(day, lat, lon)
 
         value.forEach(v => {
-          if (between(v.hours, 5, 22)) dayTimes.push(v)
+          if (between(v.hours, 4, 22)) dayTimes.push(v)
           if (between(v.hours, 4, 9)) morningTimes.push(v)
           if (between(v.hours, 10, 17)) noonTimes.push(v)
           if (between(v.hours, 18, 22)) eveningTimes.push(v)

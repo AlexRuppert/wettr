@@ -61,6 +61,8 @@
           },
         },
         ticks: {
+          autoSkip: true,
+          autoSkipPadding: 10,
           color: COLORS.tick,
           font: {
             size: 10,
@@ -128,28 +130,30 @@
               borderDash: [1, 2],
               borderWidth: 1,
               pointRadius: function (context) {
-                return (context.dataIndex % 2) * 1.2
+                return ((context.dataIndex + 1) % 2) * 1.2
               },
               pointBackgroundColor: '#fff',
               pointBorderColor: '#505050',
               datalabels: {
                 display: function (context) {
-                  return context.dataIndex % 2 === 0 ? false : 'auto'
+                  return context.dataIndex % 2 === 1 ? false : 'auto'
                 },
                 align: function (context) {
                   const index = context.dataIndex
                   const value = (context.dataset.data[index] as { y: number }).y
+                  if(index===0)
+                    return 290
                   return value < 0.5 ? 210 : 150
                 },
-                offset: 0.01,
-                padding: 2,
+                offset: 1,
+                padding: 1,
                 formatter: function (value) {
                   const l = weather.min.temperature
                   const r = weather.max.temperature
                   return l + value.y * (r - l)
                 },
-                backgroundColor: '#ffffff'+'a0',
-                borderRadius: 10,
+                backgroundColor: '#ffffff' + 'a0',
+                borderRadius: 5,
                 font: { size: 10, weight: 400 },
               },
             },
