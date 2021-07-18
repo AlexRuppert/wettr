@@ -19,7 +19,6 @@
     LineElement,
     LinearScale,
     PointElement,
-    CategoryScale,
     Filler,
     TimeScale,
     annotationPlugin,
@@ -75,6 +74,7 @@
         ticks: {
           display: false,
         },
+        min: 0,
         grid,
       },
     },
@@ -87,6 +87,14 @@
     backgroundColor: COLORS.night,
     borderColor: 'transparent',
   }
+  const bottomAnnotation = {
+    type: 'box',
+    yMin: -0.1,
+    yMax: 0,
+    backgroundColor: '#444',
+    borderColor: '#444',
+    borderWidth: 2,
+  }
 
   export let weather
 
@@ -95,7 +103,9 @@
   })
   $: {
     if (mounted) {
-      const annotations: { sunset?: any; sunrise?: any } = {}
+      const annotations: { sunset?: any; sunrise?: any; bottom: any } = {
+        bottom: bottomAnnotation,
+      }
       const sunrise = {
         xMin: weather.dayGraph[0].timestamp,
         xMax: weather.dayLight.sunrise,
@@ -141,11 +151,10 @@
                 align: function (context) {
                   const index = context.dataIndex
                   const value = (context.dataset.data[index] as { y: number }).y
-                  if(index===0)
-                    return 290
+                  if (index === 0) return 290
                   return value < 0.5 ? 210 : 150
                 },
-                offset: 1,
+                offset: 2,
                 padding: 1,
                 formatter: function (value) {
                   const l = weather.min.temperature
@@ -185,7 +194,9 @@
           ...chartOptions,
           plugins: {
             annotation: {
-              annotations: { ...annotations },
+              annotations: {
+                ...annotations,
+              },
             },
             datalabels: {
               display: false,
