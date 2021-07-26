@@ -96,6 +96,12 @@
     borderWidth: 2,
   }
 
+  const currentTimeAnnotation = {
+    type: 'line',
+    borderColor: '#a00',
+    borderWidth: 0.5,
+  }
+
   export let weather
 
   onMount(() => {
@@ -103,7 +109,12 @@
   })
   $: {
     if (mounted) {
-      const annotations: { sunset?: any; sunrise?: any; bottom: any } = {
+      const annotations: {
+        sunset?: any
+        sunrise?: any
+        current?: any
+        bottom: any
+      } = {
         bottom: bottomAnnotation,
       }
       const sunrise = {
@@ -119,6 +130,10 @@
         annotations.sunrise = { ...dayLightAnnotation, ...sunrise }
       if (new Date(sunset.xMin) < new Date(sunset.xMax))
         annotations.sunset = { ...dayLightAnnotation, ...sunset }
+
+      const now = new Date()
+      if (now > new Date(sunrise.xMin) && now < new Date(sunset.xMax))
+        annotations.current = { ...currentTimeAnnotation, xMin: now, xMax: now }
 
       const commonData = {
         tension: 0.25,
