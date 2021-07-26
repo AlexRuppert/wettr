@@ -2,14 +2,9 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
-  
-
-
 </script>
 
-<main
-  class="max-w-sm w-full mt-1 m-auto grid grid-cols-1 gap-1"
->
+<main class="max-w-sm w-full mt-1 m-auto grid grid-cols-1 gap-1">
   <Location />
   <CurrentWeather />
   <DayWeather />
