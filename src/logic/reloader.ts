@@ -6,17 +6,13 @@ const FORECAST_DAYS = 6
 let nextCheckTimeout
 let nextCheckTime = 0
 
-export const reload = async () => {
+export async function reload() {
   try {
     currentWeatherData.set(
-      await Weather.getCurrentWeatherDummy(coordinates.lat, coordinates.lon)
+      await Weather.getCurrentWeather(coordinates.lat, coordinates.lon)
     )
     weatherData.set(
-      await Weather.getWeatherDummy(
-        coordinates.lat,
-        coordinates.lon,
-        FORECAST_DAYS
-      )
+      await Weather.getWeather(coordinates.lat, coordinates.lon, FORECAST_DAYS)
     )
   } catch (err) {
     console.error(err)
@@ -27,16 +23,19 @@ export const reload = async () => {
   nextCheckTimeout = setTimeout(stageReload, CHECK_INTERVAL_MS)
 }
 
-export const stageReload = async () => {
+export async function stageReload(force = false) {
   const state = document.visibilityState
 
-  if (state === 'visible' && Date.now() > nextCheckTime && coordinates) {
+  if (
+    force ||
+    (state === 'visible' && Date.now() > nextCheckTime && coordinates)
+  ) {
     reload()
   }
 }
 
 export function reloader() {
-  document.addEventListener('visibilitychange', stageReload)
-  document.addEventListener('pagehide', stageReload)
+  document.addEventListener('visibilitychange', () => stageReload())
+  document.addEventListener('pagehide', () => stageReload())
   stageReload()
 }
