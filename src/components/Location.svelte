@@ -110,6 +110,7 @@
       class="button absolute transition-opacity z-50"
       class:opacity-0={!openedSuggestions}
       on:click={getGeoLocation}
+      aria-label="Get current location"
     >
       <SvgIcon d={mdiCrosshairsGps} dim={{ w: 24, h: 24 }} />
     </button>

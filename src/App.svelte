@@ -9,12 +9,12 @@
   <CurrentWeather />
   <DayWeather />
 </main>
-<footer class="bg-gray-200 py-10 mt-5 text-sm text-center text-gray-500">
-  Quelle: <a class="no-underline text-gray-800" href="https://www.dwd.de"
+<footer class="bg-gray-200 py-10 mt-5 text-sm text-center children:(text-gray-800)">
+  Quelle: <a class="no-underline font-medium" href="https://www.dwd.de"
     >Deutscher Wetterdienst</a
   ><br />
   via
-  <a class="no-underline text-gray-800" href="https://brightsky.dev"
+  <a class="no-underline font-medium" href="https://brightsky.dev"
     >brightsky.dev</a
   >
 </footer>
