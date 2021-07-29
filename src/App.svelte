@@ -2,6 +2,32 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
+
+  let deferredInstallPrompt
+  let showInstallButton = false
+
+  window.addEventListener('beforeinstallprompt', e => {
+    deferredInstallPrompt = e
+
+    if (
+      !(
+        window.matchMedia('(display-mode: standalone)').matches ||
+        navigator['standalone']
+      )
+    )
+      showInstallButton = true
+  })
+  window.addEventListener('appinstalled', evt => {
+    showInstallButton = false
+  })
+
+  const install = async () => {
+    deferredInstallPrompt.prompt()
+    const choice = deferredInstallPrompt.userChoice
+    if (choice.outcome === 'accepted') {
+      showInstallButton = true
+    }
+  }
 </script>
 
 <main class="max-w-sm w-full mt-1 m-auto grid grid-cols-1 gap-1">
@@ -9,13 +35,25 @@
   <CurrentWeather />
   <DayWeather />
 </main>
-<footer class="bg-gray-200 py-10 mt-5 text-sm text-center children:(text-gray-800)">
-  Quelle: <a class="no-underline font-medium" href="https://www.dwd.de"
-    >Deutscher Wetterdienst</a
-  ><br />
-  via
-  <a class="no-underline font-medium" href="https://brightsky.dev"
-    >brightsky.dev</a
+<footer
+  class="bg-gray-200 py-10 mt-5 text-sm text-center children:(text-gray-800 block)"
+>
+  Achtung: <br /> Derzeit werden noch keine Wetterwarnungen angezeigt! <br />
+  <br />
+  <a
+    class="inline-block p-2 mb-4 border border-gray-400 border-solid rounded-lg"
+    class:hidden={!showInstallButton}
+    href="#"
+    on:click={install}>Als App installieren</a
+  >
+
+  <span
+    >Quelle:
+    <a href="https://www.dwd.de">Deutscher Wetterdienst</a></span
+  >
+  <span
+    >via
+    <a href="https://brightsky.dev">brightsky.dev</a></span
   >
 </footer>
 
@@ -27,6 +65,9 @@
 
     height: 100%;
     margin: 0;
+  }
+  footer a {
+    @apply no-underline font-medium;
   }
 
   :global(body) {
