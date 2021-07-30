@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import svelte from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { tr } from 'date-fns/locale'
 const BASE = '/wettr/'
 
 // https://vitejs.dev/config/
@@ -43,12 +42,11 @@ export default defineConfig({
     visualizer(),
   ],
   base: BASE,
-  /*build: {
+  build: {
     terserOptions: {
       compress: {
-        booleans_as_integers: true,
         keep_fargs: false,
-        passes: 3,
+        passes: 5,
         pure_getters: true,
         toplevel: true,
         unsafe_arrows: true,
@@ -58,5 +56,5 @@ export default defineConfig({
       },
       ecma: 2016,
     },
-  },*/
+  },
 })
