@@ -6,13 +6,12 @@
     LineElement,
     PointElement,
     LinearScale,
-    CategoryScale,
     TimeScale,
     Filler,
   } from 'chart.js'
   import annotationPlugin from 'chartjs-plugin-annotation'
   import chartDataLabels from 'chartjs-plugin-datalabels'
-  import 'chartjs-adapter-date-fns'
+  import './../logic/adapterDateFormat'
 
   Chart.register(
     LineController,

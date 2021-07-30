@@ -32,6 +32,7 @@
 
 <main class="max-w-sm w-full mt-1 m-auto grid grid-cols-1 gap-1">
   <Location />
+
   <CurrentWeather />
   <DayWeather />
 </main>
@@ -43,7 +44,7 @@
   <a
     class="inline-block p-2 mb-4 border border-gray-400 border-solid rounded-lg"
     class:hidden={!showInstallButton}
-    href="#"
+    href={'#'}
     on:click={install}>Als App installieren</a
   >
 
