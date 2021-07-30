@@ -1,11 +1,12 @@
-import locationList from '../assets/locations'
+//import locationList from '../assets/locations'
 
 export interface Coordinates {
   lat: number
   lon: number
 }
 
-export const locations = (() => {
+export const locations = (async () => {
+  const locationList = (await import('../assets/locations')).default
   const minLat = +locationList[0]
   const minLon = +locationList[1]
   const coordinatesString = locationList[2] as string
@@ -36,20 +37,20 @@ export const locations = (() => {
   return locations
 })()
 
-export function filterLocations(search: string, maxResults = 5) {
+export async function filterLocations(search: string, maxResults = 5) {
   search = search.trim().toLowerCase()
   if (search.length <= 0)
     return ['Berlin', 'München', 'Düsseldorf', 'Hamburg', 'Stuttgart']
-  return locations
+  return (await locations)
     .filter(l => l.search.includes(search))
     .slice(0, maxResults)
     .map(s => s.name)
 }
 
-export function getLocationCoordinates(place: string) {
+export async function getLocationCoordinates(place: string) {
   if (place.trim().length === 0) return null
 
-  const result = locations.find(l => l.name === place)
+  const result = (await locations).find(l => l.name === place)
   if (result) {
     return { lat: +result.lat, lon: +result.lon } as Coordinates
   }
@@ -65,16 +66,16 @@ function distance(
   return Math.pow(sourceLat - targetLan, 2) + Math.pow(sourceLon - targetLon, 2)
 }
 
-export function getGeolocationCoordinates(successCallback) {
+export async function getGeolocationCoordinates(successCallback) {
   navigator.geolocation.getCurrentPosition(
-    position => {
+    async position => {
       const { latitude, longitude } = position.coords
       const lat = latitude.toFixed(3)
       const lon = longitude.toFixed(3)
       let closestCity = ''
       let closestDistance = Infinity
 
-      for (let location of locations) {
+      for (let location of await locations) {
         const dist = distance(latitude, longitude, +location.lat, +location.lon)
         if (dist < closestDistance) {
           closestDistance = dist

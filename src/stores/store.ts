@@ -6,7 +6,7 @@ export const currentWeatherData = writable({})
 export const weatherData = writable([])
 export let coordinates
 locationCoordinates.subscribe(async ({ lat, lon }) => {
-  if (lat !== 0 || lon !== 0) {
+  if (lat !== undefined && lon !== undefined && lat !== 0 && lon !== 0) {
     coordinates = { lat, lon }
     stageReload(true)
   }

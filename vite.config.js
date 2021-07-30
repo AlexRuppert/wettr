@@ -46,7 +46,6 @@ export default defineConfig({
     terserOptions: {
       compress: {
         keep_fargs: false,
-        passes: 5,
         pure_getters: true,
         toplevel: true,
         unsafe_arrows: true,

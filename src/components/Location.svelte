@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mdiCrosshairsGps, mdiReload } from '@mdi/js'
+  import { mdiCrosshairsGps } from '@mdi/js'
   import SvgIcon from './icons/SvgIcon.svelte'
   import {
     filterLocations,
@@ -14,13 +14,17 @@
   let place = ''
   let coordinateString = ''
   let suggestions: string[]
+  const setFilterLocations = place =>
+    filterLocations(place).then(s => (suggestions = s))
   $: {
     if (place.length <= 0) {
       const history = getHistory()
-      suggestions = history.length > 0 ? history : filterLocations(place)
-    } else suggestions = filterLocations(place)
+      if (history.length > 0) suggestions = history
+      else setFilterLocations(place)
+    } else setFilterLocations(place)
     selectedSuggestion = 0
   }
+
 
   let openedSuggestions = false
   let selectedSuggestion = 0
@@ -28,12 +32,10 @@
   function handleInputKeys(event: KeyboardEvent) {
     switch (event.code) {
       case 'ArrowUp':
-        // up arrow
         selectedSuggestion = Math.max(0, selectedSuggestion - 1)
         event.preventDefault()
         break
       case 'ArrowDown':
-        // down arrow
         selectedSuggestion = Math.min(
           suggestions.length - 1,
           selectedSuggestion + 1
@@ -64,15 +66,15 @@
       urlSearchParams.toString() +
       '#' +
       window.location.hash
-    console.log(newUrl, urlSearchParams.toString())
+
     if (newUrl !== window.location.toString())
       window.history.pushState({}, '', newUrl)
   }
-  function selectSuggestion(suggestion) {
+  async function selectSuggestion(suggestion) {
     place = suggestion
     closeSuggestions()
     inputElement.blur()
-    const coordinates = getLocationCoordinates(suggestion)
+    const coordinates = await getLocationCoordinates(suggestion)
     if (!!coordinates) {
       updateCoordinates(place, coordinates)
     }
