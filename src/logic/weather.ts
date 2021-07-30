@@ -16,8 +16,8 @@ let weatherUrl = new URL(ENDPOINT + 'weather')
 export default class Weather {
   static async getCurrentWeather(lat: number, lon: number) {
     currentWeatherUrl.search = new URLSearchParams({
-      lat: lat.toString(),
-      lon: lon.toString(),
+      lat: lat.toFixed(3),
+      lon: lon.toFixed(3),
       tz: 'Europe/Berlin',
     }).toString()
     const result = this.processCurrentWeatherData(
@@ -55,8 +55,8 @@ export default class Weather {
     const future = new Date(now.getTime() + MS_IN_HOUR * 24 * days - 10)
 
     weatherUrl.search = new URLSearchParams({
-      lat: lat.toString(),
-      lon: lon.toString(),
+      lat: lat.toFixed(3),
+      lon: lon.toFixed(3),
       days: days.toString(),
       date: Weather.dateToDateTime(now),
       last_date: Weather.dateToDateTime(future, true),
