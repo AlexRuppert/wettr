@@ -1,7 +1,5 @@
 <script lang="ts">
   import type { WeatherDataType } from 'src/logic/weatherTypes'
-  import { fade } from 'svelte/transition'
-  import { cubicInOut } from 'svelte/easing';
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
@@ -36,14 +34,11 @@
 </script>
 
 <div
-  class="flex flex-col flex-nowrap tabular-nums font-light space-y-1 mx-1"
+  class="flex flex-col flex-nowrap tabular-nums font-light space-y-1 mx-1 transition-opacity duration-700"
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   {#each weather as { day, dayParts, max, min }, i (day)}
-    <div
-      class="shadow-md rounded-md bg-white p-2"
-      in:fade={{ delay: 50 * i, easing: cubicInOut, duration: 800 }}
-    >
+    <div class="shadow-md rounded-md bg-white p-2">
       <div class="flex justify-between">
         <div class="text-3xl pl-1 w-24">
           <span>{formattedDay[i].day}</span>
