@@ -14,6 +14,9 @@ let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
 
 export default class Weather {
+  static normalizeIcon(icon) {
+    return icon.replace(/-\w/g, text => text.replace(/-/, '').toUpperCase())
+  }
   static async getCurrentWeather(lat: number, lon: number) {
     currentWeatherUrl.search = new URLSearchParams({
       lat: lat.toFixed(3),
@@ -89,7 +92,7 @@ export default class Weather {
       windGustSpeed: weather.wind_gust_speed_10,
       sunshine: weather.sunshine_30,
       temperature: Math.round(weather.temperature),
-      icon: weather.icon,
+      icon: this.normalizeIcon(weather.icon) as WeatherIconType,
     }
   }
 
@@ -113,7 +116,7 @@ export default class Weather {
       windGustSpeed: weather.wind_gust_speed,
       sunshine: weather.sunshine,
       temperature: Math.round(weather.temperature),
-      icon: weather.icon,
+      icon: this.normalizeIcon(weather.icon),
     }))
 
     const daysHash = {}
@@ -160,10 +163,10 @@ export default class Weather {
         case 'snow':
         case 'thunderstorm':
           return '#0066ED'
-        case 'clear-day':
-        case 'clear-night':
-        case 'partly-cloudy-day':
-        case 'partly-cloudy-night':
+        case 'clearDay':
+        case 'clearNight':
+        case 'partlyCloudyDay':
+        case 'partlyCloudyNight':
           return '#FFB901'
         default:
           return '#444444'

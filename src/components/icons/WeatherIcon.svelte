@@ -19,24 +19,22 @@
   export let icon: WeatherIconType
   export let color: string = '#444'
 
-  function mapIconToPath(icon: WeatherIconType) {
-    return {
-      'clear-day': clearDay,
-      'clear-night': clearNight,
-      'partly-cloudy-day': partlyCloudyDay,
-      'partly-cloudy-night': partlyCloudyNight,
-      cloudy: cloudy,
-      fog: fog,
-      wind: wind,
-      rain: rain,
-      sleet: sleet,
-      snow: snow,
-      hail: hail,
-      thunderstorm: thunderstorm,
-    }[icon]
+  const iconLookup = {
+    clearDay,
+    clearNight,
+    partlyCloudyDay,
+    partlyCloudyNight,
+    cloudy,
+    fog,
+    hail,
+    rain,
+    sleet,
+    snow,
+    thunderstorm,
+    wind,
   }
   let path: string
-  $: path = mapIconToPath(icon)
+  $: path = iconLookup[icon]
 </script>
 
 <SvgIcon d={path} fill={color} />

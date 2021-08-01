@@ -30,14 +30,13 @@
   }
 </script>
 
-<main class="max-w-sm w-full mt-1 m-auto grid grid-cols-1 gap-1">
+<main class="max-w-sm mt-0 w-full m-auto grid grid-cols-1 gap-1">
   <Location />
-
   <CurrentWeather />
   <DayWeather />
 </main>
 <footer
-  class="bg-gray-200 py-10 mt-5 text-sm text-center children:(text-gray-800 block)"
+  class="bg-gray-200 py-10 mt-5 text-sm text-center children:(block)"
 >
   Achtung: <br /> Derzeit werden noch keine Wetterwarnungen angezeigt! <br />
   <br />
@@ -68,7 +67,7 @@
     margin: 0;
   }
   footer a {
-    @apply no-underline font-medium;
+    @apply no-underline font-medium text-gray-800;
   }
 
   :global(body) {

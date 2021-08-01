@@ -14,8 +14,8 @@
 </script>
 
 <div
-  class="flex flex-nowrap tabular-nums shadow-md rounded-md p-2 bg-white transition-transform transform origin-top"
-  class:scale-y-0={Object.keys(weather??{}).length <= 0}
+  class="flex flex-nowrap tabular-nums shadow-md rounded-md p-2 bg-white transition-opacity ease-in-out duration-700 mx-1"
+  class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   <div class="w-30 h-30">
     <WeatherIcon icon={weather.icon} />
@@ -55,9 +55,3 @@
     <div class="-mt-7 text-3xl self-center">°</div>
   </div>
 </div>
-
-<style>
-  .loading {
-    @apply;
-  }
-</style>

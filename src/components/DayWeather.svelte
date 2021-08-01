@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { WeatherDataType } from 'src/logic/weatherTypes'
+  import { fade } from 'svelte/transition'
+  import { cubicInOut } from 'svelte/easing';
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
@@ -33,17 +35,22 @@
   })
 </script>
 
-<div class="flex flex-col flex-nowrap tabular-nums font-light space-y-1 transition-transform transform origin-top"
-class:scale-y-0={Object.keys(weather??{}).length <= 0}>
+<div
+  class="flex flex-col flex-nowrap tabular-nums font-light space-y-1 mx-1"
+  class:opacity-0={Object.keys(weather ?? {}).length <= 0}
+>
   {#each weather as { day, dayParts, max, min }, i (day)}
-    <div class="shadow-md rounded-md bg-white p-2">
+    <div
+      class="shadow-md rounded-md bg-white p-2"
+      in:fade={{ delay: 50 * i, easing: cubicInOut, duration: 800 }}
+    >
       <div class="flex justify-between">
         <div class="text-3xl pl-1 w-28">
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
         <div class="flex children:(w-8 flex pt-2 items-center) space-x-4 ">
-          {#each dayParts as {icon, color }}
+          {#each dayParts as { icon, color }}
             <div><WeatherIcon {icon} {color} /></div>
           {/each}
         </div>

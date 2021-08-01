@@ -13,7 +13,7 @@
 
   let place = ''
   let coordinateString = ''
-  let suggestions: string[]
+  let suggestions: string[] = []
   const setFilterLocations = place =>
     filterLocations(place).then(s => (suggestions = s))
   $: {
@@ -24,7 +24,6 @@
     } else setFilterLocations(place)
     selectedSuggestion = 0
   }
-
 
   let openedSuggestions = false
   let selectedSuggestion = 0
@@ -106,7 +105,7 @@
   })
 </script>
 
-<div class="relative shadow-md rounded-md p-1 bg-white">
+<div class="relative shadow-md rounded-b-md p-1 bg-white mx-1">
   <div>
     <button
       class="button absolute transition-opacity z-50"

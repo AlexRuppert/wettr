@@ -29,6 +29,11 @@
   let chart: Chart
 
   const COLORS = {
+    dataLabelBackgroundColor: '#ffffff' + 'a0',
+    pointBackgroundColor: '#fff',
+    pointBorderColor: '#505050',
+    currentTime: '#a00',
+    bottomLine: '#444',
     tick: '#999',
     grid: '#f0f0f0',
     night: '#444464' + '10',
@@ -90,14 +95,14 @@
     type: 'box',
     yMin: -0.1,
     yMax: 0,
-    backgroundColor: '#444',
-    borderColor: '#444',
+    backgroundColor: COLORS.bottomLine,
+    borderColor: COLORS.bottomLine,
     borderWidth: 2,
   }
 
   const currentTimeAnnotation = {
     type: 'line',
-    borderColor: '#a00',
+    borderColor: COLORS.currentTime,
     borderWidth: 0.5,
   }
 
@@ -124,11 +129,10 @@
         xMin: weather.dayLight.sunset,
         xMax: weather.dayGraph[weather.dayGraph.length - 1].timestamp,
       }
-
-      if (new Date(sunrise.xMin) < new Date(sunrise.xMax))
-        annotations.sunrise = { ...dayLightAnnotation, ...sunrise }
-      if (new Date(sunset.xMin) < new Date(sunset.xMax))
-        annotations.sunset = { ...dayLightAnnotation, ...sunset }
+      ;[sunrise, sunset].forEach((sunX, i) => {
+        if (new Date(sunX.xMin) < new Date(sunX.xMax))
+          annotations['s' + i] = { ...dayLightAnnotation, ...sunX }
+      })
 
       const now = new Date()
       if (now > new Date(sunrise.xMin) && now < new Date(sunset.xMax))
@@ -139,6 +143,7 @@
         pointRadius: 0,
         borderWidth: 1,
       }
+
       chart?.destroy()
       chart = new Chart(canvas, {
         type: 'line',
@@ -156,8 +161,8 @@
               pointRadius: function (context) {
                 return ((context.dataIndex + 1) % 2) * 1.2
               },
-              pointBackgroundColor: '#fff',
-              pointBorderColor: '#505050',
+              pointBackgroundColor: COLORS.pointBackgroundColor,
+              pointBorderColor: COLORS.pointBorderColor,
               datalabels: {
                 display: function (context) {
                   return context.dataIndex % 2 === 1 ? false : 'auto'
@@ -175,7 +180,7 @@
                   const r = weather.max.temperature
                   return l + value.y * (r - l)
                 },
-                backgroundColor: '#ffffff' + 'a0',
+                backgroundColor: COLORS.dataLabelBackgroundColor,
                 borderRadius: 5,
                 font: { size: 10, weight: 400 },
               },
