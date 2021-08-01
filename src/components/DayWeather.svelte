@@ -45,7 +45,7 @@
       in:fade={{ delay: 50 * i, easing: cubicInOut, duration: 800 }}
     >
       <div class="flex justify-between">
-        <div class="text-3xl pl-1 w-28">
+        <div class="text-3xl pl-1 w-24">
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
