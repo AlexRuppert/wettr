@@ -5,15 +5,19 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "analysis": "windicss-analysis"
+    "analysis": "windicss-analysis",
+    "gh": "node publish.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.9",
+    "gh-pages": "^3.2.3",
+    "rollup-plugin-visualizer": "^5.5.2",
     "svelte": "^3.37.0",
     "svelte-preprocess": "^4.7.2",
     "svelte-windicss-preprocess": "^4.0.11",
     "typescript": "^4.2.4",
     "vite": "^2.2.3",
+    "vite-plugin-pwa": "^0.8.2",
     "windicss": "^3.1.4",
     "windicss-analysis": "^0.3.4"
   },
@@ -22,6 +26,7 @@
     "chart.js": "^3.4.1",
     "chartjs-adapter-date-fns": "^2.0.0",
     "chartjs-plugin-annotation": "^1.0.2",
+    "chartjs-plugin-datalabels": "^2.0.0",
     "date-fns": "^2.22.1"
   }
 }

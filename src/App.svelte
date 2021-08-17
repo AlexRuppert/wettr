@@ -2,33 +2,73 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
-  // import { getSunriseSunset } from './logic/time'
 
-  // let sunTimes = getSunriseSunset(new Date('2021-05-03T12:00Z'), 48.14, 11.58)
+  let deferredInstallPrompt
+  let showInstallButton = false
+
+  window.addEventListener('beforeinstallprompt', e => {
+    deferredInstallPrompt = e
+
+    if (
+      !(
+        window.matchMedia('(display-mode: standalone)').matches ||
+        navigator['standalone']
+      )
+    )
+      showInstallButton = true
+  })
+  window.addEventListener('appinstalled', evt => {
+    showInstallButton = false
+  })
+
+  const install = async () => {
+    deferredInstallPrompt.prompt()
+    const choice = deferredInstallPrompt.userChoice
+    if (choice.outcome === 'accepted') {
+      showInstallButton = true
+    }
+  }
 </script>
 
-<main
-  class="max-w-md m-auto mt-2 grid grid-cols-1 gap-3 children:(shadow-md rounded-md p-3 bg-white)"
->
-  <div><Location /></div>
-  <div><CurrentWeather /></div>
-  <div><DayWeather /></div>
+<main class="max-w-sm w-full mt-1 m-auto grid grid-cols-1 gap-1">
+  <Location />
+
+  <CurrentWeather />
+  <DayWeather />
 </main>
 <footer
-  class="bg-gray-200 p-3 mt-5 text-sm text-center text-gray-500 children:(no-underline text-gray-800)"
+  class="bg-gray-200 py-10 mt-5 text-sm text-center children:(text-gray-800 block)"
 >
-  Quelle: <a href="https://www.dwd.de">Deutscher Wetterdienst</a>
-  <br /> via <a href="https://brightsky.dev">brightsky.dev</a>
+  Achtung: <br /> Derzeit werden noch keine Wetterwarnungen angezeigt! <br />
+  <br />
+  <a
+    class="inline-block p-2 mb-4 border border-gray-400 border-solid rounded-lg"
+    class:hidden={!showInstallButton}
+    href={'#'}
+    on:click={install}>Als App installieren</a
+  >
+
+  <span
+    >Quelle:
+    <a href="https://www.dwd.de">Deutscher Wetterdienst</a></span
+  >
+  <span
+    >via
+    <a href="https://brightsky.dev">brightsky.dev</a></span
+  >
 </footer>
 
 <style>
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    @apply bg-cool-gray-200;
-    @apply text-gray-700;
+    @apply bg-cool-gray-200 text-gray-700 overflow-y-scroll;
+
     height: 100%;
     margin: 0;
+  }
+  footer a {
+    @apply no-underline font-medium;
   }
 
   :global(body) {
