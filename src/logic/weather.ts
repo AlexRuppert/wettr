@@ -7,6 +7,7 @@ import type {
 } from './weatherTypes'
 import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
+import { COLORS } from './utils'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
 const DUMMY_DELAY = 500
@@ -155,21 +156,21 @@ export default class Weather {
       )[0] as WeatherIconType
     }
 
-    const getIconColor = (icon: WeatherIconType) => {
+    const getIconColors = (icon: WeatherIconType) => {
       switch (icon) {
         case 'rain':
         case 'sleet':
         case 'hail':
         case 'snow':
         case 'thunderstorm':
-          return '#0066ED'
+          return COLORS.rain
         case 'clearDay':
         case 'clearNight':
         case 'partlyCloudyDay':
         case 'partlyCloudyNight':
-          return '#FFB901'
+          return COLORS.sun
         default:
-          return '#444444'
+          return COLORS.foreground
       }
     }
 
@@ -223,7 +224,7 @@ export default class Weather {
           dayLight,
           dayParts: [morningTimes, noonTimes, eveningTimes].map(t => {
             const icon = mostRelevantIcon(t)
-            return { icon, color: getIconColor(icon) }
+            return { icon, colors: getIconColors(icon) }
           }),
           ...dayGraphData(dayTimes),
           data: value as WeatherDataType[],

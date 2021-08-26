@@ -17,7 +17,7 @@
   import SvgIcon from './SvgIcon.svelte'
   import type { WeatherIconType } from '../../logic/weatherTypes'
   export let icon: WeatherIconType
-  export let color: string = '#444'
+  export let color: string = undefined
 
   const iconLookup = {
     clearDay,

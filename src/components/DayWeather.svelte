@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { WeatherDataType } from 'src/logic/weatherTypes'
   import DayChart from './DayChart.svelte'
-  import { weatherData } from '../stores/store'
+  import { darkMode, weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
+  import { getDarkLightColor } from '../logic/utils'
 
   let weather: {
     day: Date
@@ -38,15 +39,17 @@
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   {#each weather as { day, dayParts, max, min }, i (day)}
-    <div class="shadow-md rounded-md bg-white p-2">
+    <div class="shadow-md rounded-md bg-white dark:bg-dark-600 p-2">
       <div class="flex justify-between">
         <div class="text-3xl pl-1 w-24">
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
         <div class="flex children:(w-8 flex pt-2 items-center) space-x-4 ">
-          {#each dayParts as { icon, color }}
-            <div><WeatherIcon {icon} {color} /></div>
+          {#each dayParts as { icon, colors }}
+            <div>
+              <WeatherIcon {icon} color={getDarkLightColor(colors, $darkMode)} />
+            </div>
           {/each}
         </div>
         <div class="text-3xl w-28 text-right">
