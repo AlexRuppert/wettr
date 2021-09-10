@@ -3,7 +3,8 @@
   import WindDirection from './icons/WindDirection.svelte'
   import { umbrellaClosed, umbrellaOpen } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
-  import { currentWeatherData } from '../stores/store'
+  import { currentWeatherData, darkMode } from '../stores/store'
+  import { getForegroundColor } from '../logic/utils'
 
   function toLocalDecimal(num, precision = 0) {
     return Number.parseFloat(num).toFixed(precision).toLocaleString()
@@ -14,11 +15,11 @@
 </script>
 
 <div
-  class="flex flex-nowrap tabular-nums shadow-md rounded-md p-2 bg-white transition-transform transform origin-top"
-  class:scale-y-0={Object.keys(weather??{}).length <= 0}
+  class="flex flex-nowrap tabular-nums shadow-md rounded-md p-2 bg-white dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
+  class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   <div class="w-30 h-30">
-    <WeatherIcon icon={weather.icon} />
+    <WeatherIcon icon={weather.icon} color={getForegroundColor($darkMode)} />
   </div>
 
   <div class="flex text-center justify-center space-x-1 flex-1">
@@ -27,6 +28,7 @@
         <div class="w-7 h-7">
           <SvgIcon
             d={weather.precipitation > 2.5 ? umbrellaOpen : umbrellaClosed}
+            fill={getForegroundColor($darkMode)}
           />
         </div>
         <span class="text-xl">
@@ -40,7 +42,10 @@
     {/if}
     <div class="flex flex-col justify-center items-center">
       <div class="w-8 h-7 -mt-1 pb-1">
-        <WindDirection direction={weather.windDirection} />
+        <WindDirection
+          direction={weather.windDirection}
+          color={getForegroundColor($darkMode)}
+        />
       </div>
       <span class="text-xl">
         {toLocalDecimal(weather.windSpeed)}
@@ -55,9 +60,3 @@
     <div class="-mt-7 text-3xl self-center">°</div>
   </div>
 </div>
-
-<style>
-  .loading {
-    @apply;
-  }
-</style>

@@ -7,6 +7,7 @@ import type {
 } from './weatherTypes'
 import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
+import { COLORS } from './utils'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
 const DUMMY_DELAY = 500
@@ -14,6 +15,9 @@ let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
 
 export default class Weather {
+  static normalizeIcon(icon) {
+    return icon.replace(/-\w/g, text => text.replace(/-/, '').toUpperCase())
+  }
   static async getCurrentWeather(lat: number, lon: number) {
     currentWeatherUrl.search = new URLSearchParams({
       lat: lat.toFixed(3),
@@ -89,7 +93,7 @@ export default class Weather {
       windGustSpeed: weather.wind_gust_speed_10,
       sunshine: weather.sunshine_30,
       temperature: Math.round(weather.temperature),
-      icon: weather.icon,
+      icon: this.normalizeIcon(weather.icon) as WeatherIconType,
     }
   }
 
@@ -113,7 +117,7 @@ export default class Weather {
       windGustSpeed: weather.wind_gust_speed,
       sunshine: weather.sunshine,
       temperature: Math.round(weather.temperature),
-      icon: weather.icon,
+      icon: this.normalizeIcon(weather.icon),
     }))
 
     const daysHash = {}
@@ -152,21 +156,21 @@ export default class Weather {
       )[0] as WeatherIconType
     }
 
-    const getIconColor = (icon: WeatherIconType) => {
+    const getIconColors = (icon: WeatherIconType) => {
       switch (icon) {
         case 'rain':
         case 'sleet':
         case 'hail':
         case 'snow':
         case 'thunderstorm':
-          return '#0066ED'
-        case 'clear-day':
-        case 'clear-night':
-        case 'partly-cloudy-day':
-        case 'partly-cloudy-night':
-          return '#FFB901'
+          return COLORS.rain
+        case 'clearDay':
+        case 'clearNight':
+        case 'partlyCloudyDay':
+        case 'partlyCloudyNight':
+          return COLORS.sun
         default:
-          return '#444444'
+          return COLORS.foreground
       }
     }
 
@@ -220,7 +224,7 @@ export default class Weather {
           dayLight,
           dayParts: [morningTimes, noonTimes, eveningTimes].map(t => {
             const icon = mostRelevantIcon(t)
-            return { icon, color: getIconColor(icon) }
+            return { icon, colors: getIconColors(icon) }
           }),
           ...dayGraphData(dayTimes),
           data: value as WeatherDataType[],

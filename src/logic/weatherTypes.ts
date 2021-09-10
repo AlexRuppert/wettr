@@ -1,8 +1,8 @@
 export type WeatherIconType =
-  | 'clear-day'
-  | 'clear-night'
-  | 'partly-cloudy-day'
-  | 'partly-cloudy-night'
+  | 'clearDay'
+  | 'clearNight'
+  | 'partlyCloudyDay'
+  | 'partlyCloudyNight'
   | 'cloudy'
   | 'fog'
   | 'wind'

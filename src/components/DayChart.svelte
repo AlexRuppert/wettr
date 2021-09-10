@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { darkMode } from '../stores/store'
   import {
     Chart,
     LineController,
@@ -12,6 +13,7 @@
   import annotationPlugin from 'chartjs-plugin-annotation'
   import chartDataLabels from 'chartjs-plugin-datalabels'
   import './../logic/adapterDateFormat'
+  import { COLORS } from '../logic/utils'
 
   Chart.register(
     LineController,
@@ -28,20 +30,49 @@
   let mounted = false
   let chart: Chart
 
-  const COLORS = {
-    tick: '#999',
-    grid: '#f0f0f0',
-    night: '#444464' + '10',
-    temperature: '#444444',
-    precipitation: '#0066ED',
-    sunniness: '#FFB901',
+  const updateColors = darkMode => {
+    if (darkMode) {
+      return {
+        dataLabelBackgroundColor: '#000000' + '30',
+        pointBackgroundColor: '#000',
+        pointBorderColor: '#9ca3aa',
+        currentTime: '#f66',
+        bottomLine: COLORS.foreground.dark,
+        tick: COLORS.foreground.dark + 'b0',
+        grid: '#252525',
+        night: '#000000' + '30',
+        temperature: COLORS.foreground.dark,
+        precipitation: COLORS.rain.dark,
+        sunniness: COLORS.sun.dark,
+      }
+    } else {
+      return {
+        dataLabelBackgroundColor: '#ffffff' + 'a0',
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#505050',
+        currentTime: '#a00',
+        bottomLine: COLORS.foreground.light,
+        tick: COLORS.foreground.light + 'b0',
+        grid: '#f0f0f0',
+        night: '#444464' + '10',
+        temperature: COLORS.foreground.light,
+        precipitation: COLORS.rain.light,
+        sunniness: COLORS.sun.light,
+      }
+    }
   }
+
+  let colors = updateColors($darkMode)
+
+  darkMode.subscribe(async value => {
+    colors = updateColors(value)
+  })
   const grid = {
     display: true,
     drawBorder: false,
     drawOnChartArea: true,
     drawTicks: false,
-    color: COLORS.grid,
+    color: () => colors.grid,
   }
 
   const chartOptions = {
@@ -61,7 +92,7 @@
         ticks: {
           autoSkip: true,
           autoSkipPadding: 10,
-          color: COLORS.tick,
+          color: () => colors.tick,
           font: {
             size: 10,
             weight: 400,
@@ -83,21 +114,21 @@
     type: 'box',
     yMin: 0,
     yMax: 1,
-    backgroundColor: COLORS.night,
+    backgroundColor: () => colors.night,
     borderColor: 'transparent',
   }
   const bottomAnnotation = {
     type: 'box',
     yMin: -0.1,
     yMax: 0,
-    backgroundColor: '#444',
-    borderColor: '#444',
+    backgroundColor: () => colors.bottomLine,
+    borderColor: () => colors.bottomLine,
     borderWidth: 2,
   }
 
   const currentTimeAnnotation = {
     type: 'line',
-    borderColor: '#a00',
+    borderColor: () => colors.currentTime,
     borderWidth: 0.5,
   }
 
@@ -107,7 +138,7 @@
     mounted = true
   })
   $: {
-    if (mounted) {
+    if (mounted && colors) {
       const annotations: {
         sunset?: any
         sunrise?: any
@@ -124,11 +155,10 @@
         xMin: weather.dayLight.sunset,
         xMax: weather.dayGraph[weather.dayGraph.length - 1].timestamp,
       }
-
-      if (new Date(sunrise.xMin) < new Date(sunrise.xMax))
-        annotations.sunrise = { ...dayLightAnnotation, ...sunrise }
-      if (new Date(sunset.xMin) < new Date(sunset.xMax))
-        annotations.sunset = { ...dayLightAnnotation, ...sunset }
+      ;[sunrise, sunset].forEach((sunX, i) => {
+        if (new Date(sunX.xMin) < new Date(sunX.xMax))
+          annotations['s' + i] = { ...dayLightAnnotation, ...sunX }
+      })
 
       const now = new Date()
       if (now > new Date(sunrise.xMin) && now < new Date(sunset.xMax))
@@ -139,6 +169,7 @@
         pointRadius: 0,
         borderWidth: 1,
       }
+
       chart?.destroy()
       chart = new Chart(canvas, {
         type: 'line',
@@ -149,15 +180,15 @@
                 x: d.timestamp,
                 y: d.temperature,
               })),
-              borderColor: COLORS.temperature,
+              borderColor: colors.temperature,
               ...commonData,
               borderDash: [1, 2],
               borderWidth: 1,
               pointRadius: function (context) {
                 return ((context.dataIndex + 1) % 2) * 1.2
               },
-              pointBackgroundColor: '#fff',
-              pointBorderColor: '#505050',
+              pointBackgroundColor: colors.pointBackgroundColor,
+              pointBorderColor: colors.pointBorderColor,
               datalabels: {
                 display: function (context) {
                   return context.dataIndex % 2 === 1 ? false : 'auto'
@@ -175,9 +206,10 @@
                   const r = weather.max.temperature
                   return l + value.y * (r - l)
                 },
-                backgroundColor: '#ffffff' + 'a0',
+                backgroundColor: colors.dataLabelBackgroundColor,
                 borderRadius: 5,
                 font: { size: 10, weight: 400 },
+                color: colors.temperature,
               },
             },
             {
@@ -185,8 +217,8 @@
                 x: d.timestamp,
                 y: d.precipitation,
               })),
-              borderColor: COLORS.precipitation,
-              backgroundColor: COLORS.precipitation + '10',
+              borderColor: colors.precipitation,
+              backgroundColor: colors.precipitation + '10',
               fill: true,
               borderDash: [6, 3],
               ...commonData,
@@ -196,8 +228,8 @@
                 x: d.timestamp,
                 y: d.sunniness,
               })),
-              borderColor: COLORS.sunniness,
-              backgroundColor: COLORS.sunniness + '10',
+              borderColor: colors.sunniness,
+              backgroundColor: colors.sunniness + '10',
               fill: true,
               ...commonData,
             },

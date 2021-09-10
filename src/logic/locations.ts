@@ -39,8 +39,6 @@ export const locations = (async () => {
 
 export async function filterLocations(search: string, maxResults = 5) {
   search = search.trim().toLowerCase()
-  if (search.length <= 0)
-    return ['Berlin', 'München', 'Düsseldorf', 'Hamburg', 'Stuttgart']
   return (await locations)
     .filter(l => l.search.includes(search))
     .slice(0, maxResults)
@@ -70,8 +68,8 @@ export async function getGeolocationCoordinates(successCallback) {
   navigator.geolocation.getCurrentPosition(
     async position => {
       const { latitude, longitude } = position.coords
-      const lat = latitude.toFixed(3)
-      const lon = longitude.toFixed(3)
+      const lat = +latitude.toFixed(3)
+      const lon = +longitude.toFixed(3)
       let closestCity = ''
       let closestDistance = Infinity
 

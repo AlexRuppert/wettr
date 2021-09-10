@@ -6,14 +6,15 @@
     getLocationCoordinates,
     getGeolocationCoordinates,
   } from '../logic/locations'
-  import { locationCoordinates } from '../stores/store'
+  import { darkMode, locationCoordinates } from '../stores/store'
   import { getHistory, pushHistory } from '../logic/history'
   import { onMount } from 'svelte'
+  import { getForegroundColor } from '../logic/utils'
   let inputElement
 
   let place = ''
   let coordinateString = ''
-  let suggestions: string[]
+  let suggestions: string[] = []
   const setFilterLocations = place =>
     filterLocations(place).then(s => (suggestions = s))
   $: {
@@ -24,7 +25,6 @@
     } else setFilterLocations(place)
     selectedSuggestion = 0
   }
-
 
   let openedSuggestions = false
   let selectedSuggestion = 0
@@ -106,7 +106,7 @@
   })
 </script>
 
-<div class="relative shadow-md rounded-md p-1 bg-white">
+<div class="relative shadow-md rounded-b-md p-1 bg-white dark:bg-dark-600 mx-1">
   <div>
     <button
       class="button absolute transition-opacity z-50"
@@ -114,13 +114,17 @@
       on:click={getGeoLocation}
       aria-label="Get current location"
     >
-      <SvgIcon d={mdiCrosshairsGps} dim={{ w: 24, h: 24 }} />
+      <SvgIcon
+        d={mdiCrosshairsGps}
+        dim={{ w: 24, h: 24 }}
+        fill={getForegroundColor($darkMode)}
+      />
     </button>
     <div class="relative">
       <input
         id="location"
         type="text"
-        class="md-input border-none flex-1 w-full bg-transparent text-center outline-none h-8 text-xl text-gray-800 mt-1"
+        class="md-input border-none flex-1 w-full bg-transparent text-center outline-none h-8 text-xl text-gray-800 dark:text-gray-400 mt-1"
         placeholder="Ort"
         autocomplete="off"
         bind:this={inputElement}
@@ -143,7 +147,7 @@
     on:click={() => closeSuggestions()}
   />
   <div
-    class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 outline-none z-20 transform origin-top transition-transform"
+    class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 dark:bg-dark-100 outline-none z-20 transform origin-top transition-transform"
     class:scale-0={!openedSuggestions}
   >
     <div class="py-1 shadow-lg">
@@ -151,7 +155,7 @@
         <a
           href={'#'}
           class="menu-item"
-          class:bg-gray-200={i === selectedSuggestion}
+          class:selected={i === selectedSuggestion}
           on:click={() => selectSuggestion(entry)}
           on:mouseenter={() => (selectedSuggestion = i)}>{entry}</a
         >
@@ -166,9 +170,12 @@
   }
 
   .menu-item {
-    @apply text-gray-700 block px-4 py-2 text-sm no-underline text-lg font-semibold;
+    @apply text-gray-700 dark:(text-gray-400) block px-4 py-2 text-sm no-underline text-lg font-semibold;
   }
   input {
     -webkit-tap-highlight-color: transparent;
+  }
+  .selected {
+    @apply bg-gray-200 dark:bg-dark-400;
   }
 </style>
