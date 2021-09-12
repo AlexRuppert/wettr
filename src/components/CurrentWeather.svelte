@@ -4,7 +4,11 @@
   import { umbrellaClosed, umbrellaOpen } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
   import { currentWeatherData, darkMode } from '../stores/store'
-  import { getForegroundColor } from '../logic/utils'
+  import {
+    getDarkLightColor,
+    getForegroundColor,
+    getWeatherIconColors,
+  } from '../logic/utils'
 
   function toLocalDecimal(num, precision = 0) {
     return Number.parseFloat(num).toFixed(precision).toLocaleString()
@@ -19,7 +23,10 @@
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   <div class="w-30 h-30">
-    <WeatherIcon icon={weather.icon} color={getForegroundColor($darkMode)} />
+    <WeatherIcon
+      icon={weather.icon}
+      color={getDarkLightColor(getWeatherIconColors(weather.icon), $darkMode)}
+    />
   </div>
 
   <div class="flex text-center justify-center space-x-1 flex-1">
