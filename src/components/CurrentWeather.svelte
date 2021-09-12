@@ -22,7 +22,15 @@
   class="flex flex-nowrap tabular-nums shadow-md rounded-md p-2 bg-white dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
-  <div class="w-30 h-30">
+  <div class="w-30 h-30 relative">
+    {#if weather.precipitation >= 1}
+      <span class="w-30 text-lg -top-1 absolute text- text-center">
+        {toLocalDecimal(
+          weather.precipitation,
+          weather.precipitation % 1 === weather.precipitation ? 0 : 1
+        )}<span class="text-xs pl-1">mm/h</span>
+      </span>
+    {/if}
     <WeatherIcon
       icon={weather.icon}
       color={getDarkLightColor(getWeatherIconColors(weather.icon), $darkMode)}
@@ -30,24 +38,7 @@
   </div>
 
   <div class="flex text-center justify-center space-x-1 flex-1">
-    {#if weather.precipitation > -10}
-      <div class="flex flex-col justify-center items-center w-1/2">
-        <div class="w-7 h-7">
-          <SvgIcon
-            d={weather.precipitation > 2.5 ? umbrellaOpen : umbrellaClosed}
-            fill={getForegroundColor($darkMode)}
-          />
-        </div>
-        <span class="text-xl">
-          {toLocalDecimal(
-            weather.precipitation,
-            weather.precipitation % 1 === weather.precipitation ? 0 : 1
-          )}
-        </span>
-        <span class="text-xs">mm/h</span>
-      </div>
-    {/if}
-    <div class="flex flex-col justify-center items-center">
+    <div class="flex flex-col justify-center items-center pl-5">
       <div class="w-8 h-7 -mt-1 pb-1">
         <WindDirection
           direction={weather.windDirection}
