@@ -7,7 +7,7 @@ import type {
 } from './weatherTypes'
 import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
-import { COLORS } from './utils'
+import { COLORS, getWeatherIconColors } from './utils'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
 const DUMMY_DELAY = 500
@@ -150,29 +150,15 @@ export default class Weather {
           (iconCount[element.icon] =
             iconValue(element.icon) + (iconCount[element.icon] ?? 0))
       )
-      return Object.entries(iconCount).reduce(
-        (acc, [key, value]) => (value > acc[1] ? [key, value] : acc),
-        ['clear-day', 0]
-      )[0] as WeatherIconType
+      return Object.entries(iconCount)
+        .reduce(
+          (acc, [key, value]) => (value > acc[1] ? [key, value] : acc),
+          ['clear-day', 0]
+        )[0]
+        .replace('Night', 'Day') as WeatherIconType
     }
 
-    const getIconColors = (icon: WeatherIconType) => {
-      switch (icon) {
-        case 'rain':
-        case 'sleet':
-        case 'hail':
-        case 'snow':
-        case 'thunderstorm':
-          return COLORS.rain
-        case 'clearDay':
-        case 'clearNight':
-        case 'partlyCloudyDay':
-        case 'partlyCloudyNight':
-          return COLORS.sun
-        default:
-          return COLORS.foreground
-      }
-    }
+    
 
     const dayGraphData = (times: WeatherDataType[]) => {
       let max = -Infinity,
@@ -224,7 +210,7 @@ export default class Weather {
           dayLight,
           dayParts: [morningTimes, noonTimes, eveningTimes].map(t => {
             const icon = mostRelevantIcon(t)
-            return { icon, colors: getIconColors(icon) }
+            return { icon, colors: getWeatherIconColors(icon) }
           }),
           ...dayGraphData(dayTimes),
           data: value as WeatherDataType[],
