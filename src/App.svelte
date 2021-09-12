@@ -2,6 +2,7 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
+  import Radar from './components/Radar.svelte'
   import { darkMode } from './stores/store'
 
   let deferredInstallPrompt
@@ -48,10 +49,11 @@
   }
 </script>
 
-<main class="max-w-sm mt-0 w-full m-auto grid grid-cols-1 gap-1">
+<main class="max-w-sm mt-0 w-full m-auto grid grid-cols-1 gap-1 relative">
   <Location />
   <CurrentWeather />
   <DayWeather />
+  <Radar />
 </main>
 <footer
   class="bg-gray-200 dark:bg-dark-800 py-10 mt-5 text-sm text-center children:(block)"
@@ -87,7 +89,7 @@
     @apply bg-dark-900 text-gray-400;
   }
   footer a {
-    @apply no-underline font-medium text-gray-800;
+    @apply no-underline font-medium text-gray-800 hover:underline;
   }
   .dark footer a {
     @apply text-gray-300;

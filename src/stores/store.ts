@@ -9,8 +9,8 @@ export let coordinates
 locationCoordinates.subscribe(async ({ lat, lon }) => {
   if (lat !== undefined && lon !== undefined && lat !== 0 && lon !== 0) {
     coordinates = { lat, lon }
-    stageReload(true)
+    //stageReload(true)
   }
 })
 
-reloader()
+//reloader()
