@@ -1,4 +1,12 @@
-import { currentWeatherData, coordinates, weatherData } from './../stores/store'
+import {
+  currentWeatherData,
+  coordinates,
+  weatherData,
+  currentCloudData,
+  cloudData,
+} from './../stores/store'
+import { getClouds } from './radar/clouds'
+import { getLocationBounds } from './radar/utils'
 import Weather from './weather'
 
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
@@ -17,8 +25,10 @@ export async function reload() {
       coordinates.lon,
       FORECAST_DAYS
     )
+    const currentCloudRequest = getClouds(getLocationBounds(coordinates), true)
 
     currentWeatherData.set(await currentWeatherRequest)
+    currentCloudData.set(await currentCloudRequest)
     weatherData.set(await weatherRequest)
   } catch (err) {
     console.error(err)
@@ -44,4 +54,13 @@ export function reloader() {
   document.addEventListener('visibilitychange', () => stageReload())
   document.addEventListener('pagehide', () => stageReload())
   stageReload()
+}
+
+export async function reloadClouds() {
+  try {
+    const cloudRequest = getClouds(getLocationBounds(coordinates))
+    cloudData.set(await cloudRequest)
+  } catch (err) {
+    console.error(err)
+  }
 }

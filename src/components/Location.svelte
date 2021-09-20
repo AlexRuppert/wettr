@@ -10,6 +10,7 @@
   import { getHistory, pushHistory } from '../logic/history'
   import { onMount } from 'svelte'
   import { getForegroundColor } from '../logic/utils'
+  import ModalBackground from './ModalBackground.svelte'
   let inputElement
 
   let place = ''
@@ -109,7 +110,7 @@
 <div class="relative shadow-md rounded-b-md p-1 bg-white dark:bg-dark-600 mx-1">
   <div>
     <button
-      class="button absolute transition-opacity z-50"
+      class="button absolute transition-opacity z-20"
       class:opacity-0={!openedSuggestions}
       on:click={getGeoLocation}
       aria-label="Get current location"
@@ -141,11 +142,8 @@
       <label for="location" class="hidden">Ort</label>
     </div>
   </div>
-  <div
-    class="opacity-0 fixed inset-0 z-10"
-    class:hidden={!openedSuggestions}
-    on:click={() => closeSuggestions()}
-  />
+  <ModalBackground hidden={!openedSuggestions} click={closeSuggestions} />
+
   <div
     class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 dark:bg-dark-100 outline-none z-20 transform origin-top transition-transform"
     class:scale-0={!openedSuggestions}
