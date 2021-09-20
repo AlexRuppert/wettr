@@ -24,8 +24,6 @@
   setColorScheme(colorSchemeQueryList)
   colorSchemeQueryList.addEventListener('change', setColorScheme)
 
-
-
   window.addEventListener('beforeinstallprompt', e => {
     deferredInstallPrompt = e
     if (
@@ -47,15 +45,12 @@
       showInstallButton = true
     }
   }
-  /*
-  <CurrentWeather />
-  <DayWeather />
-  <Radar />
-  */
 </script>
 
 <main class="max-w-sm mt-0 w-full m-auto grid grid-cols-1 gap-1 relative">
   <Location />
+  <CurrentWeather />
+  <DayWeather />
   <Radar />
 </main>
 <footer

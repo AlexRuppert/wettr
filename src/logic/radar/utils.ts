@@ -2,7 +2,7 @@ const PI2 = 2 * Math.PI
 const PI_PER_180 = Math.PI / 180
 
 export function mercatorLat(lat) {
-  return Math.log(Math.tan(deg2rad(lat) / 2 + Math.PI /4))
+  return Math.log(Math.tan(deg2rad(lat) / 2 + Math.PI / 4))
 }
 
 export function deg2rad(val) {
@@ -31,7 +31,7 @@ const bounds = {
 
 export function mercatorProjection(viewBounds, { lon, lat }) {
   let x = deg2rad(lon - viewBounds.lb.lon)
-  let y = (mercatorLat(lat) - mercatorLat(viewBounds.lb.lat))
+  let y = mercatorLat(lat) - mercatorLat(viewBounds.lb.lat)
   return { x, y }
 }
 
@@ -43,7 +43,7 @@ export function round3(value) {
   return Math.round((value + Number.EPSILON) * 1000) / 1000
 }
 
-export function getLocationBounds({ lon, lat }, radiusKm = 13) {
+export function getLocationBounds({ lon, lat }, radiusKm = 15) {
   const deg = radiusKm / 70
   return {
     lb: {
@@ -56,7 +56,7 @@ export function getLocationBounds({ lon, lat }, radiusKm = 13) {
     },
   }
 }
-export function isInBounds({ lon, lat }, viewBounds) {
+export function isInBounds({ lon, lat }, viewBounds: GeoBounds) {
   const EPSILON = 0.02
   return (
     lon + EPSILON >= viewBounds.lb.lon &&
@@ -64,6 +64,20 @@ export function isInBounds({ lon, lat }, viewBounds) {
     lat + EPSILON >= viewBounds.lb.lat &&
     lat - EPSILON <= viewBounds.rt.lat
   )
+}
+
+export function getNowestTime(times: Date[]) {
+  if (times.length <= 0) return { index: -1, time: undefined }
+  const now = new Date().getTime()
+  const index = times
+    .map(t => t.getTime())
+    .reduce(
+      (acc, val, i, arr) =>
+        Math.abs(val - now) < Math.abs(arr[acc] - now) ? i : acc,
+      0
+    )
+  const time = times[index]
+  return { index, time }
 }
 
 export interface GeoBounds {

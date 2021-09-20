@@ -1,79 +1,81 @@
 <script lang="ts">
-  import { getClouds } from '../logic/radar/clouds'
+  import { radarOpen, cloudData, locationCoordinates } from '../stores/store'
 
   import { onMount, tick } from 'svelte'
-  import { drawClouds, drawLocation, initCanvas } from '../logic/radar/draw'
-  import { getLocationBounds, getSateliteImageUrl } from '../logic/radar/radar'
+  import { getSateliteImageUrl } from '../logic/radar/radar'
+  import { reloadClouds } from '../logic/reloader'
+  import { filterClouds } from '../logic/radar/clouds'
   import Slider from '@bulatdashiev/svelte-slider'
   import ModalBackground from './ModalBackground.svelte'
+  import RadarCanvas from './RadarCanvas.svelte'
 
-  let visible = true
-  let times = [
-    '2021-09-13T20:00:00.000Z',
-    '2021-09-13T20:15:00.000Z',
-    '2021-09-13T20:30:00.000Z',
-    '2021-09-13T20:45:00.000Z',
-    '2021-09-13T21:00:00.000Z',
-  ].map(e => new Date(e))
-  let min = 0
-  let value = [min]
-  let max
-  $: {
-    max = times.length - 1
-  }
-  let width
-  let canvas
-  let ctx
-  const year = 2019
-  const quellenvermerk = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${year}, verarbeitet durch das
+  const YEAR = 2019
+  const QUELLENVERMERK = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${YEAR}, verarbeitet durch das
 Bundesamt für Kartographie und Geodäsie (BKG)`
 
-  let viewBounds = getLocationBounds(
-    {
-      lat: 51.707761258821925,
-      lon: 10.58858638776986,
-    },
-    25
+  let width
+  let min = 0
+  let max
+  let sliderValue = [min]
+  let times = []
+  let sateliteImage = ''
+  let clouds = []
+  let cloudsToShow = []
+  let viewBounds
+
+  $: if (
+    $radarOpen &&
+    !($locationCoordinates.lon === 0 && $locationCoordinates.lat === 0)
   )
+    reloadClouds()
+  $: {
+    if ($cloudData?.viewBounds?.lb && width) {
+      update($cloudData)
+    }
+  }
+  $: {
+    const selectedTime = times[sliderValue[0]]
+    if (selectedTime) {
+      scrollTime(selectedTime)
+    }
+  }
 
-  let sateliteImage
+  function update(cloudData) {
+    sateliteImage = getSateliteImageUrl(cloudData.viewBounds, width, YEAR)
+    viewBounds = cloudData.viewBounds
+    times = cloudData.times
+    clouds = cloudData.clouds
+    max = times.length - 1
+  }
+
+  function scrollTime(time) {
+    cloudsToShow = filterClouds(clouds, time)
+  }
+
   onMount(async () => {
-    ctx = initCanvas(canvas)
     await tick()
-    await tick()
-
-    sateliteImage = getSateliteImageUrl(viewBounds, width, year)
-    drawLocation(ctx)
-    const clouds = await getClouds(viewBounds, true)
-    const times = [...new Set(clouds.map(c => c.time))]
-    times.sort()
-    console.log(times[0])
-    const cloudsToDraw = clouds.filter(c => c.time == times[0])
-    drawClouds(cloudsToDraw, viewBounds, ctx)
   })
-
-  $: console.log(width)
 
   function displayTime(time) {
     return new Intl.DateTimeFormat('default', {
+      hourCycle: 'h23',
       hour: 'numeric',
       minute: 'numeric',
-      hour12: false,
     }).format(time)
   }
 </script>
 
-<ModalBackground hidden={!visible} click={() => (visible = false)} />
+<ModalBackground hidden={!$radarOpen} click={() => ($radarOpen = false)} />
 <div
   class="absolute flex flex-col shadow-md rounded-md pb-5 bg-white dark:bg-dark-600 p-2 left-0 right-0 top-0 z-20 transition duration-500"
-  class:away={!visible}
+  class:away={!$radarOpen}
 >
   <div class="text-size-xl pt-2 pb-4 text-center">
     <span>Regenradar</span>
     <span
       class="absolute right-1 text-lg font-extralight px-3 cursor-pointer"
       role="button"
-      on:click={() => (visible = false)}>×</span
+      on:click={() => ($radarOpen = false)}>×</span
     >
   </div>
   <div class="relative" bind:clientWidth={width}>
@@ -92,21 +94,16 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
       aria-hidden="true"
     />
     <img src={sateliteImage} class="rounded-md" alt="" {width} />
-    <canvas
-      class="absolute left-0 z-2 opacity-70"
-      {width}
-      height={width}
-      bind:this={canvas}
-    />
+    <RadarCanvas clouds={cloudsToShow} {viewBounds} />
   </div>
   <div class="controls z-50 mt-2 mb-15">
     <div class="text-center w-full font-light text-xl tabular-nums">
-      {displayTime(times[value[0]])}
+      {displayTime(times[sliderValue[0]])}
     </div>
-    <Slider bind:value {min} {max} />
+    <Slider bind:value={sliderValue} {min} {max} />
   </div>
   <div class="source text-center">
-    <a href="https://www.bkg.bund.de">{quellenvermerk}</a>
+    <a href="https://www.bkg.bund.de">{QUELLENVERMERK}</a>
   </div>
 </div>
 
@@ -130,7 +127,7 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
     @apply text-gray-400;
   }
   .away {
-    @apply transform -translate-y-2/1;
+    @apply transform -translate-y-1/1;
   }
   div {
     --thumb-bg: #2784ff;

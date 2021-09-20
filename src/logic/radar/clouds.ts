@@ -1,17 +1,9 @@
 import { ungzip } from 'pako/dist/pako'
 import type { GeoBounds } from './utils'
 
-const CLOUDS_URL = 'http://localhost:3001/api/clouds'
-const BOUNDS = {
-  lb: {
-    lon: 3.5889,
-    lat: 46.9526,
-  },
-  rt: {
-    lon: 15.7208,
-    lat: 54.7405,
-  },
-}
+const CLOUDS_URL = import.meta.env.DEV
+  ? 'http://localhost:3001/api/clouds'
+  : 'https://wettr-service.vercel.app/api/clouds'
 
 function decodeClouds(clouds) {
   const result = []
@@ -36,7 +28,7 @@ function decodeClouds(clouds) {
         const lon = lonFloor + (index % 100) / 100
         const lat = latFloor + ((index / 100) | 0) / 100
         const value = m / 100
-        result.push({time: sector.time, lon, lat, value })
+        result.push({ time: sector.time, lon, lat, value })
         index++
       }
     }
@@ -45,12 +37,33 @@ function decodeClouds(clouds) {
   return result
 }
 
-export async function getClouds(viewBounds: GeoBounds, onlyNow = false) {
+async function fetchClouds(viewBounds: GeoBounds, onlyNow = false) {
   const cloudsRaw = await (
     await fetch(
       CLOUDS_URL +
-        `?bounds=${viewBounds.lb.lon},${viewBounds.rt.lon},${viewBounds.lb.lat},${viewBounds.rt.lat}&onlyNow=${onlyNow}`
+        `?bounds=${viewBounds.lb.lon},${viewBounds.rt.lon},${
+          viewBounds.lb.lat
+        },${viewBounds.rt.lat}${onlyNow ? '&onlyNow=true' : ''}`
     )
   ).json()
   return decodeClouds(cloudsRaw)
+}
+
+export async function getClouds(viewBounds: GeoBounds, onlyNow = false) {
+  const clouds = await fetchClouds(viewBounds, onlyNow)
+  const times = [...new Set(clouds.map(c => c.time))].map(t => new Date(t))
+  times.sort((a, b) => a.getTime() - b.getTime())
+  return { times, clouds, viewBounds }
+}
+
+export function filterClouds(clouds: Cloud[], time: Date) {
+  const isoTime = time.toISOString()
+  return clouds.filter(c => c.time === isoTime)
+}
+
+export interface Cloud {
+  time: string
+  lon: number
+  lat: number
+  value: number
 }

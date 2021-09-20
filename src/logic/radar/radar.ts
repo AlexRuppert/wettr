@@ -1,16 +1,3 @@
-export function getLocationBounds({ lon, lat }, radiusKm = 7.5) {
-  const deg = radiusKm / 70
-  return {
-    lb: {
-      lat: lat - deg,
-      lon: lon - deg,
-    },
-    rt: {
-      lat: lat + deg,
-      lon: lon + deg,
-    },
-  }
-}
 export function getSateliteImageUrl(viewBounds, width, year = 2019) {
   const bbox = [
     viewBounds.lb.lat,
