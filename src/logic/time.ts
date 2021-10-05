@@ -1,5 +1,5 @@
-export function getSunriseSunset(date: Date, lat: number, lon: number) {
-  const noon = new Date(date.toISOString().substr(0, 10) + 'T12:00Z')
+export function getSunriseSunset(dateTime: any, latitude: any, longitude: any) {
+  const noon = new Date(dateTime.toISOString().substr(0, 10) + 'T12:00Z')
   function sinDegree(angleDegrees: number) {
     return Math.sin(angleDegrees * (Math.PI / 180))
   }
@@ -20,7 +20,7 @@ export function getSunriseSunset(date: Date, lat: number, lon: number) {
 
   const julianDate = Math.floor(noon.getTime() / 86400000 + 2440587.5)
   const n = julianDate - 2451545.0 + 0.0008
-  const meanSolarTime = n - lon / 360
+  const meanSolarTime = n - longitude / 360
   const M = (357.5291 + 0.98560028 * meanSolarTime) % 360
   const C =
     1.9148 * sinDegree(M) + 0.02 * sinDegree(2 * M) + 0.0003 * sinDegree(3 * M)
@@ -34,12 +34,16 @@ export function getSunriseSunset(date: Date, lat: number, lon: number) {
 
   const declinationOfSun = asinDegree(sinDegree(lambda) * sinDegree(23.44))
   const hourAngle = acosDegree(
-    (sinDegree(-0.83) - sinDegree(lat) * sinDegree(declinationOfSun)) /
-      (cosDegree(lat) * cosDegree(declinationOfSun))
+    (sinDegree(-0.83) - sinDegree(latitude) * sinDegree(declinationOfSun)) /
+      (cosDegree(latitude) * cosDegree(declinationOfSun))
   )
 
   return {
     sunrise: toRegularDate(solarTransit - hourAngle / 360),
     sunset: toRegularDate(solarTransit + hourAngle / 360),
   }
+}
+
+export function add(number1: number, number2: number) {
+  return number1 + number2
 }
