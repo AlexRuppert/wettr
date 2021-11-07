@@ -8,6 +8,8 @@
   import Slider from '@bulatdashiev/svelte-slider'
   import ModalBackground from './ModalBackground.svelte'
   import RadarCanvas from './RadarCanvas.svelte'
+  import { isLocationSet } from '../logic/locations'
+  import { getLocationBounds } from '../logic/radar/utils'
 
   const YEAR = 2019
   const QUELLENVERMERK = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${YEAR}, verarbeitet durch das
@@ -22,6 +24,19 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
   let clouds = []
   let cloudsToShow = []
   let viewBounds
+
+  
+
+  $: {
+    if(width && isLocationSet($locationCoordinates)) {
+      console.log('prefetch')
+      sateliteImage = getSateliteImageUrl(
+        getLocationBounds($locationCoordinates),
+        width,
+        YEAR
+      )
+    }
+  }
 
   $: if (
     $radarOpen &&
@@ -41,7 +56,6 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
   }
 
   function update(cloudData) {
-    sateliteImage = getSateliteImageUrl(cloudData.viewBounds, width, YEAR)
     viewBounds = cloudData.viewBounds
     times = cloudData.times
     clouds = cloudData.clouds

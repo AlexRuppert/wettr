@@ -86,3 +86,7 @@ export async function getGeolocationCoordinates(successCallback) {
     () => alert('Ort konte nicht ermittelt werden')
   )
 }
+
+export function isLocationSet({ lat, lon }: Coordinates) {
+  return lat !== undefined && lon !== undefined && lat !== 0 && lon !== 0
+}
