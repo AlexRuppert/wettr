@@ -26,9 +26,15 @@ export async function reload() {
       FORECAST_DAYS
     )
     const currentCloudRequest = getClouds(getLocationBounds(coordinates), true)
-    currentWeatherData.set(await currentWeatherRequest)
-    currentCloudData.set(await currentCloudRequest)
-    weatherData.set(await weatherRequest)
+    currentWeatherRequest.then(data => {
+      currentWeatherData.set(data)
+    })
+    currentCloudRequest.then(data => {
+      currentCloudData.set(data)
+    })
+    weatherRequest.then(data => {
+      weatherData.set(data)
+    })
   } catch (err) {
     console.error(err)
   }
