@@ -26,7 +26,6 @@ export async function reload() {
       FORECAST_DAYS
     )
     const currentCloudRequest = getClouds(getLocationBounds(coordinates), true)
-
     currentWeatherData.set(await currentWeatherRequest)
     currentCloudData.set(await currentCloudRequest)
     weatherData.set(await weatherRequest)
@@ -58,6 +57,7 @@ export function reloader() {
 
 export async function reloadClouds() {
   try {
+    console.log('reloadClouds')
     const cloudRequest = getClouds(getLocationBounds(coordinates))
     cloudData.set(await cloudRequest)
   } catch (err) {

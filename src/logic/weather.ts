@@ -70,7 +70,6 @@ export default class Weather {
       lat,
       lon
     )
-    weatherData.set(result)
     return result
   }
 

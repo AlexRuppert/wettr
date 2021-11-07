@@ -1,8 +1,6 @@
 <script lang="ts">
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import WindDirection from './icons/WindDirection.svelte'
-  import { umbrellaClosed, umbrellaOpen } from './icons/icons'
-  import SvgIcon from './icons/SvgIcon.svelte'
   import MiniRadar from './MiniRadar.svelte'
   import { currentWeatherData, darkMode } from '../stores/store'
   import {

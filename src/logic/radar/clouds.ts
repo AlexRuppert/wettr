@@ -1,9 +1,9 @@
 import { ungzip } from 'pako/dist/pako'
 import type { GeoBounds } from './utils'
 
-const CLOUDS_URL = import.meta.env.DEV
+const CLOUDS_URL = /*import.meta.env.DEV
   ? 'http://localhost:3001/api/clouds'
-  : 'https://wettr-service.vercel.app/api/clouds'
+  : */'https://wettr-service.vercel.app/api/clouds'
 
 function decodeClouds(clouds) {
   const result = []
