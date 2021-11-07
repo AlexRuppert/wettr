@@ -7,9 +7,7 @@ function getKmSizeInPx(viewBounds, ctx) {
 }
 
 function getCloudColor(value: number) {
-  return `hsla(${200 + 80 * value},${80 + value * 20}%,${
-    58
-  }%,${1}`
+  return `hsla(${200 + 80 * value},${80 + value * 20}%,${58}%,${1}`
 }
 
 function drawCircle(
@@ -31,8 +29,8 @@ export function initCanvas(
   width: number,
   circle = false
 ) {
-  canvas.width = width
-  canvas.height = width
+  canvas.width = width * 3
+  canvas.height = width * 3
   const ctx = canvas.getContext('2d')
   ctx.translate(0, ctx.canvas.height)
   ctx.scale(1, -1)
@@ -41,7 +39,7 @@ export function initCanvas(
       ctx,
       ctx.canvas.width / 2,
       ctx.canvas.height / 2,
-      ctx.canvas.width / 2,
+      ctx.canvas.width / 2 - 3,
       'transparent'
     )
     ctx.clip()

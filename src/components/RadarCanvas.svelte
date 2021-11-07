@@ -32,7 +32,7 @@
 
   async function update(clouds, viewBounds) {
     drawClouds(clouds, viewBounds, ctx)
-    drawLocation(ctx, getDarkLightColor(COLORS.sun, $darkMode), 2)
+    drawLocation(ctx, getDarkLightColor(COLORS.sun, $darkMode), 6)
   }
 </script>
 
