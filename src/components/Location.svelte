@@ -164,7 +164,7 @@
 
 <style>
   .button {
-    @apply bg-transparent hover:bg-blue-gray-100 rounded border-none w-10 h-10 cursor-pointer flex items-center p-1;
+    @apply bg-transparent dark:hover:bg-dark-400 hover:bg-blue-gray-100 rounded border-none w-10 h-10 cursor-pointer flex items-center p-1;
   }
 
   .menu-item {
