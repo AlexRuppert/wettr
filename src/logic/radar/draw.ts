@@ -1,4 +1,5 @@
-import { mercatorProjection, getScale, isInBounds, GeoBounds } from './utils'
+import type { GeoBounds } from './utils'
+import { mercatorProjection, getScale, isInBounds } from './utils'
 
 function getKmSizeInPx(viewBounds, ctx) {
   return (

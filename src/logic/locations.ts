@@ -1,4 +1,4 @@
-//import locationList from '../assets/locations'
+
 
 export interface Coordinates {
   lat: number

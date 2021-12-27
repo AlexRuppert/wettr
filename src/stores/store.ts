@@ -1,6 +1,7 @@
 import { stageReload, reloader } from './../logic/reloader'
 import { writable } from 'svelte/store'
-import { Coordinates, isLocationSet } from '../logic/locations'
+import type {Coordinates} from './../logic/locations'
+import { isLocationSet } from '../logic/locations'
 import type { GeoBounds } from '../logic/radar/utils'
 export const locationCoordinates = writable({ lat: 0, lon: 0 })
 

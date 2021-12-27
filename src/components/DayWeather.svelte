@@ -45,9 +45,9 @@
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
-        <div class="flex children:(w-8 flex pt-2 items-center) space-x-4 ">
+        <div class="flex space-x-4 ">
           {#each dayParts as { icon, colors }}
-            <div>
+            <div class="w-8 flex pt-2 items-center">
               <WeatherIcon {icon} color={getDarkLightColor(colors, $darkMode)} />
             </div>
           {/each}
