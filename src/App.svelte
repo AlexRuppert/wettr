@@ -46,6 +46,9 @@
     }
   }
 </script>
+<svelte:head>
+  <meta name="theme-color" content={$darkMode?'#000':'#fff'}>
+</svelte:head>
 
 <main class="max-w-sm mt-0 w-full m-auto grid grid-cols-1 gap-1 relative">
   <Location />
