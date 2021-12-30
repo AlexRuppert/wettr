@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 import { visualizer } from 'rollup-plugin-visualizer'
+import fs from 'fs'
+
 const BASE = '/wettr/'
 
 // https://vitejs.dev/config/
@@ -54,6 +56,13 @@ export default defineConfig({
         unsafe_undefined: true,
       },
       ecma: 2016,
+    },
+  },
+  server: {
+    open: true,
+    https: {
+      key: fs.readFileSync('localhost-key.pem'),
+      cert: fs.readFileSync('localhost.pem'),
     },
   },
 })
