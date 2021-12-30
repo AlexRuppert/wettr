@@ -1,7 +1,7 @@
 <script lang="ts">
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import WindDirection from './icons/WindDirection.svelte'
-  import MiniRadar from './MiniRadar.svelte'
+  import MiniRadar from './radar/MiniRadar.svelte'
   import { currentWeatherData, darkMode } from '../stores/store'
   import {
     getDarkLightColor,
@@ -18,7 +18,7 @@
 </script>
 
 <div
-  class="flex flex-nowrap pb-5 relative tabular-nums shadow-md rounded-md p-2 bg-white dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
+  class="flex flex-nowrap pb-5 relative tabular-nums shadow-md rounded-md pr-2 bg-white dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   <div class="w-30 h-30 relative">
@@ -38,13 +38,13 @@
 
   <div class="flex text-center justify-center items-center flex-1">
     <div
-      class="w-20 h-20 rounded-full align-bottom shadow-inner dark:bg-dark-800"
+      class="w-15 h-15 rounded-lg align-bottom shadow-inner dark:bg-dark-800"
     >
       <MiniRadar />
     </div>
   </div>
   <div class="flex">
-    <div class="w-25 text-7xl font-light text-right self-center">
+    <div class="w-25 text-[5rem] mb-2 font-light text-right self-center">
       {weather.temperature}
     </div>
     <div class="-mt-7 text-3xl self-center">°</div>

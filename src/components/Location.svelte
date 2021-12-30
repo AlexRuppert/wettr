@@ -11,6 +11,9 @@
   import { onMount } from 'svelte'
   import { getForegroundColor } from '../logic/utils'
   import ModalBackground from './ModalBackground.svelte'
+  import { fade, fly } from 'svelte/transition'
+
+  const TRANSITION_TIME = 250
   let inputElement
 
   let place = ''
@@ -107,20 +110,27 @@
   })
 </script>
 
-<div class="relative shadow-md rounded-b-md p-1 bg-white dark:bg-dark-600 mx-1">
+<ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
+
+<div
+  class="relative shadow-md rounded-md mt-1 p-1 bg-white dark:bg-dark-600 mx-1"
+  class:z-50={openedSuggestions}
+  >
   <div>
-    <button
-      class="button absolute transition-opacity z-20"
-      class:opacity-0={!openedSuggestions}
-      on:click={getGeoLocation}
-      aria-label="Get current location"
-    >
-      <SvgIcon
-        d={mdiCrosshairsGps}
-        dim={{ w: 24, h: 24 }}
-        fill={getForegroundColor($darkMode)}
-      />
-    </button>
+    {#if openedSuggestions}
+      <button
+        class="button absolute transition-opacity z-20"
+        transition:fade={{ duration: TRANSITION_TIME }}
+        on:click={getGeoLocation}
+        aria-label="Get current location"
+      >
+        <SvgIcon
+          d={mdiCrosshairsGps}
+          dim={{ w: 24, h: 24 }}
+          fill={getForegroundColor($darkMode)}
+        />
+      </button>
+    {/if}
     <div class="relative">
       <input
         id="location"
@@ -142,24 +152,25 @@
       <label for="location" class="hidden">Ort</label>
     </div>
   </div>
-  <ModalBackground hidden={!openedSuggestions} click={closeSuggestions} />
-
-  <div
-    class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 dark:bg-dark-100 outline-none z-20 transform origin-top transition-transform"
-    class:scale-0={!openedSuggestions}
-  >
-    <div class="py-1 shadow-lg">
-      {#each suggestions as entry, i}
-        <a
-          href={'#'}
-          class="menu-item"
-          class:selected={i === selectedSuggestion}
-          on:click={() => selectSuggestion(entry)}
-          on:mouseenter={() => (selectedSuggestion = i)}>{entry}</a
-        >
-      {/each}
+  
+  {#if openedSuggestions}
+    <div
+      class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 dark:bg-dark-800 outline-none z-20 transform origin-top transition-transform"
+      transition:fly={{ duration: TRANSITION_TIME, y: -50 }}
+    >
+      <div class="py-1 shadow-lg">
+        {#each suggestions as entry, i}
+          <a
+            href={'#'}
+            class="menu-item"
+            class:selected={i === selectedSuggestion}
+            on:click={() => selectSuggestion(entry)}
+            on:mouseenter={() => (selectedSuggestion = i)}>{entry}</a
+          >
+        {/each}
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
 
 <style>

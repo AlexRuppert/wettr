@@ -2,7 +2,7 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
-  import Radar from './components/Radar.svelte'
+  import Radar from './components/radar/Radar.svelte'
   import { darkMode } from './stores/store'
 
   let deferredInstallPrompt

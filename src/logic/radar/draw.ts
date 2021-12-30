@@ -25,27 +25,41 @@ function drawCircle(
   ctx.fill()
 }
 
-export function initCanvas(
-  canvas: HTMLCanvasElement,
-  width: number,
-  circle = false
-) {
+export function initCanvas(canvas: HTMLCanvasElement, width: number) {
   canvas.width = width * 3
   canvas.height = width * 3
   const ctx = canvas.getContext('2d')
   ctx.translate(0, ctx.canvas.height)
   ctx.scale(1, -1)
-  if (circle) {
-    drawCircle(
-      ctx,
-      ctx.canvas.width / 2,
-      ctx.canvas.height / 2,
-      ctx.canvas.width / 2 - 3,
-      'transparent'
-    )
+  return ctx
+}
+
+function clip(ctx: CanvasRenderingContext2D, mini: boolean) {
+  if (mini) {
+    drawRoundedRectPath(ctx, 0, 0, ctx.canvas.width, ctx.canvas.height, 30)
     ctx.clip()
   }
-  return ctx
+}
+
+function drawRoundedRectPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  ctx.beginPath()
+  ctx.moveTo(x + radius, y)
+  ctx.lineTo(x + width - radius, y)
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
+  ctx.lineTo(x + width, y + height - radius)
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+  ctx.lineTo(x + radius, y + height)
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
+  ctx.lineTo(x, y + radius)
+  ctx.quadraticCurveTo(x, y, x + radius, y)
+  ctx.closePath()
 }
 
 export function drawLocation(
@@ -53,19 +67,22 @@ export function drawLocation(
   color = '#fff',
   radius = 3
 ) {
+  ctx.globalCompositeOperation = 'source-over'
   drawCircle(ctx, ctx.canvas.width / 2, ctx.canvas.height / 2, radius, color)
 }
 
 export function drawClouds(
   clouds,
   viewBounds: GeoBounds,
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasRenderingContext2D,
+  mini = false
 ) {
   const scale = getScale(viewBounds)
   const radius = getKmSizeInPx(viewBounds, ctx) / 2
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.globalCompositeOperation = 'darken'
-
+  ctx.save()
+  clip(ctx, mini)
   clouds.forEach(cell => {
     if (isInBounds(cell, viewBounds)) {
       let pos = mercatorProjection(viewBounds, cell)
@@ -79,5 +96,6 @@ export function drawClouds(
       )
     }
   })
-  ctx.globalCompositeOperation = 'source-over'
+
+  ctx.restore()
 }

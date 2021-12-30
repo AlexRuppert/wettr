@@ -67,6 +67,18 @@
   darkMode.subscribe(async value => {
     colors = updateColors(value)
   })
+
+  function isCurrentValueDifferent(context) {
+    const index = context.dataIndex
+    const value = (context.dataset.data[index] as { y: number }).y
+    const valuePrevious =
+      (
+        context.dataset.data[index - 1] as {
+          y: number
+        }
+      )?.y ?? undefined
+    return value !== valuePrevious
+  }
   const grid = {
     display: true,
     drawBorder: false,
@@ -165,7 +177,7 @@
         annotations.current = { ...currentTimeAnnotation, xMin: now, xMax: now }
 
       const commonData = {
-        tension: 0.25,
+        tension: 0.2,
         pointRadius: 0,
         borderWidth: 1,
       }
@@ -176,22 +188,24 @@
         data: {
           datasets: [
             {
-              data: weather.dayGraph.map(d => ({
-                x: d.timestamp,
-                y: d.temperature,
-              })),
+              data: weather.dayGraph
+                .map(d => ({
+                  x: d.timestamp,
+                  y: d.temperature,
+                }))
+                .filter(d => new Date(d.x).getHours() % 2 === 0),
               borderColor: colors.temperature,
               ...commonData,
               borderDash: [1, 2],
               borderWidth: 1,
               pointRadius: function (context) {
-                return ((context.dataIndex + 1) % 2) * 1.2
+                return isCurrentValueDifferent(context) ? 1.2 : 0
               },
               pointBackgroundColor: colors.pointBackgroundColor,
               pointBorderColor: colors.pointBorderColor,
               datalabels: {
                 display: function (context) {
-                  return context.dataIndex % 2 === 1 ? false : 'auto'
+                  return isCurrentValueDifferent(context) ? 'auto' : false
                 },
                 align: function (context) {
                   const index = context.dataIndex

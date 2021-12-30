@@ -47,7 +47,7 @@
         </div>
         <div class="flex space-x-4 ">
           {#each dayParts as { icon, colors }}
-            <div class="w-8 flex pt-2 items-center">
+            <div class="w-8 flex pt-1.5 items-center">
               <WeatherIcon {icon} color={getDarkLightColor(colors, $darkMode)} />
             </div>
           {/each}
