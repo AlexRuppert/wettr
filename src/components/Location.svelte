@@ -1,16 +1,15 @@
 <script lang="ts">
   import { mdiCrosshairsGps } from '@mdi/js'
-  import SvgIcon from './icons/SvgIcon.svelte'
   import {
     filterLocations,
     getLocationCoordinates,
     getGeolocationCoordinates,
   } from '../logic/locations'
-  import { darkMode, locationCoordinates } from '../stores/store'
+  import { locationCoordinates } from '../stores/store'
   import { getHistory, pushHistory } from '../logic/history'
   import { onMount } from 'svelte'
-  import { getForegroundColor } from '../logic/utils'
   import ModalBackground from './ModalBackground.svelte'
+  import IconButton from './common/IconButton.svelte'
   import { fade, fly } from 'svelte/transition'
 
   const TRANSITION_TIME = 250
@@ -93,7 +92,7 @@
     closeSuggestions()
     getGeolocationCoordinates(({ closestCity, coordinates }) => {
       place = `Nahe ${closestCity}`
-      coordinateString = `${coordinates.lat}, ${coordinates.lon}`
+      //coordinateString = `${coordinates.lat}, ${coordinates.lon}`
       updateCoordinates(closestCity, coordinates)
     })
   }
@@ -113,23 +112,18 @@
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
 
 <div
-  class="relative shadow-md rounded-md mt-1 p-1 bg-white dark:bg-dark-600 mx-1"
+  class="relative shadow-md rounded-md mt-1 bg-white dark:bg-dark-600 mx-1"
   class:z-50={openedSuggestions}
-  >
+>
   <div>
     {#if openedSuggestions}
-      <button
-        class="button absolute transition-opacity z-20"
-        transition:fade={{ duration: TRANSITION_TIME }}
-        on:click={getGeoLocation}
-        aria-label="Get current location"
-      >
-        <SvgIcon
-          d={mdiCrosshairsGps}
-          dim={{ w: 24, h: 24 }}
-          fill={getForegroundColor($darkMode)}
+      <div class="absolute z-20" transition:fade={{ duration: TRANSITION_TIME }}>
+        <IconButton
+          label="Get Current Location"
+          icon={mdiCrosshairsGps}
+          on:click={getGeoLocation}
         />
-      </button>
+      </div>
     {/if}
     <div class="relative">
       <input
@@ -152,7 +146,7 @@
       <label for="location" class="hidden">Ort</label>
     </div>
   </div>
-  
+
   {#if openedSuggestions}
     <div
       class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 dark:bg-dark-800 outline-none z-20 transform origin-top transition-transform"
@@ -174,10 +168,6 @@
 </div>
 
 <style>
-  .button {
-    @apply bg-transparent dark:hover:bg-dark-400 hover:bg-blue-gray-100 rounded border-none w-10 h-10 cursor-pointer flex items-center p-1;
-  }
-
   .menu-item {
     @apply text-gray-700 dark:(text-gray-400) block px-4 py-2 text-sm no-underline text-lg font-semibold;
   }

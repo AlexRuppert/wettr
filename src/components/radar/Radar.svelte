@@ -1,31 +1,23 @@
 <script lang="ts">
-  import {
-    radarOpen,
-    cloudData,
-    locationCoordinates,
-    darkMode,
-  } from '../../stores/store'
+  import { radarOpen, cloudData, locationCoordinates } from '../../stores/store'
 
   import { onMount, tick } from 'svelte'
   import { reloadClouds } from '../../logic/reloader'
   import { filterClouds } from '../../logic/radar/clouds'
   import ModalBackground from '../ModalBackground.svelte'
   import { isLocationSet } from '../../logic/locations'
-  import { getForegroundColor } from '../../logic/utils'
-  import SvgIcon from '../icons/SvgIcon.svelte'
+
+  import IconButton from '../common/IconButton.svelte'
   import { mdiSkipNext, mdiSkipPrevious } from '@mdi/js'
   import { fly } from 'svelte/transition'
   import { swipe } from 'svelte-gestures'
   import SatelliteComposite from './SatelliteComposite.svelte'
+  import TimeSlider from './TimeSlider.svelte'
   const YEAR = 2019
   const QUELLENVERMERK = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${YEAR}, verarbeitet durch das
 Bundesamt für Kartographie und Geodäsie (BKG)`
 
-  let min = 0
-  let max: number
-  let sliderValue = min
   let times = []
-
   let clouds = []
   let cloudsToShow = []
   let viewBounds
@@ -36,35 +28,20 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
       update($cloudData)
     }
   }
-  $: {
-    const selectedTime = times[sliderValue]
-    if (selectedTime) {
-      scrollTime(selectedTime)
-    }
-  }
 
   function update(cloudData) {
     viewBounds = cloudData.viewBounds
     times = cloudData.times
     clouds = cloudData.clouds
-    max = times.length - 1
   }
 
-  function scrollTime(time) {
+  function filterCloudsByTime(time) {
     cloudsToShow = filterClouds(clouds, time)
   }
 
   onMount(async () => {
     await tick()
   })
-
-  function displayTime(time) {
-    return new Intl.DateTimeFormat('default', {
-      hourCycle: 'h23',
-      hour: 'numeric',
-      minute: 'numeric',
-    }).format(time)
-  }
 
   function close() {
     $radarOpen = false
@@ -90,38 +67,11 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
         >
       </div>
       <SatelliteComposite clouds={cloudsToShow} {viewBounds} />
-      <div class="controls z-50 mt-5 mb-10 space-y-3">
-        <div class="text-center w-full font-light text-xl tabular-nums">
-          {displayTime(times[sliderValue])}
-        </div>
-        <div class="flex">
-          <button
-            class="button"
-            on:click={() => (sliderValue = Math.max(0, sliderValue - 1))}
-            aria-label="Go Back"
-          >
-            <SvgIcon
-              d={mdiSkipPrevious}
-              dim={{ w: 24, h: 24 }}
-              fill={getForegroundColor($darkMode)}
-            />
-          </button>
-          <span class="w-full mx-5 mt-0.5">
-            <input type="range" bind:value={sliderValue} {min} {max} />
-          </span>
-
-          <button
-            class="button"
-            on:click={() => (sliderValue = Math.min(max, sliderValue + 1))}
-            aria-label="Go Forward"
-          >
-            <SvgIcon
-              d={mdiSkipNext}
-              dim={{ w: 24, h: 24 }}
-              fill={getForegroundColor($darkMode)}
-            />
-          </button>
-        </div>
+      <div>
+        <TimeSlider
+          {times}
+          on:timeSelected={event => filterCloudsByTime(event.detail)}
+        />
       </div>
     </div>
     <div class="source text-center dark:bg-dark-600">
@@ -144,58 +94,8 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
     --progress-bg: #2784ff;
     --track-bg: #444444;
   }
-  .button {
-    @apply bg-transparent dark:(hover:bg-dark-400 active:bg-dark-200) hover:bg-blue-gray-100  active:bg-blue-gray-200 rounded border-none w-15 h-10 cursor-pointer flex items-center p-1;
-  }
-  button {
-    touch-action: manipulation;
-  }
 
   :global(.thumb-content .thumb) {
     @apply w-7 h-7;
-  }
-
-  input[type='range'] {
-    width: 100%;
-    margin: 0;
-    background-color: transparent;
-    -webkit-appearance: none;
-  }
-
-  input[type='range']:focus {
-    outline: none;
-  }
-  input[type='range']::-webkit-slider-runnable-track {
-    background: #aaaaaa10;
-    border-radius: 25px;
-    width: 100%;
-    cursor: pointer;
-    height: 32px;
-  }
-
-  input[type='range']::-webkit-slider-thumb {
-    border-radius: 32px;
-    background: #006efd;
-    border: 1px solid #006efd;
-    height: 32px;
-    width: 32px;
-    -webkit-appearance: none;
-  }
-
-  input[type='range']::-moz-range-track {
-    background: #aaaaaa10;
-    border-radius: 25px;
-    width: 100%;
-    cursor: pointer;
-    height: 32px;
-  }
-
-  input[type='range']::-moz-range-thumb {
-    border-radius: 32px;
-    background: #006efd;
-    border: 1px solid #006efd;
-    height: 32px;
-    width: 32px;
-    -webkit-appearance: none;
   }
 </style>
