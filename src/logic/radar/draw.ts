@@ -73,13 +73,23 @@ function drawRoundedRectPath(
 
 export function drawLocation(
   ctx: CanvasRenderingContext2D,
-  color = '#fff',
+  color1 = '#fff',
+  color2 = '#fff',
   radius = 3
 ) {
   ctx.globalCompositeOperation = 'source-over'
-  drawCircle(ctx, ctx.canvas.width / 2, ctx.canvas.height / 2, radius, color)
+  drawCircle(ctx, ctx.canvas.width / 2, ctx.canvas.height / 2, radius*2, color1)
+  drawCircle(ctx, ctx.canvas.width / 2, ctx.canvas.height / 2, radius, color2)
 }
 
+export function drawEnv(ctx, mini = true, fn = () => {}) {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  ctx.globalCompositeOperation = 'darken'
+  ctx.save()
+  clip(ctx, mini)
+  fn()
+  ctx.restore()
+}
 export function drawClouds(
   clouds,
   viewBounds: GeoBounds,
@@ -87,27 +97,21 @@ export function drawClouds(
   mini = false
 ) {
   const scale = getScale(viewBounds)
-  const radius = getKmSizeInPx(viewBounds, ctx) / 2
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-  ctx.globalCompositeOperation = 'darken'
-  ctx.save()
-  clip(ctx, mini)
-  console.time('drawClouds')
-  //console.log(new Set((clouds.map(c=>c.value))))
-  //clouds = clouds.filter((cell, i) => i % 2 === 0)
-  //console.log(clouds.length)
-  for (const cell of clouds) {
-    let pos = mercatorProjection(viewBounds, cell)
-    drawCircle(
-      ctx,
-      (pos.x * ctx.canvas.width * scale.x) | 0,
-      (pos.y * ctx.canvas.height * scale.y) | 0,
-      radius | 0,
-      colorCache[cell.value * 100]
-    )
-  }
+  const radius = getKmSizeInPx(viewBounds, ctx) / 2 + (mini ? 1.5 : 0)
 
-  console.timeEnd('drawClouds')
+  drawEnv(ctx, mini, () => {
+    //console.time('drawClouds')
 
-  ctx.restore()
+    for (const cell of clouds) {
+      drawCircle(
+        ctx,
+        (cell.projected.x * ctx.canvas.width * scale.x) | 0,
+        (cell.projected.y * ctx.canvas.height * scale.y) | 0,
+        radius | 0,
+        colorCache[cell.value * 100]
+      )
+    }
+
+    //console.timeEnd('drawClouds')
+  })
 }

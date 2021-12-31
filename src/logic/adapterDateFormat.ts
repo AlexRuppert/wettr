@@ -11,6 +11,7 @@ _adapters._date.override({
     return {}
   },
   parse(time) {
+    //@ts-ignore
     return new Date(time).getTime()
   },
   format(time) {

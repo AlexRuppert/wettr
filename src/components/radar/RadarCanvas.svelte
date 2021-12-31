@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { drawClouds, drawLocation, initCanvas } from '../../logic/radar/draw'
+  import {
+    drawClouds,
+    drawEnv,
+    drawLocation,
+    initCanvas,
+  } from '../../logic/radar/draw'
   import { onMount, tick } from 'svelte'
   import { getDarkLightColor, COLORS } from '../../logic/utils'
   import { darkMode } from '../../stores/store'
@@ -13,7 +18,7 @@
 
   $: {
     $darkMode
-    if (clouds?.length && viewBounds?.lb) {
+    if (clouds && viewBounds?.lb) {
       if (mounted) {
         update(clouds, viewBounds)
       } else {
@@ -28,11 +33,23 @@
     await tick()
     mounted = true
     ctx = initCanvas(canvas, width)
+    drawEnv(ctx)
+
+    drawDot()
   })
+
+  function drawDot() {
+    drawLocation(
+      ctx,
+      mini ? 'transparent' : '#a30',
+      getDarkLightColor(COLORS.sun, $darkMode),
+      6
+    )
+  }
 
   async function update(clouds, viewBounds) {
     drawClouds(clouds, viewBounds, ctx, mini)
-    drawLocation(ctx, getDarkLightColor(COLORS.sun, $darkMode), 6)
+    drawDot()
   }
 </script>
 

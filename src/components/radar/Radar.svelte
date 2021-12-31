@@ -1,18 +1,15 @@
 <script lang="ts">
   import { radarOpen, cloudData, locationCoordinates } from '../../stores/store'
 
-  import { onMount, tick } from 'svelte'
   import { reloadClouds } from '../../logic/reloader'
   import { filterClouds } from '../../logic/radar/clouds'
   import ModalBackground from '../ModalBackground.svelte'
   import { isLocationSet } from '../../logic/locations'
-
-  import IconButton from '../common/IconButton.svelte'
-  import { mdiSkipNext, mdiSkipPrevious } from '@mdi/js'
   import { fly } from 'svelte/transition'
   import { swipe } from 'svelte-gestures'
   import SatelliteComposite from './SatelliteComposite.svelte'
   import TimeSlider from './TimeSlider.svelte'
+import { onMount, tick } from 'svelte';
   const YEAR = 2019
   const QUELLENVERMERK = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${YEAR}, verarbeitet durch das
 Bundesamt für Kartographie und Geodäsie (BKG)`
@@ -23,7 +20,6 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
   let viewBounds
 
   let filteredCache = new Map()
-
 
   $: if ($radarOpen && isLocationSet($locationCoordinates)) reloadClouds()
   $: {
@@ -41,14 +37,13 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
       filteredCache.set(time, filterClouds(clouds, time))
     })
   }
+  onMount(async () => {
+    await tick()
+  })
 
   function filterCloudsByTime(time) {
     cloudsToShow = filteredCache.get(time)
   }
-
-  onMount(async () => {
-    await tick()
-  })
 
   function close() {
     $radarOpen = false

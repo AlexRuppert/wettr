@@ -1,5 +1,6 @@
 import { ungzip } from 'pako/dist/pako'
-import type { GeoBounds} from './utils'
+import type { GeoBounds } from './utils'
+import { mercatorProjection } from './utils'
 import { isInBounds } from './utils'
 
 const CLOUDS_URL =
@@ -68,8 +69,21 @@ async function fetchClouds(viewBounds: GeoBounds, onlyNow = false) {
 }
 
 export async function getClouds(viewBounds: GeoBounds, onlyNow = false) {
-  const clouds = (await fetchClouds(viewBounds, onlyNow)).filter(cell =>
-    isInBounds(cell, viewBounds)
+  let clouds = (await fetchClouds(viewBounds, onlyNow))
+    .filter(cell => isInBounds(cell, viewBounds))
+    .map(cell => ({ ...cell, projected: mercatorProjection(viewBounds, cell) }))
+  
+  clouds.sort((a, b) => a.value - b.value)
+
+  clouds = Array.from(
+    new Map(
+      clouds.map(cell => [
+        `${cell.time} ${(cell.projected.x * 1e4) | 0} ${
+          (cell.projected.y * 1e4) | 0
+        }`,
+        cell,
+      ])
+    ).values()
   )
   //const times = [...new Set(clouds.map(c => c.time))].map(t => new Date(t))
   //times.sort((a, b) => a.getTime() - b.getTime())

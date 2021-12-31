@@ -2,6 +2,7 @@
   import { createEventDispatcher, onMount } from 'svelte'
   import { mdiSkipNext, mdiSkipPrevious } from '@mdi/js'
   import IconButton from '../common/IconButton.svelte'
+  import { getNowestTime } from '../../logic/radar/utils'
 
   export let sliderValue = 0
   export let times = []
@@ -17,6 +18,11 @@
 
   $: {
     max = times.length - 1
+    updateSliderValue(getNowestTime(times)?.index ?? 0)
+  }
+
+  function updateSliderValue(value) {
+    sliderValue = value
   }
 
   $: {
@@ -95,7 +101,7 @@
 
 <style>
   .time-label {
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.5), 0 -3px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1), 0 -3px 10px rgba(0, 0, 0, 0.3);
   }
   input[type='range'] {
     width: 100%;
