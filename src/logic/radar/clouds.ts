@@ -1,9 +1,11 @@
 import { ungzip } from 'pako/dist/pako'
-import type { GeoBounds } from './utils'
+import type { GeoBounds} from './utils'
+import { isInBounds } from './utils'
 
-const CLOUDS_URL = /*import.meta.env.DEV
+const CLOUDS_URL =
+  /*import.meta.env.DEV
   ? 'http://localhost:3001/api/clouds'
-  : */'https://wettr-service.vercel.app/api/clouds'
+  : */ 'https://wettr-service.vercel.app/api/clouds'
 
 function decodeClouds(clouds) {
   const result = []
@@ -37,6 +39,22 @@ function decodeClouds(clouds) {
   return result
 }
 
+function addMinutes(date, minutes) {
+  const _date = new Date(date)
+  return new Date(_date.setMinutes(_date.getMinutes() + minutes))
+}
+
+function getTimes() {
+  const nowIso = new Date(Date.now() - 5 * 60 * 1000).toISOString()
+  const minute = +nowIso.match(/:(\d\d):/)[1]
+  const startMinute = ((minute / 15) | 0) * 15
+  const baseTime = addMinutes(
+    new Date(nowIso.substring(0, 13) + ':00:00Z'),
+    startMinute
+  )
+  return [...Array(9)].map((_, i) => addMinutes(baseTime, i * 15))
+}
+
 async function fetchClouds(viewBounds: GeoBounds, onlyNow = false) {
   const cloudsRaw = await (
     await fetch(
@@ -50,9 +68,12 @@ async function fetchClouds(viewBounds: GeoBounds, onlyNow = false) {
 }
 
 export async function getClouds(viewBounds: GeoBounds, onlyNow = false) {
-  const clouds = await fetchClouds(viewBounds, onlyNow)
-  const times = [...new Set(clouds.map(c => c.time))].map(t => new Date(t))
-  times.sort((a, b) => a.getTime() - b.getTime())
+  const clouds = (await fetchClouds(viewBounds, onlyNow)).filter(cell =>
+    isInBounds(cell, viewBounds)
+  )
+  //const times = [...new Set(clouds.map(c => c.time))].map(t => new Date(t))
+  //times.sort((a, b) => a.getTime() - b.getTime())
+  const times = getTimes()
   return { times, clouds, viewBounds }
 }
 

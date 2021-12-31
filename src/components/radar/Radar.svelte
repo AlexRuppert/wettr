@@ -22,6 +22,9 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
   let cloudsToShow = []
   let viewBounds
 
+  let filteredCache = new Map()
+
+
   $: if ($radarOpen && isLocationSet($locationCoordinates)) reloadClouds()
   $: {
     if ($cloudData?.viewBounds?.lb) {
@@ -33,10 +36,14 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
     viewBounds = cloudData.viewBounds
     times = cloudData.times
     clouds = cloudData.clouds
+
+    times.forEach(time => {
+      filteredCache.set(time, filterClouds(clouds, time))
+    })
   }
 
   function filterCloudsByTime(time) {
-    cloudsToShow = filterClouds(clouds, time)
+    cloudsToShow = filteredCache.get(time)
   }
 
   onMount(async () => {

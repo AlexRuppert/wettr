@@ -1,4 +1,4 @@
-<script lang="ts">
+<script context="module">
   import {
     clearDay,
     clearNight,
@@ -14,11 +14,6 @@
     wind,
   } from './icons'
 
-  import SvgIcon from './SvgIcon.svelte'
-  import type { WeatherIconType } from '../../logic/weatherTypes'
-  export let icon: WeatherIconType
-  export let color: string = undefined
-
   const iconLookup = {
     clearDay,
     clearNight,
@@ -33,6 +28,14 @@
     thunderstorm,
     wind,
   }
+</script>
+
+<script lang="ts">
+  import SvgIcon from './SvgIcon.svelte'
+  import type { WeatherIconType } from '../../logic/weatherTypes'
+  export let icon: WeatherIconType
+  export let color: string = '#444'
+
   let path: string
   $: path = iconLookup[icon]
 </script>

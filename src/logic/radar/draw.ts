@@ -1,6 +1,9 @@
 import type { GeoBounds } from './utils'
-import { mercatorProjection, getScale, isInBounds } from './utils'
+import { mercatorProjection, getScale } from './utils'
 
+let offscreenCanvas: HTMLCanvasElement = document.createElement('canvas')
+
+let colorCache: string[] = []
 function getKmSizeInPx(viewBounds, ctx) {
   return (
     ctx.canvas.height / ((viewBounds.rt.lat - viewBounds.lb.lat) * 60 * 0.7)
@@ -25,12 +28,18 @@ function drawCircle(
   ctx.fill()
 }
 
+function createColorCache() {
+  for (let i = 0; i <= 100; i++) {
+    colorCache.push(getCloudColor(i / 100))
+  }
+}
 export function initCanvas(canvas: HTMLCanvasElement, width: number) {
   canvas.width = width * 3
   canvas.height = width * 3
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d', { alpha: false })
   ctx.translate(0, ctx.canvas.height)
   ctx.scale(1, -1)
+  createColorCache()
   return ctx
 }
 
@@ -83,19 +92,22 @@ export function drawClouds(
   ctx.globalCompositeOperation = 'darken'
   ctx.save()
   clip(ctx, mini)
-  clouds.forEach(cell => {
-    if (isInBounds(cell, viewBounds)) {
-      let pos = mercatorProjection(viewBounds, cell)
+  console.time('drawClouds')
+  //console.log(new Set((clouds.map(c=>c.value))))
+  //clouds = clouds.filter((cell, i) => i % 2 === 0)
+  //console.log(clouds.length)
+  for (const cell of clouds) {
+    let pos = mercatorProjection(viewBounds, cell)
+    drawCircle(
+      ctx,
+      (pos.x * ctx.canvas.width * scale.x) | 0,
+      (pos.y * ctx.canvas.height * scale.y) | 0,
+      radius | 0,
+      colorCache[cell.value * 100]
+    )
+  }
 
-      drawCircle(
-        ctx,
-        pos.x * ctx.canvas.width * scale.x,
-        pos.y * ctx.canvas.height * scale.y,
-        radius,
-        getCloudColor(cell.value)
-      )
-    }
-  })
+  console.timeEnd('drawClouds')
 
   ctx.restore()
 }

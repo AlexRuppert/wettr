@@ -16,7 +16,7 @@ let nextCheckTime = 0
 
 const cloudsCache = new Map()
 
-async function getCloudDataFromCache(viewBounds) {
+async function getCloudDataFromCache(viewBounds, now = false) {
   const key = JSON.stringify(viewBounds)
   if (cloudsCache.has(key)) {
     const cached = cloudsCache.get(key)
@@ -28,7 +28,7 @@ async function getCloudDataFromCache(viewBounds) {
     }
   }
   console.log('reloadClouds')
-  const clouds = await getClouds(viewBounds)
+  const clouds = await getClouds(viewBounds, now)
   cloudsCache.set(key, { clouds, timestamp: Date.now() })
   return clouds
 }
@@ -44,11 +44,15 @@ export async function reload() {
       coordinates.lon,
       FORECAST_DAYS
     )
-    const currentCloudRequest = getClouds(getLocationBounds(coordinates), true)
+    const currentCloudRequest = getCloudDataFromCache(
+      getLocationBounds(coordinates),
+      true
+    )
     currentWeatherRequest.then(data => {
       currentWeatherData.set(data)
     })
     currentCloudRequest.then(data => {
+      console.log(data)
       currentCloudData.set(data)
     })
     weatherRequest.then(data => {
@@ -83,6 +87,7 @@ export function reloader() {
 export async function reloadClouds() {
   try {
     const cloudRequest = getCloudDataFromCache(getLocationBounds(coordinates))
+
     cloudData.set(await cloudRequest)
   } catch (err) {
     console.error(err)
