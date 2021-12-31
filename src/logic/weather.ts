@@ -27,7 +27,7 @@ export default class Weather {
     const result = this.processCurrentWeatherData(
       await (await fetch(currentWeatherUrl.toString())).json()
     )
-
+      console.log(result)
     currentWeatherData.set(result)
     return result
   }
