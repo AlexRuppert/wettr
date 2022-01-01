@@ -6,10 +6,9 @@ import type {
 } from './weatherTypes'
 import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
-import { COLORS, getWeatherIconColors } from './utils'
+import { getWeatherIconColors } from './utils'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
-const DUMMY_DELAY = 500
 let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
 
