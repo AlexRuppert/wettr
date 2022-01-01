@@ -117,7 +117,10 @@
 >
   <div>
     {#if openedSuggestions}
-      <div class="absolute z-20" transition:fade={{ duration: TRANSITION_TIME }}>
+      <div
+        class="absolute z-20"
+        transition:fade={{ duration: TRANSITION_TIME }}
+      >
         <IconButton
           label="Get Current Location"
           icon={mdiCrosshairsGps}
@@ -156,7 +159,7 @@
         {#each suggestions as entry, i}
           <a
             href={'#'}
-            class="menu-item"
+            class="text-gray-700 dark:(text-gray-400) block px-4 py-2 text-sm no-underline text-lg font-semibold"
             class:selected={i === selectedSuggestion}
             on:click={() => selectSuggestion(entry)}
             on:mouseenter={() => (selectedSuggestion = i)}>{entry}</a
@@ -168,9 +171,6 @@
 </div>
 
 <style>
-  .menu-item {
-    @apply text-gray-700 dark:(text-gray-400) block px-4 py-2 text-sm no-underline text-lg font-semibold;
-  }
   input {
     -webkit-tap-highlight-color: transparent;
   }

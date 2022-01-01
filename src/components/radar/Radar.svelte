@@ -84,7 +84,7 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
 
 <style>
   .source a {
-    @apply text-xs no-underline font-normal text-gray-700 hover:underline;
+    @apply text-xs no-underline font-normal text-gray-800 hover:underline;
     letter-spacing: -0.07em;
   }
   .dark .source a {

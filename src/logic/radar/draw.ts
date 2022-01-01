@@ -1,7 +1,5 @@
 import type { GeoBounds } from './utils'
-import { mercatorProjection, getScale } from './utils'
-
-let offscreenCanvas: HTMLCanvasElement = document.createElement('canvas')
+import { getScale } from './utils'
 
 let colorCache: string[] = []
 function getKmSizeInPx(viewBounds, ctx) {

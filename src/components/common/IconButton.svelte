@@ -8,7 +8,7 @@
 </script>
 
 <button
-  class="appearance-none bg-transparent dark:hover:bg-dark-400 dark:active:bg-dark-200 hover:bg-blue-gray-100 active:bg-blue-gray-200 rounded border-none w-10 h-10 cursor-pointer flex items-center p-1;"
+  class="appearance-none bg-transparent dark:hover:bg-dark-400 dark:active:bg-dark-800 hover:bg-gray-100 active:bg-gray-200 rounded border-none w-10 h-10 cursor-pointer flex items-center p-1;"
   on:click
   aria-label={label}
 >

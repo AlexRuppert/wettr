@@ -1,4 +1,3 @@
-const PI2 = 2 * Math.PI
 const PI_PER_180 = Math.PI / 180
 
 export function mercatorLat(lat) {
@@ -18,30 +17,12 @@ export function getScale(viewBounds) {
   return { x: 1 / x, y: 1 / y }
 }
 
-const bounds = {
-  lb: {
-    lon: 3.5889,
-    lat: 46.9526,
-  },
-  rt: {
-    lon: 15.7208,
-    lat: 54.7405,
-  },
-}
-
 export function mercatorProjection(viewBounds, { lon, lat }) {
   let x = deg2rad(lon - viewBounds.lb.lon)
   let y = mercatorLat(lat) - mercatorLat(viewBounds.lb.lat)
   return { x, y }
 }
 
-export function round2(value) {
-  return Math.round((value + Number.EPSILON) * 100) / 100
-}
-
-export function round3(value) {
-  return Math.round((value + Number.EPSILON) * 1000) / 1000
-}
 
 export function getLocationBounds({ lon, lat }, radiusKm = 15) {
   const deg = radiusKm / 70

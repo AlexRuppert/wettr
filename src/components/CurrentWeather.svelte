@@ -28,21 +28,13 @@
       <MiniRadar />
     </div>
     <div class="relative p-2">
-      {#if weather.precipitation >= 1}
-        <span class="w-30 text-lg -top-1 absolute text- text-center">
-          {toLocalDecimal(
-            weather.precipitation,
-            weather.precipitation % 1 === weather.precipitation ? 0 : 1
-          )}<span class="text-xs pl-1">mm/h</span>
-        </span>
-      {/if}
       <WeatherIcon
         icon={weather.icon}
         color={getDarkLightColor(getWeatherIconColors(weather.icon), $darkMode)}
       />
     </div>
     <div class="flex p-2">
-      <div class="w-25 text-[5rem] mb-2 font-light text-right self-center">
+      <div class="text-[5rem] mb-2 font-light text-right self-center">
         {weather.temperature}
       </div>
       <div class="-mt-7 text-3xl self-center">°</div>

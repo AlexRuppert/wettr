@@ -62,7 +62,7 @@
   Achtung: <br /> Derzeit werden noch keine Wetterwarnungen angezeigt! <br />
   <br />
   <a
-    class="inline-block p-2 mb-4 border border-gray-400 dark:bg-dark-300 border-solid rounded-lg"
+    class="inline-block p-2 mb-4 border border-gray-400 dark:bg-dark-400 border-solid rounded-md"
     class:hidden={!showInstallButton}
     href={'#'}
     on:click={install}>Als App installieren</a
@@ -82,7 +82,7 @@
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    @apply bg-cool-gray-200 text-gray-700;
+    @apply bg-cool-gray-200 text-gray-800;
     height: 100%;
     margin: 0;
   }
@@ -90,17 +90,12 @@
     @apply bg-dark-900 text-gray-400;
   }
   footer a {
-    @apply no-underline font-medium text-gray-800 hover:underline;
+    @apply no-underline text-gray-800 hover:underline;
   }
   .dark footer a {
     @apply text-gray-300;
   }
   :global(body) {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    position: absolute;
     margin: 0;
   }
   :global(#app) {

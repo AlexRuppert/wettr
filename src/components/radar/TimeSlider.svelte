@@ -79,7 +79,7 @@
   <div class="absolute left-0 -top-10 z-20">
     <div
       bind:this={labelElement}
-      class="time-label relative text-center w-full text-xl px-1 rounded-md tabular-nums bg-blue-600 text-light-50"
+      class="time-label relative text-center w-full text-xl px-1 rounded-md tabular-nums bg-blue-600 text-white"
       style={`transform: translateX(${labelOffset}px)`}
     >
       {displayTime(times[sliderValue])}

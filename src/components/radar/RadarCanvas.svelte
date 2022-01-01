@@ -54,7 +54,7 @@
 </script>
 
 <canvas
-  class="absolute inset-0 w-full h-full opacity-70 z-1"
+  class="absolute inset-0 w-full h-full opacity-70 z-10"
   bind:clientWidth={width}
   bind:this={canvas}
 />
