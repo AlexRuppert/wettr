@@ -45,6 +45,8 @@ export default defineConfig({
   ],
   base: BASE,
   build: {
+    minify: 'terser',
+    target: 'esnext',
     terserOptions: {
       compress: {
         keep_fargs: false,
@@ -54,8 +56,13 @@ export default defineConfig({
         unsafe_comps: true,
         unsafe_math: true,
         unsafe_undefined: true,
+        unsafe_regexp: true,
+        //
+        booleans_as_integers : true,
+        module: true,
+        ecma: 2020,
+        passes: 2,
       },
-      ecma: 2016,
     },
   },
   server: {

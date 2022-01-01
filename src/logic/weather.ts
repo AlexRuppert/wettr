@@ -2,7 +2,6 @@ import type {
   WeatherDataType,
   RawCurrentWeatherDataType,
   RawDayWeatherDataType,
-  DayWeatherDataType,
   WeatherIconType,
 } from './weatherTypes'
 import { currentWeatherData, weatherData } from '../stores/store'
@@ -27,7 +26,6 @@ export default class Weather {
     const result = this.processCurrentWeatherData(
       await (await fetch(currentWeatherUrl.toString())).json()
     )
-      console.log(result)
     currentWeatherData.set(result)
     return result
   }
@@ -156,8 +154,6 @@ export default class Weather {
         )[0]
         .replace('Night', 'Day') as WeatherIconType
     }
-
-    
 
     const dayGraphData = (times: WeatherDataType[]) => {
       let max = -Infinity,
