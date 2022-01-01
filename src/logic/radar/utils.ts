@@ -8,10 +8,6 @@ export function deg2rad(val) {
   return val * PI_PER_180
 }
 
-export function rad2deg(val) {
-  return val / PI_PER_180
-}
-
 export function getScale(viewBounds) {
   const { x, y } = mercatorProjection(viewBounds, viewBounds.rt)
   return { x: 1 / x, y: 1 / y }

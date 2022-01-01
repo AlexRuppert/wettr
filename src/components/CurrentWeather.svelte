@@ -52,7 +52,7 @@
       </div>
       <span class="text-lg">
         {toLocalDecimal(weather.windSpeed)}
-        <span class="w-10 text-xs">km/h</span>
+        <span class="text-xs">km/h</span>
       </span>
     </div>
     <div>

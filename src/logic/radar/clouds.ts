@@ -1,4 +1,4 @@
-import { ungzip } from 'pako/dist/pako'
+import { ungzip } from 'pako/lib/inflate'
 import type { GeoBounds } from './utils'
 import { mercatorProjection } from './utils'
 import { isInBounds } from './utils'
