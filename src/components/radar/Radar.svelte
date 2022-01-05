@@ -9,7 +9,6 @@
   import { swipe } from 'svelte-gestures'
   import SatelliteComposite from './SatelliteComposite.svelte'
   import TimeSlider from './TimeSlider.svelte'
-import { onMount, tick } from 'svelte';
   const YEAR = 2019
   const QUELLENVERMERK = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${YEAR}, verarbeitet durch das
 Bundesamt für Kartographie und Geodäsie (BKG)`
@@ -37,9 +36,6 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
       filteredCache.set(time, filterClouds(clouds, time))
     })
   }
-  onMount(async () => {
-    await tick()
-  })
 
   function filterCloudsByTime(time) {
     cloudsToShow = filteredCache.get(time)

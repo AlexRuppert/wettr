@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
   import { isLocationSet } from './../../logic/locations'
   import { getLocationBounds } from './../../logic/radar/utils'
@@ -26,7 +28,6 @@
     }&Height=${width * 2}&Format=image/jpeg&TIME=${year}`
   }
   async function getCached(url) {
-    
     let result = await caches.match(url)
     if (result) {
       return result

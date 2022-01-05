@@ -39,7 +39,7 @@
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   {#each weather as { day, dayParts, max, min }, i (day)}
-    <div class="shadow-md rounded-md bg-white dark:bg-dark-600 p-2">
+    <div class="shadow-md rounded-md bg-white dark:bg-dark-600 px-2 py-1">
       <div class="flex justify-between">
         <div class="text-3xl pl-1 w-24">
           <span>{formattedDay[i].day}</span>

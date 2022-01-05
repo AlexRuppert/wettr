@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
   import { onMount } from 'svelte'
   import { darkMode } from '../stores/store'
@@ -15,6 +17,8 @@
   import './../logic/adapterDateFormat'
   import { COLORS } from '../logic/utils'
 
+  export let weather
+  
   Chart.register(
     LineController,
     LineElement,
@@ -143,8 +147,6 @@
     borderColor: () => colors.currentTime,
     borderWidth: 0.5,
   }
-
-  export let weather
 
   onMount(() => {
     mounted = true

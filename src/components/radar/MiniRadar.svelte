@@ -1,3 +1,4 @@
+<svelte:options immutable />
 <script lang="ts">
   import { filterClouds } from '../../logic/radar/clouds'
   import type { Cloud } from '../../logic/radar/clouds'

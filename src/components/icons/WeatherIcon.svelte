@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script context="module">
   import {
     clearDay,

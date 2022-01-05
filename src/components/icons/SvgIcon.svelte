@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
   export let d: string
   export let dim = { w: 30, h: 30 }

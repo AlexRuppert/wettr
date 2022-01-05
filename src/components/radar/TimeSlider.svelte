@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import { mdiSkipNext, mdiSkipPrevious } from '@mdi/js'

@@ -20,28 +20,28 @@
   $: weather = $currentWeatherData
 </script>
 
-<div class="space-y-1" class:opacity-0={Object.keys(weather ?? {}).length <= 0}>
+<div class="" class:opacity-0={Object.keys(weather ?? {}).length <= 0}>
   <div
-    class="grid grid-cols-3 gap-1 grid-rows-1 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
+    class="grid grid-cols-3 gap-1 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
   >
     <div class="">
       <MiniRadar />
     </div>
-    <div class="relative p-2">
+    <div class="relative">
       <WeatherIcon
         icon={weather.icon}
         color={getDarkLightColor(getWeatherIconColors(weather.icon), $darkMode)}
       />
     </div>
-    <div class="flex p-2">
-      <div class="text-[5rem] mb-2 font-light text-right self-center">
+    <div class="flex p-2 children:self-center justify-end">
+      <div class="text-7xl mb-2 font-light text-right">
         {weather.temperature}
       </div>
-      <div class="-mt-7 text-3xl self-center">°</div>
+      <div class="-mt-8 text-3xl">°</div>
     </div>
   </div>
   <div
-    class="shadow-md rounded-md bg-white dark:bg-dark-600 mx-1 h-10 grid grid-cols-3 gap-1 children:(flex items-center justify-center h-full space-x-1)"
+    class="shadow-md rounded-md bg-white dark:bg-dark-600 mx-1 h-10 mt-0.8 grid grid-cols-3 gap-1 children:(flex items-center justify-center h-full space-x-1)"
   >
     <div>
       <div class="w-6 h-6 -mr-1">
