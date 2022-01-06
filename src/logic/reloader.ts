@@ -17,7 +17,7 @@ let nextCheckTime = 0
 const cloudsCache = new Map()
 
 async function getCloudDataFromCache(viewBounds, now = false) {
-  const key = JSON.stringify(viewBounds)
+  const key = JSON.stringify(viewBounds)+'_'+now
 
   if (cloudsCache.has(key)) {
     const cached = cloudsCache.get(key)
