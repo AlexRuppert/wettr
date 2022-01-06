@@ -9,9 +9,11 @@
   import { swipe } from 'svelte-gestures'
   import SatelliteComposite from './SatelliteComposite.svelte'
   import TimeSlider from './TimeSlider.svelte'
-  const YEAR = 2019
-  const QUELLENVERMERK = `© Europäische Union, enthält Copernicus Sentinel-2 Daten ${YEAR}, verarbeitet durch das
-Bundesamt für Kartographie und Geodäsie (BKG)`
+  const YEAR = 2021
+  const QUELLENVERMERK1 = `Kartendarstellung: © Bundesamt für Kartographie und Geodäsie (${YEAR})`
+  const QUELLEN_LINK1 = `http://www.bkg.bund.de/`
+  const QUELLENVERMERK2 = `Datenquellen`
+  const QUELLEN_LINK2 = `https://sg.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf`
 
   let times = []
   let clouds = []
@@ -73,7 +75,8 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
       </div>
     </div>
     <div class="source text-center dark:bg-dark-600">
-      <a href="https://www.bkg.bund.de">{QUELLENVERMERK}</a>
+      <a href={QUELLEN_LINK1}>{QUELLENVERMERK1}</a><span>, </span>
+      <a href={QUELLEN_LINK2}>{QUELLENVERMERK2}</a>
     </div>
   </div>
 {/if}
@@ -83,8 +86,8 @@ Bundesamt für Kartographie und Geodäsie (BKG)`
     @apply text-xs no-underline font-normal text-gray-800 hover:underline;
     letter-spacing: -0.07em;
   }
-  .dark .source a {
-    @apply text-gray-600;
+  .dark .source span, .dark .source a {
+    @apply text-gray-500;
   }
 
   div {

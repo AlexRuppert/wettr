@@ -23,9 +23,13 @@
     ]
       .map(num => Number.parseFloat(num).toFixed(3))
       .join(',')
-    return `https://sgx.geodatenzentrum.de/wms_sentinel2_de?service=wms&version=1.3.0&request=GetMap&Layers=rgb&STYLES=&BBOX=${bbox}&CRS=EPSG:4326&width=${
+    /*return `https://sgx.geodatenzentrum.de/wms_sentinel2_de?service=wms&version=1.3.0&request=GetMap&Layers=rgb&STYLES=&BBOX=${bbox}&CRS=EPSG:4326&width=${
       width * 2
-    }&Height=${width * 2}&Format=image/jpeg&TIME=${year}`
+    }&Height=${width * 2}&Format=image/jpeg&TIME=${year}`*/
+
+    return `https://sgx.geodatenzentrum.de/wms_topplus_open?service=wms&version=1.3.0&request=GetMap&Layers=p25&STYLES=default&BBOX=${bbox}&CRS=EPSG:4326&width=${
+      width * 2
+    }&Height=${width * 2}&Format=image/jpeg`
   }
   async function getCached(url) {
     let result = await caches.match(url)
@@ -52,22 +56,15 @@
 </script>
 
 <div class="relative children:(w-full rounded-md)">
-  <img class="sharpen1" src={satelliteImage} alt="" aria-hidden="true" />
   <img class="sharpen2" src={satelliteImage} alt="" aria-hidden="true" />
   <img src={satelliteImage} alt="" />
   <RadarCanvas {clouds} {viewBounds} />
 </div>
 
 <style>
-  .sharpen1 {
-    position: absolute;
-    mix-blend-mode: multiply;
-    filter: contrast(1.5);
-    z-index: 1;
-  }
   .sharpen2 {
     position: absolute;
-    filter: blur(2px) invert(1) contrast(1.2);
+    filter: blur(1px) invert(1) contrast(2);
     mix-blend-mode: overlay;
   }
 </style>
