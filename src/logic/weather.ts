@@ -162,15 +162,15 @@ export default class Weather {
         if (element.temperature > max) max = element.temperature
         if (element.temperature < min) min = element.temperature
       })
+
+      const temperatureRange = max - min
       return {
         min: { temperature: min },
         max: { temperature: max },
         dayGraph: times.map(time => {
           return {
             timestamp: time.timestamp,
-            temperature: Math.abs(
-              (time.temperature - min) / (Math.abs(max) - Math.abs(min))
-            ),
+            temperature: Math.abs((time.temperature - min) / temperatureRange),
             precipitation:
               Math.min(Math.pow(Math.sqrt(time.precipitation) * 1.7, 2), 6) / 6,
             sunniness: 1 - time.cloudCover / 100,
