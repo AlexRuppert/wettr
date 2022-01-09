@@ -14,7 +14,7 @@
 {#if show}
   <div
     transition:fade={{ duration: 200 }}
-    class="bg-dark-800/90 fixed inset-0 z-10 backdrop-filter backdrop-grayscale-100"
+    class="bg-dark-800/90 inset-0 z-10 fixed backdrop-filter backdrop-grayscale-100"
     on:click|stopPropagation={close}
   />
 {/if}

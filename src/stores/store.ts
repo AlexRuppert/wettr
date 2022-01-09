@@ -9,6 +9,7 @@ export const darkMode = writable(false)
 export const radarOpen = writable(false)
 export const currentWeatherData = writable({})
 export const weatherData = writable([])
+export const weatherWarningData = writable([])
 export const currentCloudData = writable({
   times: [],
   clouds: [],

@@ -7,6 +7,7 @@ import type {
 import { currentWeatherData, weatherData } from '../stores/store'
 import { getSunriseSunset } from './time'
 import { getWeatherIconColors } from './utils'
+import { getCachedRequest } from './cache'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
 let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
@@ -23,7 +24,7 @@ export default class Weather {
       tz: 'Europe/Berlin',
     }).toString()
     const result = this.processCurrentWeatherData(
-      await (await fetch(currentWeatherUrl.toString())).json()
+      await (await getCachedRequest(currentWeatherUrl.toString(), 9)).json()
     )
     currentWeatherData.set(result)
     return result
@@ -63,7 +64,7 @@ export default class Weather {
       last_date: Weather.dateToDateTime(future, true),
     }).toString()
     const result = this.processWeatherData(
-      await (await fetch(weatherUrl.toString())).json(),
+      await (await getCachedRequest(weatherUrl.toString(), 9)).json(),
       lat,
       lon
     )

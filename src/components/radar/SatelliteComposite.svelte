@@ -1,6 +1,10 @@
 <svelte:options immutable />
 
 <script lang="ts">
+  import { fade } from 'svelte/transition'
+
+  import { getCachedRequest } from './../../logic/cache'
+
   import { isLocationSet } from './../../logic/locations'
   import { getLocationBounds } from './../../logic/radar/utils'
   import { locationCoordinates } from './../../stores/store'
@@ -31,16 +35,6 @@
       width * 2
     }&Height=${width * 2}&Format=image/jpeg`
   }
-  async function getCached(url) {
-    let result = await caches.match(url)
-    if (result) {
-      return result
-    }
-    result = await fetch(url)
-    //no need to wait before returning
-    ;(await caches.open('v1')).put(url, result.clone())
-    return result
-  }
 
   $: (async () => {
     if (isLocationSet($locationCoordinates)) {
@@ -49,15 +43,20 @@
         WIDTH,
         YEAR
       )
-      const blob = await (await getCached(satelliteImageUrl)).blob()
+      const blob = await (await getCachedRequest(satelliteImageUrl)).blob()
       satelliteImage = URL.createObjectURL(blob)
     }
   })()
 </script>
 
-<div class="relative children:(w-full rounded-md)">
-  <img class="sharpen2" src={satelliteImage} alt="" aria-hidden="true" />
-  <img src={satelliteImage} alt="" />
+<div
+  class="relative children:(w-full rounded-md) "
+  style={`min-height:${WIDTH - 22}px`}
+>
+  {#if satelliteImage}
+    <img class="sharpen2" src={satelliteImage} alt="" aria-hidden="true" />
+    <img src={satelliteImage} alt="" transition:fade={{ duration: 150 }} />
+  {/if}
   <RadarCanvas {clouds} {viewBounds} />
 </div>
 

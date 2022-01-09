@@ -4,36 +4,17 @@ import {
   weatherData,
   currentCloudData,
   cloudData,
+  weatherWarningData,
 } from './../stores/store'
 import { getClouds } from './radar/clouds'
 import { getLocationBounds } from './radar/utils'
 import Weather from './weather'
+import { getWeatherWarnings } from './weatherWarnings'
 
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
 const FORECAST_DAYS = 6
 let nextCheckTimeout
 let nextCheckTime = 0
-
-const cloudsCache = new Map()
-
-async function getCloudDataFromCache(viewBounds, now = false) {
-  const key = JSON.stringify(viewBounds)+'_'+now
-
-  if (cloudsCache.has(key)) {
-    const cached = cloudsCache.get(key)
-    //in time
-    if (Date.now() < cached.timestamp + CHECK_INTERVAL_MS) {
-      return cached.clouds
-    } else {
-      cloudsCache.delete(key)
-    }
-  }
-  console.log('reloadClouds')
-  const clouds = await getClouds(viewBounds, now)
-
-  cloudsCache.set(key, { clouds, timestamp: Date.now() })
-  return clouds
-}
 
 export async function reload() {
   try {
@@ -46,10 +27,12 @@ export async function reload() {
       coordinates.lon,
       FORECAST_DAYS
     )
-    const currentCloudRequest = getCloudDataFromCache(
+    const currentCloudRequest = getClouds(
       getLocationBounds(coordinates),
       true
     )
+
+    const warningsRequest = getWeatherWarnings(coordinates)
     currentWeatherRequest.then(data => {
       currentWeatherData.set(data)
     })
@@ -59,6 +42,10 @@ export async function reload() {
     weatherRequest.then(data => {
       weatherData.set(data)
     })
+    warningsRequest.then(data => {
+      weatherWarningData.set(data)
+    })
+
   } catch (err) {
     console.error(err)
   }
@@ -87,7 +74,7 @@ export function reloader() {
 
 export async function reloadClouds() {
   try {
-    const cloudRequest = getCloudDataFromCache(getLocationBounds(coordinates))
+    const cloudRequest = getClouds(getLocationBounds(coordinates))
     cloudData.set(await cloudRequest)
   } catch (err) {
     console.error(err)

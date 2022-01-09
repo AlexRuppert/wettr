@@ -47,7 +47,7 @@ export default defineConfig({
   build: {
     minify: 'esbuild',
     target: 'esnext',
-    terserOptions: {
+    /*terserOptions: {
       compress: {
         keep_fargs: false,
         pure_getters: true,
@@ -62,7 +62,7 @@ export default defineConfig({
         ecma: 2020,
         passes: 2,
       },
-    },
+    },*/
   },
   server: {
     open: false,

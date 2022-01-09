@@ -64,7 +64,7 @@
     on:click={() => (sliderValue = Math.max(0, sliderValue - 1))}
   />
 
-  <span class="w-full flex-grow mx-5 mt-1">
+  <span class="flex-grow mx-5 mt-1 w-full">
     <input
       type="range"
       bind:this={rangeElement}
@@ -78,14 +78,14 @@
     icon={mdiSkipNext}
     on:click={() => (sliderValue = Math.min(max, sliderValue + 1))}
   />
-  <div class="absolute left-0 -top-10 z-20">
+  <div class="-top-10 left-0 z-20 absolute">
     <div
       bind:this={labelElement}
-      class="time-label relative text-center w-full text-xl px-1 rounded-md tabular-nums bg-blue-600 text-white"
+      class="rounded-md bg-blue-600 text-center text-xl text-white w-full px-1 time-label relative tabular-nums"
       style={`transform: translateX(${labelOffset}px)`}
     >
       {displayTime(times[sliderValue])}
-      <div class="absolute -mt-0.5" style={`left:${labelWidth / 2 - 10}px`}>
+      <div class="-mt-0.5 absolute" style={`left:${labelWidth / 2 - 10}px`}>
         <svg
           width="100%"
           class="h-6 w-[20px] "

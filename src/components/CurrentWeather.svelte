@@ -4,11 +4,7 @@
   import MiniRadar from './radar/MiniRadar.svelte'
   import { currentWeatherData, darkMode } from '../stores/store'
   import { fade } from 'svelte/transition'
-  import {
-    getDarkLightColor,
-    getForegroundColor,
-    getWeatherIconColors,
-  } from '../logic/utils'
+  import { getDarkLightColor, getWeatherIconColors } from '../logic/utils'
   import { humidity, umbrellaOpen } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
 
@@ -22,33 +18,30 @@
 
 <div class="" class:opacity-0={Object.keys(weather ?? {}).length <= 0}>
   <div
-    class="grid grid-cols-3 gap-1 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 transition-opacity ease-in-out duration-700 mx-1"
+    class="mx-1 grid transition-opacity ease-in-out gap-1 grid-cols-3 duration-700 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 "
   >
     <div class="">
       <MiniRadar />
     </div>
-    <div class="relative">
+    <div class="p-2 relative">
       <WeatherIcon
         icon={weather.icon}
         color={getDarkLightColor(getWeatherIconColors(weather.icon), $darkMode)}
       />
     </div>
-    <div class="flex p-2 children:self-center justify-end">
-      <div class="text-7xl mb-2 font-light text-right">
+    <div class="flex p-2 justify-end children:self-center">
+      <div class="font-light text-right mb-2 text-7xl">
         {weather.temperature}
       </div>
       <div class="-mt-8 text-3xl">°</div>
     </div>
   </div>
   <div
-    class="shadow-md rounded-md bg-white dark:bg-dark-600 mx-1 h-10 mt-0.8 grid grid-cols-3 gap-1 children:(flex items-center justify-center h-full space-x-1)"
+    class="bg-white rounded-md h-14 shadow-md mx-1 mt-1 grid gap-1 grid-cols-3 dark:bg-dark-600 children:(flex items-center justify-center h-full space-x-1) "
   >
     <div>
-      <div class="w-6 h-6 -mr-1">
-        <WindDirection
-          direction={weather.windDirection}
-          color={getForegroundColor($darkMode)}
-        />
+      <div class="h-6 -mr-1 w-6">
+        <WindDirection direction={weather.windDirection} />
       </div>
       <span class="text-lg">
         {toLocalDecimal(weather.windSpeed)}
@@ -57,8 +50,8 @@
     </div>
     <div>
       {#if weather.percipation > 0.5}
-        <div class="w-5 h-5" transition:fade>
-          <SvgIcon d={umbrellaOpen} fill={getForegroundColor($darkMode)} />
+        <div class="h-5 w-5" transition:fade>
+          <SvgIcon d={umbrellaOpen} />
         </div>
         <span transition:fade>
           {toLocalDecimal(
@@ -69,8 +62,8 @@
       {/if}
     </div>
     <div>
-      <div class="w-5 h-5">
-        <SvgIcon d={humidity} fill={getForegroundColor($darkMode)} />
+      <div class="h-5 w-5">
+        <SvgIcon d={humidity} />
       </div>
       <span>
         {weather.relativeHumidity}<span class="text-xs pl-1">%</span>

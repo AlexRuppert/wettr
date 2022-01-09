@@ -3,6 +3,7 @@
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
   import Radar from './components/radar/Radar.svelte'
+  import WeatherWarning from './components/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
 
   let deferredInstallPrompt
@@ -46,23 +47,23 @@
     }
   }
 </script>
+
 <svelte:head>
-  <meta name="theme-color" content={$darkMode?'#000':'#fff'}>
+  <meta name="theme-color" content={$darkMode ? '#000' : '#fff'} />
 </svelte:head>
 
-<main class="max-w-sm mt-0 w-full m-auto grid grid-cols-1 gap-1 relative">
+<main class="m-auto max-w-sm mt-0 w-full grid gap-1 grid-cols-1 relative">
   <Location />
   <CurrentWeather />
+  <WeatherWarning />
   <DayWeather />
   <Radar />
 </main>
 <footer
-  class="bg-gray-200 dark:bg-dark-800 py-10 mt-5 text-sm text-center children:(block)"
+  class="space-y-2 bg-gray-200 mt-5 text-sm text-center py-10 dark:bg-dark-800 children:(block)"
 >
-  Achtung: <br /> Derzeit werden noch keine Wetterwarnungen angezeigt! <br />
-  <br />
   <a
-    class="inline-block p-2 mb-4 border border-gray-400 dark:bg-dark-400 border-solid rounded-md"
+    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:bg-dark-400"
     class:hidden={!showInstallButton}
     href={'#'}
     on:click={install}>Als App installieren</a
@@ -85,12 +86,13 @@
     @apply bg-cool-gray-200 text-gray-800;
     height: 100%;
     margin: 0;
+    
   }
   :global(html.dark) {
     @apply bg-dark-900 text-gray-400;
   }
   footer a {
-    @apply no-underline text-gray-800 hover:underline;
+    @apply text-gray-800 no-underline hover:underline;
   }
   .dark footer a {
     @apply text-gray-300;
@@ -104,4 +106,13 @@
     height: 100%;
     overflow-x: hidden;
   }
+
+  :global(.clickable) {
+    @apply hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-dark-400 dark:active:bg-dark-800;
+  }
+
+  :global(.custom-scrollbar) {
+    @apply scrollbar scrollbar-thumb-gray-400 scrollbar-track-light-900 dark:(scrollbar-thumb-dark-50 scrollbar-track-dark-300) ;
+  }
+  
 </style>

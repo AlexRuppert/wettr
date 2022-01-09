@@ -35,24 +35,24 @@
 </script>
 
 <div
-  class="flex flex-col flex-nowrap tabular-nums font-light space-y-1 mx-1 transition-opacity duration-700"
+  class="flex flex-col flex-nowrap font-light space-y-1 mx-1 transition-opacity duration-700 tabular-nums"
   class:opacity-0={Object.keys(weather ?? {}).length <= 0}
 >
   {#each weather as { day, dayParts, max, min }, i (day)}
-    <div class="shadow-md rounded-md bg-white dark:bg-dark-600 px-2 py-1">
+    <div class="bg-white rounded-md shadow-md py-1 px-2 dark:bg-dark-600">
       <div class="flex justify-between">
-        <div class="text-3xl pl-1 w-24">
+        <div class="pl-1 text-3xl w-24">
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
         <div class="flex space-x-4 ">
           {#each dayParts as { icon, colors }}
-            <div class="w-8 flex pt-1.5 items-center">
+            <div class="flex pt-1.5 w-8 items-center">
               <WeatherIcon {icon} color={getDarkLightColor(colors, $darkMode)} />
             </div>
           {/each}
         </div>
-        <div class="text-3xl w-28 text-right">
+        <div class="text-right text-3xl w-28">
           <span class="text-lg">{min.temperature}°</span>
           <span class="font-normal">{max.temperature}°</span>
         </div>

@@ -21,6 +21,10 @@ export const COLORS = {
     light: '#FFB901',
     dark: '#FFC637',
   },
+  warning: {
+    light: '#EA580C',
+    dark: '#EA580C',
+  },
 }
 
 export const getWeatherIconColors = (icon: WeatherIconType) => {
@@ -39,4 +43,10 @@ export const getWeatherIconColors = (icon: WeatherIconType) => {
     default:
       return COLORS.foreground
   }
+}
+
+export function sort<T>(array: T[], fn?: (a: T, b: T) => number) {
+  const copy = array.slice()
+  copy.sort(fn)
+  return copy
 }

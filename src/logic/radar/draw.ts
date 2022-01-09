@@ -4,7 +4,7 @@ import { getScale } from './utils'
 let colorCache: string[] = []
 function getKmSizeInPx(viewBounds, ctx) {
   return (
-    ctx.canvas.height / ((viewBounds.rt.lat - viewBounds.lb.lat) * 60 * 0.7)
+    ctx.canvas.height / ((viewBounds.rt.lat - viewBounds.lb.lat) * 60 * 0.58)
   )
 }
 

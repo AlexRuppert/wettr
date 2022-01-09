@@ -20,7 +20,7 @@ export function mercatorProjection(viewBounds, { lon, lat }) {
 }
 
 
-export function getLocationBounds({ lon, lat }, radiusKm = 5) {
+export function getLocationBounds({ lon, lat }, radiusKm = 8) {
   const deg = radiusKm / 70
   return {
     lb: {

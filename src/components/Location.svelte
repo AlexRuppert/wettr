@@ -112,13 +112,13 @@
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
 
 <div
-  class="relative shadow-md rounded-md mt-1 bg-white dark:bg-dark-600 mx-1"
+  class="bg-white rounded-md shadow-md mx-1 mt-1 relative dark:bg-dark-600"
   class:z-50={openedSuggestions}
 >
   <div>
     {#if openedSuggestions}
       <div
-        class="absolute z-20"
+        class="z-20 absolute"
         transition:fade={{ duration: TRANSITION_TIME }}
       >
         <IconButton
@@ -132,7 +132,7 @@
       <input
         id="location"
         type="text"
-        class="md-input border-none flex-1 w-full bg-transparent text-center outline-none h-8 text-xl text-gray-800 dark:text-gray-400 mt-1"
+        class="bg-transparent border-none outline-none flex-1 h-9 mt-1 text-center text-xl w-full text-gray-800 md-input dark:text-gray-400"
         placeholder="Ort"
         autocomplete="off"
         bind:this={inputElement}
@@ -142,7 +142,7 @@
         on:click={openSuggestions}
       />
       <div
-        class="absolute text-gray-500 left-0 right-0 text-center -bottom-1 pointer-events-none text-xs"
+        class="text-center text-xs right-0 -bottom-1 left-0 text-gray-500 absolute pointer-events-none"
       >
         {coordinateString}
       </div>
@@ -152,14 +152,14 @@
 
   {#if openedSuggestions}
     <div
-      class="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-gray-100 dark:bg-dark-800 outline-none z-20 transform origin-top transition-transform"
+      class="rounded-md outline-none bg-gray-100 shadow-lg mt-2 w-full transform origin-top-right origin-top transition-transform left-0 z-20 absolute dark:bg-dark-800"
       transition:fly={{ duration: TRANSITION_TIME, y: -50 }}
     >
-      <div class="py-1 shadow-lg">
+      <div class="shadow-lg py-1">
         {#each suggestions as entry, i}
           <a
             href={'#'}
-            class="text-gray-700 dark:(text-gray-400) block px-4 py-2 text-sm no-underline text-lg font-semibold"
+            class="font-semibold text-sm text-lg py-2 px-4 text-gray-700 block no-underline dark:(text-gray-400)"
             class:selected={i === selectedSuggestion}
             on:click={() => selectSuggestion(entry)}
             on:mouseenter={() => (selectedSuggestion = i)}>{entry}</a

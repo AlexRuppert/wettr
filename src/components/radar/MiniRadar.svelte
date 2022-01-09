@@ -21,7 +21,7 @@
 </script>
 
 <div
-  class="relative w-full h-full cursor-pointer"
+  class="rounded-md cursor-pointer h-full w-full relative clickable"
   on:click={() => ($radarOpen = true)}
 >
   <RadarCanvas clouds={cloudData} {viewBounds} mini={true} />

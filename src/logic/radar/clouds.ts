@@ -1,4 +1,5 @@
 import { ungzip } from 'pako/lib/inflate'
+import { getCachedRequest } from '../cache'
 import type { GeoBounds } from './utils'
 import { mercatorProjection } from './utils'
 import { isInBounds } from './utils'
@@ -58,11 +59,12 @@ function getTimes() {
 
 async function fetchClouds(viewBounds: GeoBounds, onlyNow = false) {
   const cloudsRaw = await (
-    await fetch(
+    await getCachedRequest(
       CLOUDS_URL +
         `?bounds=${viewBounds.lb.lon},${viewBounds.rt.lon},${
           viewBounds.lb.lat
-        },${viewBounds.rt.lat}${onlyNow ? '&onlyNow=true' : ''}`
+        },${viewBounds.rt.lat}${onlyNow ? '&onlyNow=true' : ''}`,
+      9
     )
   ).json()
   return decodeClouds(cloudsRaw)
@@ -72,7 +74,7 @@ export async function getClouds(viewBounds: GeoBounds, onlyNow = false) {
   let clouds = (await fetchClouds(viewBounds, onlyNow))
     .filter(cell => isInBounds(cell, viewBounds))
     .map(cell => ({ ...cell, projected: mercatorProjection(viewBounds, cell) }))
-  
+
   clouds.sort((a, b) => a.value - b.value)
 
   clouds = Array.from(

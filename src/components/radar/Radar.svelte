@@ -52,16 +52,16 @@
 
 {#if $radarOpen}
   <div
-    class="absolute space-y-2 flex flex-col children:(shadow-md rounded-md max-w-sm p-2 bg-white mx-5 z-20) left-0 right-0 top-0 z-20 select-none"
+    class="flex flex-col space-y-2 top-0 right-0 left-0 z-20 absolute select-none children:(shadow-md rounded-md max-w-sm p-2 bg-white mx-5 z-20) "
     transition:fly={{ y: -300 }}
     use:swipe={{ timeframe: 500, minSwipeDistance: 35, touchAction: 'none' }}
     on:swipe={({ detail }) => (detail.direction === 'top' ? close() : null)}
   >
     <div class="flex-col mt-2 dark:bg-dark-600">
-      <div class="text-size-xl pt-2 pb-4 text-center" on:click={close}>
+      <div class="text-size-xl text-center pt-2 pb-4" on:click={close}>
         <span>Regenradar</span>
         <span
-          class="absolute right-5 text-lg font-extralight px-3 cursor-pointer"
+          class="cursor-pointer font-extralight text-lg px-3 right-5 absolute"
           role="button"
           on:click={close}>×</span
         >
@@ -74,7 +74,7 @@
         />
       </div>
     </div>
-    <div class="source text-center dark:bg-dark-600">
+    <div class="text-center leading-3 source dark:bg-dark-600">
       <a href={QUELLEN_LINK1}>{QUELLENVERMERK1}</a><span>, </span>
       <a href={QUELLEN_LINK2}>{QUELLENVERMERK2}</a>
     </div>
@@ -83,8 +83,8 @@
 
 <style>
   .source a {
-    @apply text-xs no-underline font-normal text-gray-800 hover:underline;
-    letter-spacing: -0.07em;
+    @apply font-normal text-xs text-gray-800 no-underline hover:underline;
+    letter-spacing: -0.02em;
   }
   .dark .source span, .dark .source a {
     @apply text-gray-500;
@@ -97,6 +97,6 @@
   }
 
   :global(.thumb-content .thumb) {
-    @apply w-7 h-7;
+    @apply h-7 w-7;
   }
 </style>
