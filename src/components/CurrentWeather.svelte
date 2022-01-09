@@ -16,13 +16,16 @@
   $: weather = $currentWeatherData
 </script>
 
-<div class="" class:opacity-0={Object.keys(weather ?? {}).length <= 0}>
+{#if weather && weather.timestamp}
   <div
+    transition:fade={{ duration: 250 }}
     class="mx-1 grid transition-opacity ease-in-out gap-1 grid-cols-3 duration-700 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 "
   >
     <div class="relative">
       <MiniRadar />
-      <div class="h-7 -mt-3 text-shadow-xs -ml-3 top-1/2 left-1/2 w-7 z-10 absolute pointer-events-none">
+      <div
+        class="h-7 -mt-3 text-shadow-xs -ml-3 top-1/2 left-1/2 w-7 z-10 absolute pointer-events-none"
+      >
         <div class="h-full -mt-[0.30rem] w-full ">
           <WindDirection direction={weather.windDirection} />
         </div>
@@ -72,4 +75,4 @@
       </div>
     </div>
   </div>
-</div>
+{/if}

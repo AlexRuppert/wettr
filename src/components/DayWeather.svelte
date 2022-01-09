@@ -4,6 +4,7 @@
   import { darkMode, weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getDarkLightColor } from '../logic/utils'
+import { fade } from 'svelte/transition';
 
   let weather: {
     day: Date
@@ -34,9 +35,10 @@
   })
 </script>
 
+{#if weather && weather.length>0}
 <div
   class="flex flex-col flex-nowrap font-light space-y-1 mx-1 transition-opacity duration-700 tabular-nums"
-  class:opacity-0={Object.keys(weather ?? {}).length <= 0}
+  transition:fade={{ duration: 250 }}
 >
   {#each weather as { day, dayParts, max, min }, i (day)}
     <div class="bg-white rounded-md shadow-md py-1 px-2 dark:bg-dark-600">
@@ -61,3 +63,4 @@
     </div>
   {/each}
 </div>
+{/if}
