@@ -7,6 +7,15 @@
   export let color: string = undefined
 </script>
 
-<div style="transform: rotate({direction}deg); transform-origin: center;">
+<div
+  class="outlined-path"
+  style="transform: rotate({direction}deg); transform-origin: center;"
+>
   <SvgIcon d={windDirection} fill={color} />
 </div>
+
+<style>
+  :global(.outlined-path svg path) {
+    filter: drop-shadow(0px 0px 0.5px rgba(0, 0, 0, 0.5));
+  }
+</style>

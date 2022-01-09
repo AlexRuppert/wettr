@@ -20,8 +20,35 @@
   <div
     class="mx-1 grid transition-opacity ease-in-out gap-1 grid-cols-3 duration-700 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 "
   >
-    <div class="">
+    <div class="relative">
       <MiniRadar />
+      <div class="h-7 -mt-3 text-shadow-xs -ml-3 top-1/2 left-1/2 w-7 z-10 absolute pointer-events-none">
+        <div class="h-full -mt-[0.30rem] w-full ">
+          <WindDirection direction={weather.windDirection} />
+        </div>
+      </div>
+      <div class="right-1 bottom-2 absolute">
+        {toLocalDecimal(weather.windSpeed)}
+        <span class="text-xs text-size-[0.5rem]"
+          ><sup>km</sup>/<sub>h</sub></span
+        >
+      </div>
+
+      {#if weather.precipitation > 0.5}
+        <div class="flex bottom-2 left-1 absolute" transition:fade>
+          <div class="h-4 mr-1 w-4 self-center">
+            <SvgIcon d={umbrellaOpen} />
+          </div>
+          <span>
+            {toLocalDecimal(
+              weather.precipitation,
+              weather.precipitation % 1 === weather.precipitation ? 0 : 1
+            )}<span class="pl-1 text-size-[0.5rem]"
+              ><sup>mm</sup>/<sub>h</sub></span
+            >
+          </span>
+        </div>
+      {/if}
     </div>
     <div class="p-2 relative">
       <WeatherIcon
@@ -29,45 +56,20 @@
         color={getDarkLightColor(getWeatherIconColors(weather.icon), $darkMode)}
       />
     </div>
-    <div class="flex p-2 justify-end children:self-center">
+    <div class="flex p-2 relative justify-end children:self-center">
       <div class="font-light text-right mb-2 text-7xl">
         {weather.temperature}
       </div>
       <div class="-mt-8 text-3xl">°</div>
-    </div>
-  </div>
-  <div
-    class="bg-white rounded-md h-14 shadow-md mx-1 mt-1 grid gap-1 grid-cols-3 dark:bg-dark-600 children:(flex items-center justify-center h-full space-x-1) "
-  >
-    <div>
-      <div class="h-6 -mr-1 w-6">
-        <WindDirection direction={weather.windDirection} />
-      </div>
-      <span class="text-lg">
-        {toLocalDecimal(weather.windSpeed)}
-        <span class="text-xs">km/h</span>
-      </span>
-    </div>
-    <div>
-      {#if weather.percipation > 0.5}
-        <div class="h-5 w-5" transition:fade>
-          <SvgIcon d={umbrellaOpen} />
-        </div>
-        <span transition:fade>
-          {toLocalDecimal(
-            weather.precipitation,
-            weather.precipitation % 1 === weather.precipitation ? 0 : 1
-          )}<span class="text-xs pl-1">mm/h</span>
+      <div class="flex right-2 bottom-2 absolute">
+        <span class="h-4 self-center">
+          <SvgIcon d={humidity} />
         </span>
-      {/if}
-    </div>
-    <div>
-      <div class="h-5 w-5">
-        <SvgIcon d={humidity} />
+        <span>
+          {weather.relativeHumidity}
+        </span>
+        <span class="text-xs pl-1 self-center">%</span>
       </div>
-      <span>
-        {weather.relativeHumidity}<span class="text-xs pl-1">%</span>
-      </span>
     </div>
   </div>
 </div>

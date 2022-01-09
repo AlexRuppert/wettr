@@ -32,7 +32,6 @@ export const locations = (async () => {
       })
     }
   }
-  console.log(locations)
   return locations
 })()
 

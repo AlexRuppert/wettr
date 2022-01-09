@@ -41,7 +41,7 @@
   {#each weather as { day, dayParts, max, min }, i (day)}
     <div class="bg-white rounded-md shadow-md py-1 px-2 dark:bg-dark-600">
       <div class="flex justify-between">
-        <div class="pl-1 text-3xl w-24">
+        <div class="pl-1 text-3xl w-28">
           <span>{formattedDay[i].day}</span>
           <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
         </div>
