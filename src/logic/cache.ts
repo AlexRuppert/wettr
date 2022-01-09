@@ -1,7 +1,5 @@
 const TIMESTAMP_HEADER = 'x--cache-timestamp'
 export async function getCachedRequest(url, maxAgeMinutes = 1e6) {
-
-  /*
   let result = await caches.match(url)
   if (
     result &&
@@ -26,6 +24,6 @@ export async function getCachedRequest(url, maxAgeMinutes = 1e6) {
     headers: newHeaders,
   })
 
-  ;(await caches.open('v1')).put(url, cloned)*/
-  return fetch(url) //result
+  ;(await caches.open('v1')).put(url, cloned)
+  return result
 }
