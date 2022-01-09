@@ -4,6 +4,7 @@
     filterLocations,
     getLocationCoordinates,
     getGeolocationCoordinates,
+    getClosestCity,
   } from '../logic/locations'
   import { locationCoordinates } from '../stores/store'
   import { getHistory, pushHistory } from '../logic/history'
@@ -54,7 +55,11 @@
     }
   }
   function closeSuggestions() {
+    if (!place && $locationCoordinates) {
+      getClosestCity($locationCoordinates).then(city => (place = city))
+    }
     openedSuggestions = false
+    inputElement.blur()
   }
 
   function updateCoordinates(place, coordinates) {
@@ -112,47 +117,42 @@
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
 
 <div
-  class="bg-white rounded-md shadow-md mx-1 mt-1 relative dark:bg-dark-600"
+  class="bg-white rounded-md h-10 shadow-md mx-1 mt-1 relative dark:bg-dark-600"
   class:z-50={openedSuggestions}
 >
-  <div>
-    {#if openedSuggestions}
-      <div
-        class="z-20 absolute"
-        transition:fade={{ duration: TRANSITION_TIME }}
-      >
-        <IconButton
-          label="Get Current Location"
-          icon={mdiCrosshairsGps}
-          on:click={getGeoLocation}
-        />
-      </div>
-    {/if}
-    <div class="relative">
-      <input
-        id="location"
-        type="text"
-        class="bg-transparent border-none outline-none flex-1 h-9 mt-1 text-center text-xl w-full text-gray-800 md-input dark:text-gray-400"
-        placeholder="Ort"
-        autocomplete="off"
-        bind:this={inputElement}
-        bind:value={place}
-        on:keydown={handleInputKeys}
-        on:focus={openSuggestions}
-        on:click={openSuggestions}
+  {#if openedSuggestions}
+    <div class="z-20 absolute" transition:fade={{ duration: TRANSITION_TIME }}>
+      <IconButton
+        label="Get Current Location"
+        icon={mdiCrosshairsGps}
+        on:click={getGeoLocation}
       />
-      <div
-        class="text-center text-xs right-0 -bottom-1 left-0 text-gray-500 absolute pointer-events-none"
-      >
-        {coordinateString}
-      </div>
-      <label for="location" class="hidden">Ort</label>
     </div>
+  {/if}
+  <div class="h-full relative">
+    <input
+      id="location"
+      type="text"
+      class="bg-transparent border-none h-full outline-none flex-1 text-center text-xl w-full text-gray-800 dark:text-gray-400"
+      placeholder="Ort"
+      autocomplete="off"
+      bind:this={inputElement}
+      bind:value={place}
+      on:keydown={handleInputKeys}
+      on:focus={openSuggestions}
+      on:click={openSuggestions}
+    />
+    <div
+      class="text-center text-xs right-0 -bottom-1 left-0 text-gray-500 absolute pointer-events-none"
+    >
+      {coordinateString}
+    </div>
+    <label for="location" class="hidden">Ort</label>
   </div>
 
   {#if openedSuggestions}
     <div
-      class="rounded-md outline-none bg-gray-100 shadow-lg mt-2 w-full transform origin-top-right origin-top transition-transform left-0 z-20 absolute dark:bg-dark-800"
+      class="rounded-md outline-none bg-gray-100 shadow-lg w-full transform origin-top-right origin-top transition-transform left-0 z-20 absolute m1-2 dark:bg-dark-800"
       transition:fly={{ duration: TRANSITION_TIME, y: -50 }}
     >
       <div class="shadow-lg py-1">

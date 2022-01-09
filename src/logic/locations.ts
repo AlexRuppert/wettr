@@ -1,5 +1,3 @@
-
-
 export interface Coordinates {
   lat: number
   lon: number
@@ -28,12 +26,13 @@ export const locations = (async () => {
         lat,
         lon: num,
         search: name
-          .split(/,|(\sbei|am|in\s)/)[0]
+          .split(/,|(\s(bei|am|in)\s)/)[0]
           .trim()
           .toLowerCase(),
       })
     }
   }
+  console.log(locations)
   return locations
 })()
 
@@ -70,21 +69,32 @@ export async function getGeolocationCoordinates(successCallback) {
       const { latitude, longitude } = position.coords
       const lat = +latitude.toFixed(3)
       const lon = +longitude.toFixed(3)
-      let closestCity = ''
-      let closestDistance = Infinity
 
-      for (let location of await locations) {
-        const dist = distance(latitude, longitude, +location.lat, +location.lon)
-        if (dist < closestDistance) {
-          closestDistance = dist
-          closestCity = location.name
-        }
-      }
+      let closestCity = await getClosestCity({ lat, lon })
 
       successCallback({ closestCity, coordinates: { lat, lon } })
     },
     () => alert('Ort konte nicht ermittelt werden')
   )
+}
+
+export async function getClosestCity(coordinates: Coordinates) {
+  let closestCity = ''
+  let closestDistance = Infinity
+
+  for (let location of await locations) {
+    const dist = distance(
+      coordinates.lat,
+      coordinates.lon,
+      +location.lat,
+      +location.lon
+    )
+    if (dist < closestDistance) {
+      closestDistance = dist
+      closestCity = location.name
+    }
+  }
+  return closestCity
 }
 
 export function isLocationSet({ lat, lon }: Coordinates) {
