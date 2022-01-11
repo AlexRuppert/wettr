@@ -43,7 +43,7 @@
     drawLocation(
       ctx,
       mini ? 'transparent' : '#a30',
-      getDarkLightColor(COLORS.sun, $darkMode),
+      mini ? 'transparent' : getDarkLightColor(COLORS.sun, $darkMode),
       6
     )
   }

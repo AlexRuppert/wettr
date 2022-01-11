@@ -37,14 +37,14 @@
   const updateColors = darkMode => {
     if (darkMode) {
       return {
-        dataLabelBackgroundColor: '#000000' + '30',
+        dataLabelBackgroundColor: '#000000' + '40',
         pointBackgroundColor: '#000',
         pointBorderColor: '#9ca3aa',
         currentTime: '#f66',
         bottomLine: COLORS.foreground.dark,
         tick: COLORS.foreground.dark + 'b0',
         grid: '#252525',
-        night: '#000000' + '30',
+        night: '#000000' + '22',
         temperature: COLORS.foreground.dark,
         precipitation: COLORS.rain.dark,
         sunniness: COLORS.sun.dark,
@@ -86,7 +86,7 @@
   const grid = {
     display: true,
     drawBorder: false,
-    drawOnChartArea: true,
+    drawOnChartArea: false,
     drawTicks: false,
     color: () => colors.grid,
   }
@@ -216,7 +216,12 @@
                   return value < 0.5 ? 210 : 150
                 },
                 offset: 2,
-                padding: 1,
+                padding: {
+                  top: 0.5,
+                  bottom: 0,
+                  left: 2,
+                  right: 2,
+                },
                 formatter: function (value) {
                   const l = weather.min.temperature
                   const r = weather.max.temperature
