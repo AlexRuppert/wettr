@@ -17,16 +17,16 @@
 </script>
 
 <div
-  class="h-32 mx-1 grid transition-opacity ease-in-out gap-1 grid-cols-3 duration-700 relative tabular-nums children:(shadow-md rounded-md bg-white) children:dark:bg-dark-600 "
+  class="flex space-x-1 h-32 mx-1 relative tabular-nums children:(shadow-md rounded-md bg-white w-32) children:dark:bg-dark-600 "
 >
   <div class="relative">
     {#if weather && weather.timestamp}
-      <div class="h-full w-full absolute" transition:fade>
+      <div class="inset-0 absolute" transition:fade>
         <MiniRadar />
       </div>
 
       <div
-        class="h-full w-full absolute pointer-events-none children:(z-10 absolute pointer-events-none) "
+        class="inset-0 absolute pointer-events-none children:(z-10 absolute pointer-events-none) "
       >
         <div
           class="h-7 -mt-3 text-shadow-xs -ml-3 top-1/2 left-1/2 w-7"
@@ -61,10 +61,10 @@
       </div>
     {/if}
   </div>
-  <div class="p-2 relative">
+  <div class="h-32 w-32 relative">
     {#if weather && weather.timestamp}
       {#key weather.icon}
-        <div class="inset-0 absolute" transition:scale>
+        <div class="inset-2 absolute" transition:scale>
           <WeatherIcon
             icon={weather.icon}
             color={getDarkLightColor(
@@ -76,7 +76,7 @@
       {/key}
     {/if}
   </div>
-  <div class="flex p-2 relative justify-end">
+  <div class="flex p-2 box-border relative justify-end">
     {#if weather && weather.timestamp}
       <div class="">
         <div
