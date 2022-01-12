@@ -18,7 +18,7 @@
   import { COLORS } from '../logic/utils'
 
   export let weather
-  
+
   Chart.register(
     LineController,
     LineElement,
@@ -92,6 +92,9 @@
   }
 
   const chartOptions = {
+    animation: {
+      duration: 500,
+    },
     layout: {
       padding: {
         top: 3,

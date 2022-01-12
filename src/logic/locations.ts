@@ -1,10 +1,11 @@
+import locationsRaw from '../assets/locations'
 export interface Coordinates {
   lat: number
   lon: number
 }
 
 export const locations = (async () => {
-  const locationList = (await import('../assets/locations')).default
+  const locationList = locationsRaw
   const minLat = +locationList[0]
   const minLon = +locationList[1]
   const coordinatesString = locationList[2] as string

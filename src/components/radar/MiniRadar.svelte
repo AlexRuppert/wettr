@@ -6,6 +6,7 @@
   import { getNowestTime } from '../../logic/radar/utils'
   import { currentCloudData, radarOpen } from '../../stores/store'
   import RadarCanvas from './RadarCanvas.svelte'
+import { fade } from 'svelte/transition';
 
   let cloudData: Cloud[]
   let viewBounds: GeoBounds
@@ -22,6 +23,7 @@
 
 <div
   class="rounded-md cursor-pointer h-full w-full relative clickable"
+  transition:fade
   on:click={() => ($radarOpen = true)}
 >
   <RadarCanvas clouds={cloudData} {viewBounds} mini={true} />
