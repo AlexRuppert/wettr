@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition'
+  import AppInstall from './components/AppInstall.svelte'
 
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
@@ -7,9 +7,6 @@
   import Radar from './components/radar/Radar.svelte'
   import WeatherWarning from './components/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
-
-  let deferredInstallPrompt
-  let showInstallButton = false
 
   let colorSchemeQueryList = window.matchMedia('(prefers-color-scheme: dark)')
 
@@ -26,28 +23,6 @@
   }
   setColorScheme(colorSchemeQueryList)
   colorSchemeQueryList.addEventListener('change', setColorScheme)
-
-  window.addEventListener('beforeinstallprompt', e => {
-    deferredInstallPrompt = e
-    if (
-      !(
-        window.matchMedia('(display-mode: standalone)').matches ||
-        navigator['standalone']
-      )
-    )
-      showInstallButton = true
-  })
-  window.addEventListener('appinstalled', evt => {
-    showInstallButton = false
-  })
-
-  const install = async () => {
-    deferredInstallPrompt.prompt()
-    const choice = deferredInstallPrompt.userChoice
-    if (choice.outcome === 'accepted') {
-      showInstallButton = true
-    }
-  }
 </script>
 
 <svelte:head>
@@ -64,14 +39,7 @@
 <footer
   class="space-y-2 bg-gray-200 mt-5 text-sm text-center py-10 dark:bg-dark-800 children:(block)"
 >
-  {#if showInstallButton}
-    <a
-      class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:bg-dark-400"
-      transition:fade
-      href={'#'}
-      on:click={install}>Als App installieren</a
-    >
-  {/if}
+  <AppInstall />
   <span
     >Quelle:
     <a href="https://www.dwd.de">Deutscher Wetterdienst</a></span
