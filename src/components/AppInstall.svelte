@@ -5,7 +5,7 @@
   import { mdiPlusBoxOutline } from '@mdi/js'
   let isIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
   let showInstallButton = false
-  let showInstallOverlay = true
+  let showInstallOverlay = false
   let alreadyInstalled = false
   let deferredInstallPrompt
   const iOSCanInstall = 'standalone' in window.navigator
