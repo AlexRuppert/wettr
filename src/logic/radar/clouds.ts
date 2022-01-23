@@ -1,4 +1,5 @@
-import { ungzip } from 'pako/lib/inflate'
+//import { ungzip } from 'pako/lib/inflate'
+import { inflate} from 'uzip-module'
 import { getCachedRequest } from '../cache'
 import type { GeoBounds } from './utils'
 import { mercatorProjection } from './utils'
@@ -15,7 +16,7 @@ function decodeClouds(clouds) {
     const lonFloor = sector.lon_bucket
     const latFloor = sector.lat_bucket
 
-    const compressedMatrix = ungzip(
+    const compressedMatrix = inflate(
       Uint8Array.from(
         atob(sector.data)
           .split('')

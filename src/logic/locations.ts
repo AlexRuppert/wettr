@@ -1,38 +1,22 @@
-import locationsRaw from '../assets/locations'
+import locationsUrl from '../assets/locations.json?url'
+import { getCachedRequest } from './cache'
+
 export interface Coordinates {
   lat: number
   lon: number
 }
 
 export const locations = (async () => {
-  const locationList = locationsRaw
-  const minLat = +locationList[0]
-  const minLon = +locationList[1]
-  const coordinatesString = locationList[2] as string
-  const places = (locationList[3] as string).split('|')
-  const locations = []
-  let lat = 0
-  for (let i = 0; i < coordinatesString.length / 3; i++) {
-    const buffer = coordinatesString.substr(i * 3, 3)
-    let num = +buffer / 100
-    if (i % 2 === 0) {
-      //lat
-      num += minLat
-      lat = num
-    } else {
-      num += minLon
-      let name = places[Math.floor(i / 2)]
-      locations.push({
-        name,
-        lat,
-        lon: num,
-        search: name
-          .split(/,|(\s(bei|am|in)\s)/)[0]
-          .trim()
-          .toLowerCase(),
-      })
-    }
-  }
+  const locationList = await (
+    await getCachedRequest(locationsUrl, 60 * 24)
+  ).json()
+  const locations = locationList.map(location => ({
+    ...location,
+    search: location.name
+      .split(/,|(\s(bei|am|in)\s)/)[0]
+      .trim()
+      .toLowerCase(),
+  }))
   return locations
 })()
 

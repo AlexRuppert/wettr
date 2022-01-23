@@ -1,50 +1,38 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { onMount } from 'svelte'
   import { darkMode } from '../stores/store'
-  import {
-    Chart,
-    LineController,
-    LineElement,
-    PointElement,
-    LinearScale,
-    TimeScale,
-    Filler,
-  } from 'chart.js'
-  import annotationPlugin from 'chartjs-plugin-annotation'
-  import chartDataLabels from 'chartjs-plugin-datalabels'
-  import './../logic/adapterDateFormat'
   import { COLORS } from '../logic/utils'
+  import { getPathData } from '../logic/chart/path'
 
   export let weather
 
-  Chart.register(
-    LineController,
-    LineElement,
-    LinearScale,
-    PointElement,
-    Filler,
-    TimeScale,
-    annotationPlugin,
-    chartDataLabels
-  )
+  let hours = [4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+  let minHour = hours[0]
+  let maxHour = hours[hours.length - 1]
+  let hoursTotal = maxHour - minHour + 1
 
-  let canvas: HTMLCanvasElement
-  let mounted = false
-  let chart: Chart
+  let hourWidth
+  let width
+  let height
+  let svg: SVGSVGElement
+
+  let dayLengthsX = [0, 100]
+  let nowLineX = -5
+
+  let temperatureLabelPoints = []
+  let sunninessPath = ''
+  let temperaturePath = ''
+  let precipitationPath = ''
 
   const updateColors = darkMode => {
     if (darkMode) {
       return {
-        dataLabelBackgroundColor: '#000000' + '40',
-        pointBackgroundColor: '#000',
-        pointBorderColor: '#9ca3aa',
+        dataLabelBackgroundColor: '#222222' + '40',
+        pointBackgroundColor: '#222',
         currentTime: '#f66',
-        bottomLine: COLORS.foreground.dark,
-        tick: COLORS.foreground.dark + 'b0',
-        grid: '#252525',
-        night: '#000000' + '22',
+        tick: COLORS.foreground.dark + 'f0',
+        night: '#000000' + '32',
         temperature: COLORS.foreground.dark,
         precipitation: COLORS.rain.dark,
         sunniness: COLORS.sun.dark,
@@ -53,11 +41,8 @@
       return {
         dataLabelBackgroundColor: '#ffffff' + 'a0',
         pointBackgroundColor: '#fff',
-        pointBorderColor: '#505050',
         currentTime: '#a00',
-        bottomLine: COLORS.foreground.light,
-        tick: COLORS.foreground.light + 'b0',
-        grid: '#f0f0f0',
+        tick: COLORS.foreground.light + 'c0',
         night: '#444464' + '10',
         temperature: COLORS.foreground.light,
         precipitation: COLORS.rain.light,
@@ -67,215 +52,196 @@
   }
 
   let colors = updateColors($darkMode)
-
+  const PADDING = 5
   darkMode.subscribe(async value => {
     colors = updateColors(value)
   })
 
-  function isCurrentValueDifferent(context) {
-    const index = context.dataIndex
-    const value = (context.dataset.data[index] as { y: number }).y
-    const valuePrevious =
-      (
-        context.dataset.data[index - 1] as {
-          y: number
-        }
-      )?.y ?? undefined
+  function dateToHoursFraction(date: Date) {
+    return (date.getHours() * 60 + date.getMinutes()) / 60
+  }
+  function getX(hour) {
+    return hourWidth * (hour - minHour) + hourWidth / 2
+  }
+
+  function getY(value) {
+    return Math.max(
+      PADDING,
+      Math.min((1 - value) * height, height - PADDING / 2)
+    )
+  }
+
+  function isCurrentValueDifferent(index, points) {
+    const value = points[index].y
+    const valuePrevious = points[index - 1]?.y ?? undefined
     return value !== valuePrevious
   }
-  const grid = {
-    display: true,
-    drawBorder: false,
-    drawOnChartArea: false,
-    drawTicks: false,
-    color: () => colors.grid,
-  }
 
-  const chartOptions = {
-    animation: {
-      duration: 500,
-    },
-    layout: {
-      padding: {
-        top: 3,
-      },
-    },
-    scales: {
-      x: {
-        type: 'time',
-        time: {
-          displayFormats: {
-            hour: 'HH',
-          },
-        },
-        ticks: {
-          autoSkip: true,
-          autoSkipPadding: 10,
-          color: () => colors.tick,
-          font: {
-            size: 10,
-            weight: 400,
-          },
-        },
-        grid,
-      },
-      y: {
-        ticks: {
-          display: false,
-        },
-        min: 0,
-        grid,
-      },
-    },
+  function getTotalTemperature(weather, value) {
+    const l = weather.min.temperature
+    const r = weather.max.temperature
+    return l + value * (r - l)
   }
-
-  const dayLightAnnotation = {
-    type: 'box',
-    yMin: 0,
-    yMax: 1,
-    backgroundColor: () => colors.night,
-    borderColor: 'transparent',
-  }
-  const bottomAnnotation = {
-    type: 'box',
-    yMin: -0.1,
-    yMax: 0,
-    backgroundColor: () => colors.bottomLine,
-    borderColor: () => colors.bottomLine,
-    borderWidth: 2,
-  }
-
-  const currentTimeAnnotation = {
-    type: 'line',
-    borderColor: () => colors.currentTime,
-    borderWidth: 0.5,
-  }
-
-  onMount(() => {
-    mounted = true
-  })
   $: {
-    if (mounted && colors) {
-      const annotations: {
-        sunset?: any
-        sunrise?: any
-        current?: any
-        bottom: any
-      } = {
-        bottom: bottomAnnotation,
-      }
-      const sunrise = {
-        xMin: weather.dayGraph[0].timestamp,
-        xMax: weather.dayLight.sunrise,
-      }
-      const sunset = {
-        xMin: weather.dayLight.sunset,
-        xMax: weather.dayGraph[weather.dayGraph.length - 1].timestamp,
-      }
-      ;[sunrise, sunset].forEach((sunX, i) => {
-        if (new Date(sunX.xMin) < new Date(sunX.xMax))
-          annotations['s' + i] = { ...dayLightAnnotation, ...sunX }
-      })
+    if (svg) {
+      const rect = svg.getBoundingClientRect()
+      width = rect.width
+      height = rect.height - 13
+
+      hourWidth = width / hoursTotal
+    }
+  }
+
+  $: {
+    if (weather && hourWidth) {
+      const { sunrise, sunset } = weather.dayLight
+      dayLengthsX = [sunrise, sunset].map(t => getX(dateToHoursFraction(t)))
 
       const now = new Date()
-      if (now > new Date(sunrise.xMin) && now < new Date(sunset.xMax))
-        annotations.current = { ...currentTimeAnnotation, xMin: now, xMax: now }
+      const today =
+        new Date(weather.dayGraph[0].timestamp) < now &&
+        new Date(weather.dayGraph[weather.dayGraph.length - 1].timestamp) > now
 
-      const commonData = {
-        tension: 0.2,
-        pointRadius: 0,
-        borderWidth: 1,
+      if (today) {
+        nowLineX = getX(dateToHoursFraction(now))
       }
 
-      chart?.destroy()
-      chart = new Chart(canvas, {
-        type: 'line',
-        data: {
-          datasets: [
-            {
-              data: weather.dayGraph
-                .map(d => ({
-                  x: d.timestamp,
-                  y: d.temperature,
-                }))
-                .filter(d => new Date(d.x).getHours() % 2 === 0),
-              borderColor: colors.temperature,
-              ...commonData,
-              borderDash: [1, 2],
-              borderWidth: 1,
-              pointRadius: function (context) {
-                return isCurrentValueDifferent(context) ? 1.2 : 0
-              },
-              pointBackgroundColor: colors.pointBackgroundColor,
-              pointBorderColor: colors.pointBorderColor,
-              datalabels: {
-                display: function (context) {
-                  return isCurrentValueDifferent(context) ? 'auto' : false
-                },
-                align: function (context) {
-                  const index = context.dataIndex
-                  const value = (context.dataset.data[index] as { y: number }).y
-                  if (index === 0) return 290
-                  return value < 0.5 ? 210 : 150
-                },
-                offset: 2,
-                padding: {
-                  top: 0.5,
-                  bottom: 0,
-                  left: 2,
-                  right: 2,
-                },
-                formatter: function (value) {
-                  const l = weather.min.temperature
-                  const r = weather.max.temperature
-                  return l + value.y * (r - l)
-                },
-                backgroundColor: colors.dataLabelBackgroundColor,
-                borderRadius: 5,
-                font: { size: 10, weight: 400 },
-                color: colors.temperature,
-              },
-            },
-            {
-              data: weather.dayGraph.map(d => ({
-                x: d.timestamp,
-                y: d.precipitation,
-              })),
-              borderColor: colors.precipitation,
-              backgroundColor: colors.precipitation + '10',
-              fill: true,
-              borderDash: [6, 3],
-              ...commonData,
-            },
-            {
-              data: weather.dayGraph.map(d => ({
-                x: d.timestamp,
-                y: d.sunniness,
-              })),
-              borderColor: colors.sunniness,
-              backgroundColor: colors.sunniness + '10',
-              fill: true,
-              ...commonData,
-            },
-          ],
-        },
-        //@ts-ignore
-        options: {
-          ...chartOptions,
-          plugins: {
-            annotation: {
-              annotations: {
-                ...annotations,
-              },
-            },
-            datalabels: {
-              display: false,
-            },
-          },
-        },
-      })
+      const sunninessPoints = weather.dayGraph.map(d => ({
+        x: getX(dateToHoursFraction(new Date(d.timestamp))),
+        y: getY(d.sunniness),
+      }))
+      const precipitationPoints = weather.dayGraph.map(d => ({
+        x: getX(dateToHoursFraction(new Date(d.timestamp))),
+        y: d.precipitation < 0.02 ? height : getY(d.precipitation),
+      }))
+      const temperaturePoints = weather.dayGraph
+        .map(d => {
+          const date = new Date(d.timestamp)
+          return {
+            x: getX(dateToHoursFraction(date)),
+            y: getY(d.temperature),
+            flipY: d.temperature < 0.2,
+            temperature: getTotalTemperature(weather, d.temperature),
+            hour: date.getHours(),
+          }
+        })
+        .filter(
+          ({ hour, temperature }) =>
+            temperature >= weather.max.temperature ||
+            temperature <= weather.min.temperature ||
+            hour % 2 === 0
+        )
+
+      temperatureLabelPoints = temperaturePoints.filter((point, i, points) =>
+        isCurrentValueDifferent(i, points)
+      )
+      sunninessPath = getPathData(sunninessPoints, height, PADDING / 2)
+      temperaturePath = getPathData(temperaturePoints, height, PADDING / 2)
+      precipitationPath = getPathData(precipitationPoints, height, PADDING / 2)
     }
   }
 </script>
 
-<canvas bind:this={canvas} height={75} />
+<svg
+  width="100%"
+  height="100%"
+  bind:this={svg}
+  fill="none"
+  stroke="none"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  {#if weather && hourWidth}
+    <defs>
+      <clipPath id="cut-off-bottom">
+        <rect x="0" y={0} width="100%" height={height - 1} />
+      </clipPath>
+    </defs>
+    <g fill={colors.night}>
+      <path
+        d={`M${getX(minHour)},${height - 1}a5 5 0 1 0 0 ${14}h${
+          dayLengthsX[0] - getX(minHour)
+        }v-${14}z`}
+      />
+
+      <path
+        d={`M${dayLengthsX[1]},${height - 1}v${14}h${
+          getX(maxHour) - dayLengthsX[1] + 2
+        }a-5 5 0 1 0 0 -${14}z`}
+      />
+    </g>
+    <g
+      stroke-width="0"
+      fill={colors.tick}
+      text-anchor="middle"
+      font-size="12"
+      font-weight="300"
+    >
+      {#each hours as hour, i}
+        <text x={getX(hour)} y="96%"> {hour}</text>
+      {/each}
+    </g>
+
+    <path
+      fill={colors.sunniness + '10'}
+      d={sunninessPath + `V${height + 1}H${getX(4)}z`}
+      clip-path="url(#cut-off-bottom)"
+    />
+    <path
+      stroke={colors.sunniness}
+      d={sunninessPath}
+      clip-path="url(#cut-off-bottom)"
+    />
+    <path
+      fill={colors.precipitation + '20'}
+      d={precipitationPath + `V${height + 1}H${getX(4)}z`}
+      clip-path="url(#cut-off-bottom)"
+    />
+    <path
+      stroke={colors.precipitation}
+      stroke-dasharray="4, 5"
+      d={precipitationPath}
+      clip-path="url(#cut-off-bottom)"
+    />
+
+    <path
+      stroke={colors.temperature}
+      stroke-dasharray=".1, 2.5"
+      d={temperaturePath}
+    />
+    <g font-size="10" font-weight="400" text-anchor="middle">
+      {#each temperatureLabelPoints as point, i}
+        <circle
+          stroke={colors.temperature}
+          stroke-width="0.7"
+          cx={point.x}
+          cy={point.y}
+          r="1.2"
+          fill={colors.pointBackgroundColor}
+        />
+        <g
+          transform={`translate(${point.x + (i === 0 ? 2 : -7)} ${
+            point.y + (point.flipY ? -3 : 8)
+          })`}
+        >
+          <text
+            fill={colors.dataLabelBackgroundColor}
+            stroke={colors.dataLabelBackgroundColor}
+            stroke-width="3"
+            >{point.temperature}
+          </text>
+          <text fill={colors.temperature}>{point.temperature} </text>
+        </g>
+      {/each}
+    </g>
+    {#if nowLineX > 0}
+      <line
+        x1={nowLineX}
+        x2={nowLineX}
+        y2={height}
+        stroke={colors.currentTime}
+        stroke-width="0.5"
+      />
+    {/if}
+  {/if}
+</svg>

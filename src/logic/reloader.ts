@@ -1,15 +1,7 @@
-import {
-  currentWeatherData,
-  coordinates,
-  weatherData,
-  currentCloudData,
-  cloudData,
-  weatherWarningData,
-} from './../stores/store'
-import { getClouds } from './radar/clouds'
+import { get } from 'svelte/store'
+import { locationCoordinates, thread } from './../stores/store'
+
 import { getLocationBounds } from './radar/utils'
-import Weather from './weather'
-import { getWeatherWarnings } from './weatherWarnings'
 
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
 const FORECAST_DAYS = 6
@@ -18,34 +10,24 @@ let nextCheckTime = 0
 
 export async function reload() {
   try {
-    const currentWeatherRequest = Weather.getCurrentWeather(
-      coordinates.lat,
-      coordinates.lon
-    )
-    const weatherRequest = Weather.getWeather(
-      coordinates.lat,
-      coordinates.lon,
-      FORECAST_DAYS
-    )
-    const currentCloudRequest = getClouds(
-      getLocationBounds(coordinates),
-      true
-    )
-
-    const warningsRequest = getWeatherWarnings(coordinates)
-    currentWeatherRequest.then(data => {
-      currentWeatherData.set(data)
+    const coordinates = get(locationCoordinates)
+    const worker = get(thread)
+    worker.postMessage({
+      type: 'currentWeatherData',
+      data: coordinates,
     })
-    currentCloudRequest.then(data => {
-      currentCloudData.set(data)
+    worker.postMessage({
+      type: 'weatherData',
+      data: { ...coordinates, days: FORECAST_DAYS },
     })
-    weatherRequest.then(data => {
-      weatherData.set(data)
+    worker.postMessage({
+      type: 'cloudData',
+      data: { bounds: getLocationBounds(coordinates), onlyNow: true },
     })
-    warningsRequest.then(data => {
-      weatherWarningData.set(data)
+    worker.postMessage({
+      type: 'weatherWarningData',
+      data: coordinates,
     })
-
   } catch (err) {
     console.error(err)
   }
@@ -56,14 +38,17 @@ export async function reload() {
 }
 
 export async function stageReload(force = false) {
-  const state = document.visibilityState
-
-  if (
-    force ||
-    (state === 'visible' && Date.now() > nextCheckTime && coordinates)
-  ) {
-    reload()
-  }
+  setTimeout(() => {
+    const state = document.visibilityState
+    if (
+      force ||
+      (state === 'visible' &&
+        Date.now() > nextCheckTime &&
+        get(locationCoordinates))
+    ) {
+      reload()
+    }
+  }, 0)
 }
 
 export function reloader() {
@@ -74,8 +59,13 @@ export function reloader() {
 
 export async function reloadClouds() {
   try {
-    const cloudRequest = getClouds(getLocationBounds(coordinates))
-    cloudData.set(await cloudRequest)
+    get(thread).postMessage({
+      type: 'cloudData',
+      data: {
+        bounds: getLocationBounds(get(locationCoordinates)),
+        onlyNow: false,
+      },
+    })
   } catch (err) {
     console.error(err)
   }

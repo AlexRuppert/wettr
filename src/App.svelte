@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition'
+
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
@@ -62,13 +64,14 @@
 <footer
   class="space-y-2 bg-gray-200 mt-5 text-sm text-center py-10 dark:bg-dark-800 children:(block)"
 >
-  <a
-    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:bg-dark-400"
-    class:hidden={!showInstallButton}
-    href={'#'}
-    on:click={install}>Als App installieren</a
-  >
-
+  {#if showInstallButton}
+    <a
+      class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:bg-dark-400"
+      transition:fade
+      href={'#'}
+      on:click={install}>Als App installieren</a
+    >
+  {/if}
   <span
     >Quelle:
     <a href="https://www.dwd.de">Deutscher Wetterdienst</a></span
@@ -86,7 +89,6 @@
     @apply bg-cool-gray-200 text-gray-800;
     height: 100%;
     margin: 0;
-    
   }
   :global(html.dark) {
     @apply bg-dark-900 text-gray-400;
@@ -111,8 +113,8 @@
     @apply hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-dark-400 dark:active:bg-dark-800;
   }
 
-  :global(.custom-scrollbar) {
+  :global(.custom-scrollbar),
+  :global(body) {
     @apply scrollbar scrollbar-thumb-gray-400 scrollbar-track-light-900 dark:(scrollbar-thumb-dark-50 scrollbar-track-dark-300) ;
   }
-  
 </style>

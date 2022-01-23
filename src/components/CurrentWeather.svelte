@@ -12,6 +12,7 @@
     return Number.parseFloat(num).toFixed(precision).toLocaleString()
   }
 
+  const ANIMATION_DURATION = 150
   let weather
   $: weather = $currentWeatherData
 </script>
@@ -21,7 +22,10 @@
 >
   <div class="relative">
     {#if weather && weather.timestamp}
-      <div class="inset-0 absolute" transition:fade>
+      <div
+        class="inset-0 absolute"
+        transition:fade={{ duration: ANIMATION_DURATION }}
+      >
         <MiniRadar />
       </div>
 
@@ -30,13 +34,16 @@
       >
         <div
           class="h-7 -mt-3 text-shadow-xs -ml-3 top-1/2 left-1/2 w-7"
-          transition:scale
+          transition:scale={{ duration: ANIMATION_DURATION }}
         >
           <div class="h-full -mt-[0.30rem] -ml-[0.10rem] w-full ">
             <WindDirection direction={weather.windDirection} />
           </div>
         </div>
-        <div class="right-1 bottom-2" transition:scale>
+        <div
+          class="right-1 bottom-2"
+          transition:scale={{ duration: ANIMATION_DURATION }}
+        >
           {toLocalDecimal(weather.windSpeed)}
           <span class="text-xs text-size-[0.5rem]"
             ><sup>km</sup>/<sub>h</sub></span
@@ -44,7 +51,10 @@
         </div>
 
         {#if weather.precipitation > 0.5}
-          <div class="flex bottom-2 left-1" transition:scale>
+          <div
+            class="flex bottom-2 left-1"
+            transition:scale={{ duration: ANIMATION_DURATION }}
+          >
             <div class="h-4 mr-1 w-4 self-center">
               <SvgIcon d={umbrellaOpen} />
             </div>
@@ -64,7 +74,10 @@
   <div class="h-32 w-32 relative">
     {#if weather && weather.timestamp}
       {#key weather.icon}
-        <div class="inset-2 absolute" transition:scale>
+        <div
+          class="inset-2 absolute"
+          transition:scale={{ duration: ANIMATION_DURATION }}
+        >
           <WeatherIcon
             icon={weather.icon}
             color={getDarkLightColor(
@@ -81,7 +94,7 @@
       <div class="">
         <div
           class="flex font-light h-full mt-3 text-right text-7xl"
-          transition:scale
+          transition:scale={{ duration: ANIMATION_DURATION }}
         >
           <span class="text-right"
             ><span
@@ -91,7 +104,10 @@
           </span><span class="font-light text-sm leading-[2.2]">°</span>
         </div>
 
-        <div class="flex right-2 bottom-2 absolute" transition:scale>
+        <div
+          class="flex right-2 bottom-2 absolute"
+          transition:scale={{ duration: ANIMATION_DURATION }}
+        >
           <div class="h-4 w-5 self-center">
             <SvgIcon d={humidity} />
           </div>

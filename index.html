@@ -6,24 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wettr</title>
   <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-  <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#ffae00">
-  <link rel="shortcut icon" href="favicon/favicon-32x32.png">
+  <link rel="shortcut icon apple-touch-icon mask-icon" type="image/svg+xml" sizes="16x16 32x32 180x180" color="#ffae00"
+    href="favicon/icon.svg">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="msapplication-config" content="favicon/browserconfig.xml">
-  <meta name="theme-color" content="#000">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="description" content="A simple weather app for germany.">
-  <style>
-    html {
-      background-color: #000;
-    }
-  </style>
+  <link rel="preconnect" href="https://api.brightsky.dev">
+  <link rel="preconnect" href="https://s3.eu-central-1.amazonaws.com">
 </head>
 
-<body class="custom-scrollbar">
+<body style="background: #000;">
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
+
+
 </body>
 
 </html>

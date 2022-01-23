@@ -12,7 +12,7 @@ export async function getWeatherWarnings(coordinates) {
 function keepWarning(warning, end, now) {
   return warning.level > 2 && end > now
 }
-export function processWarningData(warningData) {
+function processWarningData(warningData) {
   const now = Date.now()
   let result = warningData.warnings
     .map(w => {

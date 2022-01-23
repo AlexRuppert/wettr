@@ -44,7 +44,7 @@
   {#each dummy as index, i (index)}
     <div
       transition:fade={{ duration: 250 }}
-      class="bg-white rounded-md h-32 shadow-md py-1 px-2 dark:bg-dark-600"
+      class="bg-white rounded-md h-30 shadow-md py-1 px-2 dark:bg-dark-600"
     >
       {#if weather && weather.length > 0}
         <div class="flex justify-between">
@@ -56,7 +56,10 @@
             {#each weather[index].dayParts as { icon, colors }, j (i + '' + j)}
               <div class="flex h-8 pt-1.5 w-8 items-center relative">
                 {#key weather[index].dayParts}
-                  <div class="inset-0 absolute" transition:scale={{delay: j*50}}>
+                  <div
+                    class="inset-0 absolute"
+                    transition:scale={{ delay: j * 50 }}
+                  >
                     <WeatherIcon
                       {icon}
                       color={getDarkLightColor(colors, $darkMode)}
@@ -83,7 +86,7 @@
             >
           </div>
         </div>
-        <div transition:fly={{ y: 15 }}>
+        <div class="h-20" transition:fly={{ y: 15 }}>
           <DayChart weather={weather[index]} />
         </div>
       {/if}
