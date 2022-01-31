@@ -1,4 +1,5 @@
 <svelte:options immutable />
+
 <script lang="ts">
   import {
     drawClouds,
@@ -19,6 +20,7 @@
 
   $: {
     $darkMode
+
     if (clouds && viewBounds?.lb) {
       if (mounted) {
         update(clouds, viewBounds)

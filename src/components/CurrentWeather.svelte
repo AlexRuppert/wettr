@@ -55,9 +55,6 @@
             class="flex bottom-2 left-1"
             transition:scale={{ duration: ANIMATION_DURATION }}
           >
-            <div class="h-4 mr-1 w-4 self-center">
-              <SvgIcon d={umbrellaOpen} />
-            </div>
             <span>
               {toLocalDecimal(
                 weather.precipitation,

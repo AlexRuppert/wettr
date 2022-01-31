@@ -28,7 +28,7 @@
   const updateColors = darkMode => {
     if (darkMode) {
       return {
-        dataLabelBackgroundColor: '#222222' + '40',
+        dataLabelBackgroundColor: '#222222' + '70',
         pointBackgroundColor: '#222',
         currentTime: '#f66',
         tick: COLORS.foreground.dark + 'f0',
@@ -71,6 +71,10 @@
     )
   }
 
+  function getGraphY(value) {
+    return value < 0.01 ? height : getY(value)
+  }
+
   function isCurrentValueDifferent(index, points) {
     const value = points[index].y
     const valuePrevious = points[index - 1]?.y ?? undefined
@@ -108,18 +112,18 @@
 
       const sunninessPoints = weather.dayGraph.map(d => ({
         x: getX(dateToHoursFraction(new Date(d.timestamp))),
-        y: getY(d.sunniness),
+        y: getGraphY(d.sunniness),
       }))
       const precipitationPoints = weather.dayGraph.map(d => ({
         x: getX(dateToHoursFraction(new Date(d.timestamp))),
-        y: d.precipitation < 0.02 ? height : getY(d.precipitation),
+        y: getGraphY(d.precipitation),
       }))
       const temperaturePoints = weather.dayGraph
         .map(d => {
           const date = new Date(d.timestamp)
           return {
             x: getX(dateToHoursFraction(date)),
-            y: getY(d.temperature),
+            y: getGraphY(d.temperature),
             flipY: d.temperature < 0.2,
             temperature: getTotalTemperature(weather, d.temperature),
             hour: date.getHours(),
@@ -181,41 +185,36 @@
         <text x={getX(hour)} y="96%"> {hour}</text>
       {/each}
     </g>
+    <g clip-path="url(#cut-off-bottom)">
+      <path
+        fill={colors.sunniness + '10'}
+        d={sunninessPath + `V${height + 1}H${getX(4)}z`}
+      />
+      <path stroke={colors.sunniness} d={sunninessPath} />
+      <path
+        fill={colors.precipitation + '20'}
+        d={precipitationPath + `V${height + 1}H${getX(4)}z`}
+      />
+      <path
+        stroke={colors.precipitation}
+        stroke-dasharray="4, 5"
+        d={precipitationPath}
+      />
+      <path
+        stroke={colors.temperature}
+        stroke-dasharray=".2, 5"
+        stroke-width="1.8"
+        d={temperaturePath}
+      />
+    </g>
 
-    <path
-      fill={colors.sunniness + '10'}
-      d={sunninessPath + `V${height + 1}H${getX(4)}z`}
-      clip-path="url(#cut-off-bottom)"
-    />
-    <path
-      stroke={colors.sunniness}
-      d={sunninessPath}
-      clip-path="url(#cut-off-bottom)"
-    />
-    <path
-      fill={colors.precipitation + '20'}
-      d={precipitationPath + `V${height + 1}H${getX(4)}z`}
-      clip-path="url(#cut-off-bottom)"
-    />
-    <path
-      stroke={colors.precipitation}
-      stroke-dasharray="4, 5"
-      d={precipitationPath}
-      clip-path="url(#cut-off-bottom)"
-    />
-
-    <path
-      stroke={colors.temperature}
-      stroke-dasharray=".1, 2.5"
-      d={temperaturePath}
-    />
     <g font-size="10" font-weight="400" text-anchor="middle">
       {#each temperatureLabelPoints as point, i}
         <circle
           stroke={colors.temperature}
           stroke-width="0.7"
           cx={point.x}
-          cy={point.y}
+          cy={Math.min(point.y, height-2)}
           r="1.2"
           fill={colors.pointBackgroundColor}
         />

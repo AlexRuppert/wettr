@@ -21,9 +21,10 @@ export async function reload() {
       data: { ...coordinates, days: FORECAST_DAYS },
     })
     worker.postMessage({
-      type: 'cloudData',
+      type: 'currentCloudData',
       data: { bounds: getLocationBounds(coordinates), onlyNow: true },
     })
+
     worker.postMessage({
       type: 'weatherWarningData',
       data: coordinates,
@@ -38,6 +39,7 @@ export async function reload() {
 }
 
 export async function stageReload(force = false) {
+  init()
   setTimeout(() => {
     const state = document.visibilityState
     if (
@@ -50,11 +52,13 @@ export async function stageReload(force = false) {
     }
   }, 0)
 }
-
-export function reloader() {
-  document.addEventListener('visibilitychange', () => stageReload())
-  document.addEventListener('pagehide', () => stageReload())
-  stageReload()
+let initialized = false
+function init() {
+  if (!initialized) {
+    document.addEventListener('visibilitychange', () => stageReload())
+    document.addEventListener('pagehide', () => stageReload())
+    initialized = true
+  }
 }
 
 export async function reloadClouds() {

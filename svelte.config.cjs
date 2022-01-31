@@ -5,7 +5,7 @@ module.exports = {
   // Consult https://github.com/sveltejs/svelte-preprocess
   // for more information about preprocessors
   preprocess: [
-    windicss({ configPath: 'windi.config.mjs', siltent: true}),
+    windicss({ configPath: 'windi.config.mjs', siltent: true }),
     sveltePreprocess(),
   ],
 }

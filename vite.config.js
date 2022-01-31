@@ -3,6 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { minifyHtml } from 'vite-plugin-html'
+import replace from '@rollup/plugin-replace'
 import fs from 'fs'
 
 const BASE = '/wettr/'
@@ -35,7 +36,29 @@ export default defineConfig({
         sourcemap: false,
       },
     }),
-    svelte(),
+    replace({
+      preventAssignment: true,
+      include: '**/*.css',
+      delimiters: ['', ''],
+      values: {
+        '.null': '',
+      },
+    }),
+    replace({
+      preventAssignment: true,
+      include: '**/*.css',
+      delimiters: ['', ''],
+      values: {
+        '>{': '>*{',
+      },
+    }),
+    svelte({
+      compilerOptions: {
+        cssHash: ({ hash, css, name, filename }) => {
+          return null
+        },
+      },
+    }),
     visualizer(),
     minifyHtml(),
   ],

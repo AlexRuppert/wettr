@@ -12,6 +12,7 @@ onmessage = async function ({ data: { type, data } }) {
       result = getWeather(data.lat, data.lon, data.days)
       break
     case 'cloudData':
+    case 'currentCloudData':
       result = getClouds(data.bounds, data.onlyNow)
       break
     case 'weatherWarningData':

@@ -1,5 +1,5 @@
-import { stageReload, reloader } from './../logic/reloader'
-import { writable, readable} from 'svelte/store'
+import { stageReload } from './../logic/reloader'
+import { writable, readable } from 'svelte/store'
 import type { Coordinates } from './../logic/locations'
 import { isLocationSet } from '../logic/locations'
 import type { GeoBounds } from '../logic/radar/utils'
@@ -9,24 +9,26 @@ export const locationCoordinates = writable({ lat: 0, lon: 0 })
 
 const worker = new Worker()
 
-
-worker.onmessage = function ({data:{type,data}}) {
+worker.onmessage = function ({ data: { type, data } }) {
   switch (type) {
     case 'currentWeatherData':
       currentWeatherData.set(data)
-      break;
+      break
     case 'weatherData':
       weatherData.set(data)
-      break;
+      break
     case 'cloudData':
       cloudData.set(data)
-      break;
+      break
+    case 'currentCloudData':
+      currentCloudData.set(data)
+      break
     case 'weatherWarningData':
       weatherWarningData.set(data)
-      break;
-    
+      break
+
     default:
-      break;
+      break
   }
 }
 
@@ -53,4 +55,3 @@ locationCoordinates.subscribe(async ({ lat, lon }) => {
     stageReload(true)
   }
 })
-
