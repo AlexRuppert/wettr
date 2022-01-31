@@ -90,12 +90,6 @@
     @apply text-gray-500;
   }
 
-  div {
-    --thumb-bg: #2784ff;
-    --progress-bg: #2784ff;
-    --track-bg: #444444;
-  }
-
   :global(.thumb-content .thumb) {
     @apply h-7 w-7;
   }

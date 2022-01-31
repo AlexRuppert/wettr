@@ -43,7 +43,7 @@ export function initCanvas(canvas: HTMLCanvasElement, width: number) {
 
 function clip(ctx: CanvasRenderingContext2D, mini: boolean) {
   if (mini) {
-    drawRoundedRectPath(ctx, 0, 0, ctx.canvas.width, ctx.canvas.height, 30)
+    drawRoundedRectPath(ctx, 0, 0, ctx.canvas.width, ctx.canvas.height, 21)
     ctx.clip()
   }
 }

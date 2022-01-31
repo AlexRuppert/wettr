@@ -37,9 +37,11 @@
   <Radar />
 </main>
 <footer
-  class="space-y-2 bg-gray-200 mt-5 text-sm text-center py-10 dark:bg-dark-800 children:(block)"
+  class="space-y-2 bg-gray-200 mt-5 text-sm text-center py-10 dark:bg-dark-800 children:block"
 >
-  <AppInstall />
+  <span class="self-center">
+    <AppInstall />
+  </span>
   <span
     >Quelle:
     <a href="https://www.dwd.de">Deutscher Wetterdienst</a></span

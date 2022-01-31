@@ -13,6 +13,5 @@
 <style>
   button {
     touch-action: manipulation;
-    aspect-ratio: 1;
   }
 </style>

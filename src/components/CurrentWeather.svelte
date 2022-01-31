@@ -18,9 +18,9 @@
 </script>
 
 <div
-  class="flex space-x-1 h-32 mx-1 relative tabular-nums children:(shadow-md rounded-md bg-white w-32) children:dark:bg-dark-600 "
+  class="flex space-x-1 h-32 mx-1 relative tabular-nums children:(shadow-md rounded-md bg-white w-32 relative) "
 >
-  <div class="relative">
+  <div class="dark:bg-dark-600">
     {#if weather && weather.timestamp}
       <div
         class="inset-0 absolute"
@@ -30,13 +30,13 @@
       </div>
 
       <div
-        class="inset-0 absolute pointer-events-none children:(z-10 absolute pointer-events-none) "
+        class="text-shadow-light inset-0 absolute pointer-events-none children:(z-10 absolute pointer-events-none) "
       >
         <div
-          class="h-7 -mt-3 text-shadow-xs -ml-3 top-1/2 left-1/2 w-7"
+          class="h-7 -mt-3  -ml-3 top-1/2 left-1/2 w-7"
           transition:scale={{ duration: ANIMATION_DURATION }}
         >
-          <div class="h-full -mt-[0.30rem] -ml-[0.10rem] w-full ">
+          <div class="h-full -mt-[0.30rem] -ml-[0.10rem] w-full">
             <WindDirection direction={weather.windDirection} />
           </div>
         </div>
@@ -68,7 +68,7 @@
       </div>
     {/if}
   </div>
-  <div class="h-32 w-32 relative">
+  <div class="h-32 w-32 dark:bg-dark-600">
     {#if weather && weather.timestamp}
       {#key weather.icon}
         <div
@@ -86,7 +86,7 @@
       {/key}
     {/if}
   </div>
-  <div class="flex p-2 box-border relative justify-end">
+  <div class="flex p-2 box-border  justify-end dark:bg-dark-600">
     {#if weather && weather.timestamp}
       <div class="">
         <div
@@ -117,3 +117,12 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .text-shadow-light {
+    text-shadow: 0 0 2px rgba(235, 235, 238, 1);
+  }
+  :global(.dark .text-shadow-light) {
+    text-shadow: 0 0 2px rgba(15, 15, 15, 1);
+  }
+</style>
