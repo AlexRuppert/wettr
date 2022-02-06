@@ -2,9 +2,8 @@
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import WindDirection from './icons/WindDirection.svelte'
   import MiniRadar from './radar/MiniRadar.svelte'
-  import { currentWeatherData, darkMode } from '../stores/store'
+  import { currentWeatherData } from '../stores/store'
   import { fade, scale } from 'svelte/transition'
-  import { getDarkLightColor, getWeatherIconColors } from '../logic/utils'
   import { humidity } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
 
@@ -13,6 +12,7 @@
   }
 
   const ANIMATION_DURATION = 150
+  const MIN_PRECIPITATION = 0.3
   let weather
   $: weather = $currentWeatherData
 </script>
@@ -30,34 +30,39 @@
           <MiniRadar />
         </div>
 
-        <div
-          class="text-shadow-light pointer-events-none children:(z-10 absolute) "
-        >
-          <div class="h-8 -m-4 inset-1/2 w-8">
+        <div class="text-shadow-light pointer-events-none">
+          <div class="h-8 -m-4 inset-1/2 w-8 z-10 absolute">
             <WindDirection direction={weather.windDirection} />
           </div>
 
           <div
-            class="flex space-x-1 bottom-2 left-2"
-            class:!hidden={weather.precipitation < 0.3}
+            class="flex space-x-2 w-full bottom-2 z-10 absolute justify-around"
           >
-            <div>
-              {toLocalDecimal(
-                weather.precipitation,
-                weather.precipitation % 1 === weather.precipitation ? 0 : 1
-              )}
+            <div
+              class="flex space-x-1"
+              class:!hidden={weather.precipitation < MIN_PRECIPITATION}
+            >
+              <div>
+                {toLocalDecimal(
+                  weather.precipitation,
+                  weather.precipitation % 1 === weather.precipitation ? 0 : 1
+                )}
+              </div>
+              <div class="pt-1 text-size-[0.5rem] self-center">
+                <sup>mm</sup>/<sub>h</sub>
+              </div>
             </div>
-            <div class="pt-1 text-size-[0.5rem] self-center">
-              <sup>mm</sup>/<sub>h</sub>
-            </div>
-          </div>
 
-          <div class="flex space-x-1 right-2 bottom-2">
-            <div class:current-warning-text={weather.windSpeed > 25}>
-              {toLocalDecimal(weather.windSpeed)}
-            </div>
-            <div class="pt-1 text-size-[0.5rem] self-center">
-              <sup>km</sup>/<sub>h</sub>
+            <div
+              class="flex space-x-1"
+              class:pl-3={weather.precipitation < MIN_PRECIPITATION}
+            >
+              <div class:current-warning-text={weather.windSpeed > 25}>
+                {toLocalDecimal(weather.windSpeed)}
+              </div>
+              <div class="pt-1 text-size-[0.5rem] self-center">
+                <sup>km</sup>/<sub>h</sub>
+              </div>
             </div>
           </div>
         </div>
@@ -73,43 +78,41 @@
         </div>
       {/key}
     </div>
-    <div class="flex p-2 box-border justify-end dark:bg-dark-600">
-      {#key weather.temperature}
-        <div
-          class="flex font-light h-full mt-3 text-right text-7xl"
-          transition:scale={{ duration: ANIMATION_DURATION }}
-        >
-          <span
-            class="max-w-4 overflow-hidden"
-            class:hidden={weather.temperature >= 0}>-</span
-          >{Math.abs(weather.temperature)}
-          <span class="mt-1 text-sm">°</span>
-        </div>
+    <div class="flex p-2 box-border justify-center dark:bg-dark-600">
+      <div
+        class="flex font-light h-full mt-3 text-right ml-1 text-7xl"
+        transition:fade={{ duration: ANIMATION_DURATION }}
+      >
+        <span
+          class="max-w-4 overflow-hidden"
+          class:hidden={weather.temperature >= 0}>-</span
+        >{Math.abs(weather.temperature)}
+        <span class="mt-1 text-sm">°</span>
+      </div>
 
-        <div
-          class="flex right-2 bottom-2 absolute"
-          transition:scale={{ duration: ANIMATION_DURATION }}
-        >
-          <div class="h-4 w-4 self-center">
-            <SvgIcon d={humidity} outline />
-          </div>
-          <div>
-            {weather.relativeHumidity}
-          </div>
-          <span class="text-size-[0.5rem] self-center">%</span>
+      <div
+        class="flex bottom-2 justify-center absolute"
+        transition:scale={{ duration: ANIMATION_DURATION }}
+      >
+        <div class="h-4 w-4 self-center">
+          <SvgIcon d={humidity} outline />
         </div>
-      {/key}
+        <div>
+          {weather.relativeHumidity}
+        </div>
+        <span class="ml-0.5 text-size-[0.5rem] self-center">%</span>
+      </div>
     </div>
   {/if}
 </div>
 
 <style global>
   .text-shadow-light {
-    text-shadow: 0 0 2px rgba(235, 235, 238, 1);
+    text-shadow: 0 0 2px #fff;
   }
   @media (prefers-color-scheme: dark) {
     .text-shadow-light {
-      text-shadow: 0 0 2px rgba(15, 15, 15, 1);
+      text-shadow: 0 0 2px #111;
     }
   }
 

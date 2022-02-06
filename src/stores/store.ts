@@ -1,7 +1,11 @@
 import { stageReload } from './../logic/reloader'
-import { writable, readable } from 'svelte/store'
-import type { Coordinates } from './../logic/locations'
+import { writable, readable, get } from 'svelte/store'
+import {
+  getCoordinatesFromUrl,
+  serializeCoordinates,
+} from './../logic/locations'
 import { isLocationSet } from '../logic/locations'
+import type { Coordinates } from './../logic/locations'
 import type { GeoBounds } from '../logic/radar/utils'
 
 import Worker from './../workers/worker.ts?worker'
@@ -49,9 +53,15 @@ export const cloudData = writable({ times: [], clouds: [], viewBounds: {} } as {
   viewBounds: GeoBounds
 })
 export let coordinates: Coordinates
-locationCoordinates.subscribe(async ({ lat, lon }) => {
-  if (isLocationSet({ lat, lon })) {
-    coordinates = { lat, lon }
+
+locationCoordinates.subscribe(async coord => {
+  if (
+    isLocationSet(coord) &&
+    (!coordinates ||
+      serializeCoordinates(coordinates) !== serializeCoordinates(coord))
+  ) {
+    coordinates = coord
     stageReload(true)
   }
 })
+locationCoordinates.set(getCoordinatesFromUrl())

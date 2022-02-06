@@ -7,7 +7,6 @@
   import Radar from './components/radar/Radar.svelte'
   import WeatherWarning from './components/warnings/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
-
   let colorSchemeQueryList = window.matchMedia('(prefers-color-scheme: dark)')
 
   const setColorScheme = e => {
@@ -23,6 +22,7 @@
   }
   setColorScheme(colorSchemeQueryList)
   colorSchemeQueryList.addEventListener('change', setColorScheme)
+  
 </script>
 
 <svelte:head>

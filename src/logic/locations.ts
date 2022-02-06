@@ -6,7 +6,7 @@ export interface Coordinates {
   lon: number
 }
 
-export const locations = (async () => {
+export const loadLocations = async () => {
   const locationList = await (
     await getCachedRequest(locationsUrl, 60 * 24)
   ).json()
@@ -18,20 +18,26 @@ export const locations = (async () => {
       .toLowerCase(),
   }))
   return locations
-})()
+}
+let locations = []
+
+const getLocations = async () => {
+  if (locations.length < 1) {
+    locations = await loadLocations()
+  }
+  return locations
+}
 
 export async function filterLocations(search: string, maxResults = 5) {
   search = search.trim().toLowerCase()
-  return (await locations)
+  return (await getLocations())
     .filter(l => l.search.includes(search))
     .slice(0, maxResults)
-    .map(s => s.name)
 }
 
 export async function getLocationCoordinates(place: string) {
   if (place.trim().length === 0) return null
-
-  const result = (await locations).find(l => l.name === place)
+  const result = (await getLocations()).find(l => l.name === place)
   if (result) {
     return { lat: +result.lat, lon: +result.lon } as Coordinates
   }
@@ -66,7 +72,7 @@ export async function getClosestCity(coordinates: Coordinates) {
   let closestCity = ''
   let closestDistance = Infinity
 
-  for (let location of await locations) {
+  for (let location of await getLocations()) {
     const dist = distance(
       coordinates.lat,
       coordinates.lon,
@@ -82,5 +88,38 @@ export async function getClosestCity(coordinates: Coordinates) {
 }
 
 export function isLocationSet({ lat, lon }: Coordinates) {
-  return lat !== undefined && lon !== undefined && lat !== 0 && lon !== 0
+  return (
+    lat !== undefined &&
+    lon !== undefined &&
+    lat !== 0 &&
+    lon !== 0 &&
+    lat > -500
+  )
+}
+
+export function serializeCoordinates({ lon, lat }) {
+  return `${(+lon).toFixed(3)}_${(+lat).toFixed(3)}`
+}
+export function deserializeCoordinates(coordinateString) {
+  const [lon, lat] = coordinateString.split('_').map(el => +el)
+  return { lon, lat }
+}
+
+export function getCoordinatesFromUrl() {
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  const params = Object.fromEntries(urlSearchParams.entries())
+
+  let coordinates = { lon: 0, lat: -500 }
+
+  try {
+    const _coordinates = deserializeCoordinates(params.coordinates)
+    if (
+      _coordinates &&
+      !Number.isNaN(_coordinates.lon) &&
+      !Number.isNaN(_coordinates.lat)
+    ) {
+      coordinates = _coordinates
+    }
+  } catch (ex) {}
+  return coordinates
 }

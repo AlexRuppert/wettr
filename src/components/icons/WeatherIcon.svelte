@@ -28,8 +28,8 @@
 
   $: {
     color = getDarkLightColor(getWeatherIconColors(icon), $darkMode)
+    iconData = iconLookup[icon]
   }
-  $: iconData = iconLookup[icon]
 </script>
 
 <svg
@@ -81,12 +81,14 @@
       id="thunderstorm"
       stroke-width="0.3"
       d="M12.6 17h3.5l-2.5 4h1.8l-5 6.9l2-5.3h-2.5z"
-      fill={color}
     />
   </defs>
 
   <use href={'#' + iconData[0]} />
-  <use href={'#' + iconData[1]} />
+  <use
+    href={'#' + iconData[1]}
+    fill={iconData[1] === 'thunderstorm' ? color : 'none'}
+  />
   <use href={'#' + iconData[2]} />
 </svg>
 

@@ -4,34 +4,47 @@
     getLocationCoordinates,
     getGeolocationCoordinates,
     getClosestCity,
+    serializeCoordinates,
+    getCoordinatesFromUrl,
   } from '../logic/locations'
+  import type { Coordinates } from '../logic/locations'
   import { locationCoordinates } from '../stores/store'
   import { getHistory, pushHistory } from '../logic/history'
-  import { onMount } from 'svelte'
   import ModalBackground from './ModalBackground.svelte'
   import IconButton from './common/IconButton.svelte'
   import { fade, fly } from 'svelte/transition'
   import { gps } from './icons/icons'
 
   const TRANSITION_TIME = 250
+  const FALLBACK_SUGGESTION = {
+    location: '',
+    coordinates: { lon: 0, lat: 0 },
+  }
   let inputElement
 
   let place = ''
-  let coordinateString = ''
-  let suggestions: string[] = []
+
+  let suggestions: { name: string; lon: number; lat: number }[] = []
   const setFilterLocations = place =>
     filterLocations(place).then(s => (suggestions = s))
-  $: {
-    if (place.length <= 0) {
-      const history = getHistory()
-      if (history.length > 0) suggestions = history
-      else setFilterLocations(place)
-    } else setFilterLocations(place)
-    selectedSuggestion = 0
-  }
 
   let openedSuggestions = false
   let selectedSuggestion = 0
+  $: {
+    if (openedSuggestions) {
+      if (place.length <= 0) {
+        const history = getHistory()
+        if (history.length > 0)
+          suggestions = history.map(h => ({
+            name: h.location,
+            lon: h.coordinates.lon,
+            lat: h.coordinates.lat,
+          }))
+        else setFilterLocations(place)
+      } else setFilterLocations(place)
+      selectedSuggestion = 0
+    }
+  }
 
   function handleInputKeys(event: KeyboardEvent) {
     switch (event.code) {
@@ -59,14 +72,15 @@
       getClosestCity($locationCoordinates).then(city => (place = city))
     }
     openedSuggestions = false
-    inputElement.blur()
+    inputElement?.blur()
   }
 
-  function updateCoordinates(place, coordinates) {
+  function updateCoordinates(place: string, coordinates: Coordinates) {
     $locationCoordinates = coordinates
-    pushHistory(place)
+    pushHistory(place, coordinates)
     const urlSearchParams = new URLSearchParams(window.location.search)
     urlSearchParams.set('location', place)
+    urlSearchParams.set('coordinates', serializeCoordinates(coordinates))
     const newUrl =
       window.location.origin +
       window.location.pathname +
@@ -78,40 +92,55 @@
     if (newUrl !== window.location.toString())
       window.history.pushState({}, '', newUrl)
   }
-  async function selectSuggestion(suggestion) {
-    place = suggestion
+  async function selectSuggestion(suggestion: {
+    name: string
+    lon: number
+    lat: number
+  }) {
+    place = suggestion.name
+    updateCoordinates(place, { ...suggestion })
     closeSuggestions()
-    inputElement.blur()
-    const coordinates = await getLocationCoordinates(suggestion)
-    if (!!coordinates) {
-      updateCoordinates(place, coordinates)
-    }
   }
   function openSuggestions() {
     openedSuggestions = true
     selectedSuggestion = 0
     place = ''
-    coordinateString = ''
   }
   function getGeoLocation() {
     closeSuggestions()
     getGeolocationCoordinates(({ closestCity, coordinates }) => {
-      place = `Nahe ${closestCity}`
-      //coordinateString = `${coordinates.lat}, ${coordinates.lon}`
+      place = closestCity
       updateCoordinates(closestCity, coordinates)
     })
   }
-
-  onMount(() => {
+  async function init() {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const params = Object.fromEntries(urlSearchParams.entries())
 
-    if (params.location) {
-      selectSuggestion(params.location)
-    } else {
-      selectSuggestion(getHistory()?.[0] ?? '')
+    let coordinates = getCoordinatesFromUrl()
+    let name = ''
+
+    if (params.location != 'undefined') {
+      name = params.location
     }
-  })
+
+    if (!name && coordinates.lat > -500) {
+      name = await getClosestCity(coordinates)
+    } else if (name && coordinates.lat <= -500) {
+      coordinates = await getLocationCoordinates(name)
+    } else {
+      const fallback = getHistory()?.[0]
+      if (fallback.location && fallback.coordinates) {
+        name = fallback.location
+        coordinates = fallback.coordinates
+      } else {
+        name = FALLBACK_SUGGESTION.location
+        coordinates = FALLBACK_SUGGESTION.coordinates
+      }
+    }
+    selectSuggestion({ name, ...coordinates })
+  }
+  init()
 </script>
 
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
@@ -144,11 +173,7 @@
       on:focus={openSuggestions}
       on:click={openSuggestions}
     />
-    <div
-      class="text-center text-xs right-0 -bottom-1 left-0 text-gray-500 absolute pointer-events-none"
-    >
-      {coordinateString}
-    </div>
+
     <label for="location" class="hidden">Ort</label>
   </div>
 
@@ -164,7 +189,7 @@
             class="font-semibold text-sm text-lg py-2 px-4 text-gray-700 block no-underline dark:(text-gray-400)"
             class:selected={i === selectedSuggestion}
             on:click={() => selectSuggestion(entry)}
-            on:mouseenter={() => (selectedSuggestion = i)}>{entry}</a
+            on:mouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
           >
         {/each}
       </div>

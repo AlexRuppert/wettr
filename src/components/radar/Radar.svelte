@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { radarOpen, cloudData, locationCoordinates } from '../../stores/store'
+  import {
+    radarOpen,
+    cloudData,
+    currentCloudData,
+    locationCoordinates,
+  } from '../../stores/store'
 
   import { reloadClouds } from '../../logic/reloader'
   import { filterClouds } from '../../logic/radar/clouds'
@@ -22,7 +27,13 @@
 
   let filteredCache = new Map()
 
-  $: if ($radarOpen && isLocationSet($locationCoordinates)) reloadClouds()
+  $: if ($radarOpen && isLocationSet($locationCoordinates)) {
+    //preliminary
+    if ($currentCloudData?.viewBounds?.lb) {
+      update($currentCloudData)
+    }
+    reloadClouds()
+  }
   $: {
     if ($cloudData?.viewBounds?.lb) {
       update($cloudData)
@@ -55,7 +66,10 @@
     class="flex flex-col space-y-2 top-0 right-0 left-0 z-20 absolute select-none children:(shadow-md rounded-md max-w-sm p-2 bg-white mx-5 z-20) "
     transition:fly={{ y: -300 }}
     use:swipe={{ timeframe: 500, minSwipeDistance: 35, touchAction: 'none' }}
-    on:swipe={({ detail }) => (detail.direction === 'top'|| detail.direction === 'bottom'  ? close() : null)}
+    on:swipe={({ detail }) =>
+      detail.direction === 'top' || detail.direction === 'bottom'
+        ? close()
+        : null}
   >
     <div class="flex-col mt-2 dark:bg-dark-600">
       <div class="text-size-xl text-center pt-2 pb-4" on:click={close}>
