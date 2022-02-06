@@ -3,14 +3,14 @@
 </script>
 
 <button
-  class="bg-transparent border-none rounded cursor-pointer flex h-10 p-1 w-10 appearance-none clickable items-center"
+  class="bg-transparent border-none rounded flex h-10 p-1 w-10 appearance-none clickable items-center"
   on:click
   aria-label={label}
 >
   <slot />
 </button>
 
-<style>
+<style global>
   button {
     touch-action: manipulation;
   }

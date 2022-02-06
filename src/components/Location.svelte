@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { mdiCrosshairsGps } from '@mdi/js'
   import {
     filterLocations,
     getLocationCoordinates,
@@ -12,6 +11,7 @@
   import ModalBackground from './ModalBackground.svelte'
   import IconButton from './common/IconButton.svelte'
   import { fade, fly } from 'svelte/transition'
+  import { gps } from './icons/icons'
 
   const TRANSITION_TIME = 250
   let inputElement
@@ -124,7 +124,9 @@
     <div class="z-20 absolute" transition:fade={{ duration: TRANSITION_TIME }}>
       <IconButton
         label="Get Current Location"
-        icon={mdiCrosshairsGps}
+        icon={gps}
+        outline
+        strokeWidth={1}
         on:click={getGeoLocation}
       />
     </div>
@@ -170,7 +172,7 @@
   {/if}
 </div>
 
-<style>
+<style global>
   input {
     -webkit-tap-highlight-color: transparent;
   }

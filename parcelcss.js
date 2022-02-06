@@ -2,7 +2,7 @@ const css = require('@parcel/css');
 const fs = require('fs');
 let {code, map} = css.transform({
   filename: './dist/assets/index.d5b2db89.min.css',
-  code: fs.readFileSync('./dist/assets/index.d5b2db89.css'),
+  code: fs.readFileSync('./dist/assets/index.2ad2b737.css'),
   minify: true,
   sourceMap: false,
   targets: {
@@ -11,4 +11,4 @@ let {code, map} = css.transform({
     safari: (15 << 16) | (1 << 8)
   }
 });
-fs.writeFileSync('./dist/assets/index.d5b2db89.min.css', code);
+fs.writeFileSync('./dist/assets/index.2ad2b737.min.css', code);

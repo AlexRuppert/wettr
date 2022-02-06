@@ -5,7 +5,7 @@
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
   import Radar from './components/radar/Radar.svelte'
-  import WeatherWarning from './components/WeatherWarning.svelte'
+  import WeatherWarning from './components/warnings/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
 
   let colorSchemeQueryList = window.matchMedia('(prefers-color-scheme: dark)')
@@ -44,15 +44,16 @@
   </span>
   <span
     >Quelle:
-    <a href="https://www.dwd.de">Deutscher Wetterdienst</a></span
+    <a class="footer-link" href="https://www.dwd.de">Deutscher Wetterdienst</a
+    ></span
   >
   <span
     >via
-    <a href="https://brightsky.dev">brightsky.dev</a></span
+    <a class="footer-link" href="https://brightsky.dev">brightsky.dev</a></span
   >
 </footer>
 
-<style>
+<style global>
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -60,31 +61,29 @@
     height: 100%;
     margin: 0;
   }
-  :global(html.dark) {
+  html.dark {
     @apply bg-dark-900 text-gray-400;
   }
-  footer a {
-    @apply text-gray-800 no-underline hover:underline;
+  .footer-link {
+    @apply text-gray-800 no-underline dark:text-gray-300 hover:underline;
   }
-  .dark footer a {
-    @apply text-gray-300;
-  }
-  :global(body) {
+
+  body {
     margin: 0;
   }
-  :global(#app) {
+  #app {
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow-x: hidden;
   }
 
-  :global(.clickable) {
-    @apply hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-dark-400 dark:active:bg-dark-800;
+  .clickable {
+    @apply cursor-pointer hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-dark-400 dark:active:bg-dark-800;
   }
 
-  :global(.custom-scrollbar),
-  :global(body) {
+  .custom-scrollbar,
+  body {
     @apply scrollbar scrollbar-thumb-gray-400 scrollbar-track-light-900 dark:(scrollbar-thumb-dark-50 scrollbar-track-dark-300) ;
   }
 </style>

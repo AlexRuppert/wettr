@@ -61,3 +61,6 @@
   bind:clientWidth={width}
   bind:this={canvas}
 />
+<style global>
+  
+</style>

@@ -3,11 +3,85 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { minifyHtml } from 'vite-plugin-html'
-import replace from '@rollup/plugin-replace'
+import cssnano from 'cssnano'
+import postcss from 'postcss'
 import fs from 'fs'
 
 const BASE = '/wettr/'
 // https://vitejs.dev/config/
+
+function postPostCSS() {
+  function removeGlobal(css) {
+    return css.replace(/:global\(([^\(]+)\)/g, '$1')
+  }
+  function minifyCSSVariables(css) {
+    const varList = new Set(css.match(/--[-\w\d]+/g))
+    const usedVarList = new Set(css.match(/--[-\w\d]+(?=:)/g))
+
+    let i = 0
+    varList.forEach(variable => {
+      if (!usedVarList.has(variable)) {
+        css = css.replaceAll(variable, '""')
+        css = css.replaceAll('var("")', '')
+        css = css.replaceAll(/var\("",([^\)]+)\)/g, '$1')
+        css = css.replaceAll(/--[-\w\d]+:\s;/g, '')
+      } else {
+        css = css.replaceAll(variable, '--e' + i++)
+      }
+    })
+
+    return css
+  }
+  function minifyDark(css) {
+    const regex =
+      /@media \(prefers-color-scheme: dark\)\{(([^\}]|\}(?!\}))*\})\}/g
+    let temp = ''
+    while ((result = regex.exec(css))) {
+      temp += result[1]
+    }
+    return (
+      css.replaceAll(regex, '') + `@media (prefers-color-scheme:dark){${temp}}`
+    )
+  }
+  function simplify(css) {
+    const regexes = [
+      { regex: /transparent(?=;|\})/g, replace: '#00000000' },
+      //{ regex: /dark\\:/g, replace: '' },
+      { regex: /background-color/g, replace: 'background' },
+    ]
+    regexes.forEach(r => (css = css.replaceAll(r.regex, r.replace)))
+    return css
+  }
+
+  return {
+    name: 'postPostCSS',
+    generateBundle(options, bundle) {
+      const cssFiles = Object.keys(bundle)
+        .filter(key => key.endsWith('.css'))
+        .map(key => bundle[key])
+
+      cssFiles.forEach(css => {
+        let cssCode = removeGlobal(css.source)
+        for (let i = 0; i <= 3; i++) {
+          cssCode = minifyCSSVariables(cssCode)
+        }
+
+        cssCode = minifyDark(cssCode)
+        cssCode = simplify(cssCode)
+        postcss([
+          cssnano({
+            preset: 'advanced',
+          }),
+        ])
+          .process(cssCode)
+          .then(result => {
+            css.source = result.css
+          })
+      })
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
     VitePWA({
@@ -36,32 +110,24 @@ export default defineConfig({
         sourcemap: false,
       },
     }),
-    replace({
-      preventAssignment: true,
-      include: '**/*.css',
-      delimiters: ['', ''],
-      values: {
-        '.null': '',
-      },
-    }),
-    replace({
-      preventAssignment: true,
-      include: '**/*.css',
-      delimiters: ['', ''],
-      values: {
-        '>{': '>*{',
-      },
-    }),
-    svelte({
-      compilerOptions: {
-        cssHash: ({ hash, css, name, filename }) => {
-          return null
-        },
-      },
-    }),
+    /* modify({
+      find: /:global\(([^\(]+)\)/g,
+      replace: (match, path) => path,
+    }),*/
+
+    svelte(),
+
     visualizer(),
     minifyHtml(),
+    postPostCSS(),
   ],
+
+  /*css: {
+    postcss: {
+     
+      plugins: [cssnano],
+    },
+  },*/
   base: BASE,
   build: {
     minify: 'terser',

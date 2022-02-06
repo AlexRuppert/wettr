@@ -22,9 +22,12 @@ import { fade } from 'svelte/transition';
 </script>
 
 <div
-  class="rounded-md cursor-pointer h-full w-full relative clickable"
+  class="rounded-md h-full w-full relative clickable"
   transition:fade
   on:click={() => ($radarOpen = true)}
 >
   <RadarCanvas clouds={cloudData} {viewBounds} mini={true} />
 </div>
+<style global>
+  
+</style>

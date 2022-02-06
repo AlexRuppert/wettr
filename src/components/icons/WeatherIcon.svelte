@@ -2,27 +2,33 @@
 
 <script context="module">
   const iconLookup = {
-    clearDay: { primary: 'sun', secondary: '' },
-    clearNight: { primary: 'moon', secondary: '' },
-    partlyCloudyDay: { primary: 'cloud', secondary: 'sun-part' },
-    partlyCloudyNight: { primary: 'cloud', secondary: 'moon-part' },
-    cloudy: { primary: 'cloud', secondary: 'cloud-part' },
-    fog: { primary: 'fog', secondary: '' },
-    hail: { primary: 'cloud-open', secondary: 'hail' },
-    rain: { primary: 'cloud-open', secondary: 'rain' },
-    sleet: { primary: 'cloud-open', secondary: 'sleet' },
-    snow: { primary: 'cloud-open', secondary: 'snow' },
-    thunderstorm: { primary: 'cloud-open', secondary: 'thunderstorm' },
-    wind: { primary: 'wind', secondary: '' },
+    clearDay: ['sun', 'sun-rays'],
+    clearNight: ['sun'],
+    partlyCloudyDay: ['cloud', 'sun-part', 'sun-part-rays'],
+    partlyCloudyNight: ['cloud', 'sun-part'],
+    cloudy: ['cloud', 'cloud-part'],
+    fog: ['fog'],
+    hail: ['cloud-open', 'hail'],
+    rain: ['cloud-open', 'rain'],
+    sleet: ['cloud-open', 'sleet'],
+    snow: ['cloud-open', 'snow'],
+    thunderstorm: ['cloud-open', 'thunderstorm'],
+    wind: ['wind'],
   }
 </script>
 
 <script lang="ts">
+  import { getDarkLightColor, getWeatherIconColors } from '../../logic/utils'
   import type { WeatherIconType } from '../../logic/weatherTypes'
+  import { darkMode } from '../../stores/store'
   export let icon: WeatherIconType
-  export let color: string = '#444'
+  let color: string = '#444'
 
-  let iconData: { primary: string; secondary: string }
+  let iconData: string[]
+
+  $: {
+    color = getDarkLightColor(getWeatherIconColors(icon), $darkMode)
+  }
   $: iconData = iconLookup[icon]
 </script>
 
@@ -33,25 +39,23 @@
   stroke-linecap="round"
   fill="none"
   stroke-width="1.5"
+  stroke={color}
 >
   <defs>
+    <path id="sun" d="M15 10.5a4.5 4.5 0 10.001 0" />
     <path
-      id="sun"
-      d="M15 10.5a4.5 4.5 0 10.001 0M15 5v2m0 18v-2M5 15h2m18 0h-2M7.75 7.75l1.4 1.4m13.1 13.1l-1.4-1.4m1.4-13.1l-1.4 1.4m-13.1 13.1l1.4-1.4"
+      id="sun-rays"
+      d="M15 5v2m0 18v-2M5 15h2m18 0h-2M7.75 7.75l1.4 1.4m13.1 13.1l-1.4-1.4m1.4-13.1l-1.4 1.4m-13.1 13.1l1.4-1.4"
     />
-    <path id="moon" d="M15 10.5a4.5 4.5 0 104.5 4.5a4.5 4.5 0 01-4.5-4.5 " />
     <path
       id="cloud-open"
       d="M7 20a4 4 0 110-8h1a4 4 0 1110-0h1.5a4 4 0 110 8"
     />
     <path id="cloud" d="M7 20a4 4 0 110-8h1a4 4 0 1110-0h1.5a4 4 0 110 8z" />
+    <path id="sun-part" d="M18 7a3.8 3.8 0 116 4.5" />
     <path
-      id="sun-part"
-      d="M18 7a3.8 3.8 0 116 4.5M21.5 1.2l0 1.5M27.5 8.8l1.5 0M25.8 4.6l1.1-1.1M17 4.6l-1.1-1.1M25.8 13l1.1 1.1"
-    />
-    <path
-      id="moon-part"
-      d="M18 7a4 4 0 013.5 -2.05a3.8 3.8 0 003.7 3.5a4.2 4 0 01-1.2 3.1"
+      id="sun-part-rays"
+      d="M21.5 1.2l0 1.5M27.5 8.8l1.5 0M25.8 4.6l1.1-1.1M17 4.6l-1.1-1.1M25.8 13l1.1 1.1"
     />
 
     <path
@@ -81,6 +85,10 @@
     />
   </defs>
 
-  <use href={`#${iconData.primary}`} stroke={color} />
-  <use href={`#${iconData.secondary}`} stroke={color} />
+  <use href={'#' + iconData[0]} />
+  <use href={'#' + iconData[1]} />
+  <use href={'#' + iconData[2]} />
 </svg>
+
+<style global>
+</style>

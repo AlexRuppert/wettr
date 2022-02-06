@@ -60,7 +60,7 @@
   <RadarCanvas {clouds} {viewBounds} />
 </div>
 
-<style>
+<style global>
   .sharpen2 {
     position: absolute;
     filter: blur(1px) invert(1) contrast(2);

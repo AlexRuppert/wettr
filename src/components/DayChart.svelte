@@ -200,12 +200,7 @@
         stroke-dasharray="4, 5"
         d={precipitationPath}
       />
-      <path
-        stroke={colors.temperature}
-        stroke-dasharray=".2, 5"
-        stroke-width="1.8"
-        d={temperaturePath}
-      />
+      <path stroke={colors.temperature + '70'} d={temperaturePath} />
     </g>
 
     <g font-size="10" font-weight="400" text-anchor="middle">
@@ -214,7 +209,7 @@
           stroke={colors.temperature}
           stroke-width="0.7"
           cx={point.x}
-          cy={Math.min(point.y, height-2)}
+          cy={Math.min(point.y, height - 2)}
           r="1.2"
           fill={colors.pointBackgroundColor}
         />
@@ -244,3 +239,6 @@
     {/if}
   {/if}
 </svg>
+<style global>
+  
+</style>

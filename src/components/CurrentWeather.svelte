@@ -3,9 +3,9 @@
   import WindDirection from './icons/WindDirection.svelte'
   import MiniRadar from './radar/MiniRadar.svelte'
   import { currentWeatherData, darkMode } from '../stores/store'
-  import { fly, draw, fade, scale, slide, blur } from 'svelte/transition'
+  import { fade, scale } from 'svelte/transition'
   import { getDarkLightColor, getWeatherIconColors } from '../logic/utils'
-  import { humidity, umbrellaOpen } from './icons/icons'
+  import { humidity } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
 
   function toLocalDecimal(num, precision = 0) {
@@ -18,111 +18,102 @@
 </script>
 
 <div
-  class="flex space-x-1 h-32 mx-1 relative tabular-nums children:(shadow-md rounded-md bg-white w-32 relative) "
+  class="flex space-x-1 h-32 mx-1 relative tabular-nums select-none children:(shadow-md rounded-md bg-white w-32 h-32 relative) "
 >
-  <div class="dark:bg-dark-600">
-    {#if weather && weather.timestamp}
-      <div
-        class="inset-0 absolute"
-        transition:fade={{ duration: ANIMATION_DURATION }}
-      >
-        <MiniRadar />
-      </div>
-
-      <div
-        class="text-shadow-light inset-0 absolute pointer-events-none children:(z-10 absolute pointer-events-none) "
-      >
+  {#if weather && weather.timestamp}
+    <div class="dark:bg-dark-600">
+      {#key weather.timestamp}
         <div
-          class="h-7 -mt-3  -ml-3 top-1/2 left-1/2 w-7"
-          transition:scale={{ duration: ANIMATION_DURATION }}
+          class="inset-0 absolute"
+          transition:fade={{ duration: ANIMATION_DURATION }}
         >
-          <div class="h-full -mt-[0.30rem] -ml-[0.10rem] w-full">
+          <MiniRadar />
+        </div>
+
+        <div
+          class="text-shadow-light pointer-events-none children:(z-10 absolute) "
+        >
+          <div class="h-8 -m-4 inset-1/2 w-8">
             <WindDirection direction={weather.windDirection} />
           </div>
-        </div>
-        <div
-          class="right-1 bottom-2"
-          transition:scale={{ duration: ANIMATION_DURATION }}
-        >
-          {toLocalDecimal(weather.windSpeed)}
-          <span class="text-xs text-size-[0.5rem]"
-            ><sup>km</sup>/<sub>h</sub></span
-          >
-        </div>
 
-        {#if weather.precipitation > 0.5}
           <div
-            class="flex bottom-2 left-1"
-            transition:scale={{ duration: ANIMATION_DURATION }}
+            class="flex space-x-1 bottom-2 left-2"
+            class:!hidden={weather.precipitation < 0.3}
           >
-            <span>
+            <div>
               {toLocalDecimal(
                 weather.precipitation,
                 weather.precipitation % 1 === weather.precipitation ? 0 : 1
-              )}<span class="pl-1 text-size-[0.5rem]"
-                ><sup>mm</sup>/<sub>h</sub></span
-              >
-            </span>
+              )}
+            </div>
+            <div class="pt-1 text-size-[0.5rem] self-center">
+              <sup>mm</sup>/<sub>h</sub>
+            </div>
           </div>
-        {/if}
-      </div>
-    {/if}
-  </div>
-  <div class="h-32 w-32 dark:bg-dark-600">
-    {#if weather && weather.timestamp}
-      {#key weather.icon}
-        <div
-          class="inset-2 absolute"
-          transition:scale={{ duration: ANIMATION_DURATION }}
-        >
-          <WeatherIcon
-            icon={weather.icon}
-            color={getDarkLightColor(
-              getWeatherIconColors(weather.icon),
-              $darkMode
-            )}
-          />
+
+          <div class="flex space-x-1 right-2 bottom-2">
+            <div class:current-warning-text={weather.windSpeed > 25}>
+              {toLocalDecimal(weather.windSpeed)}
+            </div>
+            <div class="pt-1 text-size-[0.5rem] self-center">
+              <sup>km</sup>/<sub>h</sub>
+            </div>
+          </div>
         </div>
       {/key}
-    {/if}
-  </div>
-  <div class="flex p-2 box-border  justify-end dark:bg-dark-600">
-    {#if weather && weather.timestamp}
-      <div class="">
+    </div>
+    <div class="dark:bg-dark-600">
+      {#key weather.icon}
+        <div
+          class="m-2 pt-1 inset-0 absolute"
+          transition:scale={{ duration: ANIMATION_DURATION }}
+        >
+          <WeatherIcon icon={weather.icon} />
+        </div>
+      {/key}
+    </div>
+    <div class="flex p-2 box-border justify-end dark:bg-dark-600">
+      {#key weather.temperature}
         <div
           class="flex font-light h-full mt-3 text-right text-7xl"
           transition:scale={{ duration: ANIMATION_DURATION }}
         >
-          <span class="text-right"
-            ><span
-              class="max-w-4 inline-flex overflow-hidden"
-              class:hidden={weather.temperature >= 0}>-</span
-            >{Math.abs(weather.temperature)}
-          </span><span class="font-light text-sm leading-[2.2]">°</span>
+          <span
+            class="max-w-4 overflow-hidden"
+            class:hidden={weather.temperature >= 0}>-</span
+          >{Math.abs(weather.temperature)}
+          <span class="mt-1 text-sm">°</span>
         </div>
 
         <div
           class="flex right-2 bottom-2 absolute"
           transition:scale={{ duration: ANIMATION_DURATION }}
         >
-          <div class="h-4 w-5 self-center">
-            <SvgIcon d={humidity} />
+          <div class="h-4 w-4 self-center">
+            <SvgIcon d={humidity} outline />
           </div>
           <div>
             {weather.relativeHumidity}
           </div>
-          <span class="ml-[.1rem] text-size-[0.5rem] leading-[2.1]">%</span>
+          <span class="text-size-[0.5rem] self-center">%</span>
         </div>
-      </div>
-    {/if}
-  </div>
+      {/key}
+    </div>
+  {/if}
 </div>
 
-<style>
+<style global>
   .text-shadow-light {
     text-shadow: 0 0 2px rgba(235, 235, 238, 1);
   }
-  :global(.dark .text-shadow-light) {
-    text-shadow: 0 0 2px rgba(15, 15, 15, 1);
+  @media (prefers-color-scheme: dark) {
+    .text-shadow-light {
+      text-shadow: 0 0 2px rgba(15, 15, 15, 1);
+    }
+  }
+
+  .current-warning-text {
+    @apply font-semibold text-orange-600;
   }
 </style>

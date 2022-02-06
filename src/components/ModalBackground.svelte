@@ -18,3 +18,6 @@
     on:click|stopPropagation={close}
   />
 {/if}
+<style global>
+  
+</style>

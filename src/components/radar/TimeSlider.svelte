@@ -1,10 +1,10 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { mdiSkipNext, mdiSkipPrevious } from '@mdi/js'
+  import { createEventDispatcher } from 'svelte'
   import IconButton from '../common/IconButton.svelte'
   import { getNowestTime } from '../../logic/radar/utils'
+  import { skipNext, skipPrevious } from '../icons/icons'
 
   export let sliderValue = 0
   export let times = []
@@ -58,13 +58,16 @@
 </script>
 
 <div class="flex my-2 relative">
-  <IconButton
-    label="Go Back"
-    icon={mdiSkipPrevious}
-    on:click={() => (sliderValue = Math.max(0, sliderValue - 1))}
-  />
+  <span>
+    <IconButton
+      label="Go Back"
+      icon={skipPrevious}
+      outline
+      on:click={() => (sliderValue = Math.max(0, sliderValue - 1))}
+    />
+  </span>
 
-  <span class="flex-grow mx-5 mt-1 w-full">
+  <span class="flex-grow mx-3 mt-1 w-full">
     <input
       type="range"
       bind:this={rangeElement}
@@ -73,11 +76,14 @@
       {max}
     />
   </span>
-  <IconButton
-    label="Go Forward"
-    icon={mdiSkipNext}
-    on:click={() => (sliderValue = Math.min(max, sliderValue + 1))}
-  />
+  <span>
+    <IconButton
+      label="Go Forward"
+      icon={skipNext}
+      outline
+      on:click={() => (sliderValue = Math.min(max, sliderValue + 1))}
+    />
+  </span>
   <div class="-top-10 left-0 z-20 absolute">
     <div
       bind:this={labelElement}
@@ -101,7 +107,7 @@
   </div>
 </div>
 
-<style>
+<style global>
   .time-label {
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1), 0 -3px 10px rgba(0, 0, 0, 0.3);
   }

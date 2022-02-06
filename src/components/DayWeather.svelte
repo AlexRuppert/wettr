@@ -2,9 +2,8 @@
   import type { WeatherDataType } from 'src/logic/weatherTypes'
 
   import DayChart from './DayChart.svelte'
-  import { darkMode, weatherData } from '../stores/store'
+  import { weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
-  import { getDarkLightColor } from '../logic/utils'
   import { fade, fly, blur, scale, slide, crossfade } from 'svelte/transition'
 
   let weather: {
@@ -39,7 +38,7 @@
 </script>
 
 <div
-  class="flex flex-col flex-nowrap font-light space-y-1 mx-1 transition-opacity duration-700 tabular-nums"
+  class="flex flex-col flex-nowrap font-light space-y-1 mx-1 transition-opacity duration-700 tabular-nums select-none"
 >
   {#each dummy as index, i (index)}
     <div
@@ -60,10 +59,7 @@
                     class="inset-0 absolute"
                     transition:scale={{ delay: j * 50 }}
                   >
-                    <WeatherIcon
-                      {icon}
-                      color={getDarkLightColor(colors, $darkMode)}
-                    />
+                    <WeatherIcon {icon} />
                   </div>
                 {/key}
               </div>
@@ -94,7 +90,7 @@
   {/each}
 </div>
 
-<style>
+<style global>
   .cold {
     @apply text-blue-600 dark:text-blue-400;
   }
