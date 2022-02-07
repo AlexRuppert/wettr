@@ -186,7 +186,7 @@
         {#each suggestions as entry, i}
           <a
             href={'#'}
-            class="font-semibold text-sm text-lg py-2 px-4 text-gray-700 block no-underline dark:(text-gray-400)"
+            class="font-semibold text-md text-lg py-3 px-4 text-gray-700 block no-underline dark:(text-gray-400)"
             class:selected={i === selectedSuggestion}
             on:click={() => selectSuggestion(entry)}
             on:mouseenter={() => (selectedSuggestion = i)}>{entry.name}</a

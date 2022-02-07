@@ -8,7 +8,7 @@ export interface Coordinates {
 
 export const loadLocations = async () => {
   const locationList = await (
-    await getCachedRequest(locationsUrl, 60 * 24)
+    await getCachedRequest(locationsUrl, 7 * 60 * 24)
   ).json()
   const locations = locationList.map(location => ({
     ...location,
