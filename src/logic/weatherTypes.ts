@@ -1,8 +1,8 @@
 export type WeatherIconType =
-  | 'clearDay'
-  | 'clearNight'
-  | 'partlyCloudyDay'
-  | 'partlyCloudyNight'
+  | 'clear-day'
+  | 'clear-night'
+  | 'partly-cloudy-day'
+  | 'partly-cloudy-night'
   | 'cloudy'
   | 'fog'
   | 'wind'
@@ -44,32 +44,32 @@ type common = {
   pressure_msl: number
   relative_humidity: number
   visibility: number
-  temperature: number  
+  temperature: number
   icon: WeatherIconType
 }
-
+export interface CurrentWeatherDataType extends common {
+  precipitation_10: number
+  precipitation_30: number
+  precipitation_60: number
+  wind_direction_10: number
+  wind_direction_30: number
+  wind_direction_60: number
+  wind_speed_10: number
+  wind_speed_30: number
+  wind_speed_60: number
+  wind_gust_direction_10: number
+  wind_gust_direction_30: number
+  wind_gust_direction_60: number
+  wind_gust_speed_10: number
+  wind_gust_speed_30: number
+  wind_gust_speed_60: number
+  sunshine_30: number
+  sunshine_60: number
+  fallback_source_ids: {}
+  icon: WeatherIconType
+}
 export interface RawCurrentWeatherDataType {
-  weather: common & {
-    precipitation_10: number
-    precipitation_30: number
-    precipitation_60: number
-    wind_direction_10: number
-    wind_direction_30: number
-    wind_direction_60: number
-    wind_speed_10: number
-    wind_speed_30: number
-    wind_speed_60: number
-    wind_gust_direction_10: number
-    wind_gust_direction_30: number
-    wind_gust_direction_60: number
-    wind_gust_speed_10: number
-    wind_gust_speed_30: number
-    wind_gust_speed_60: number
-    sunshine_30: number
-    sunshine_60: number
-    fallback_source_ids: {}
-    icon: WeatherIconType
-  }
+  weather: CurrentWeatherDataType
   sources: Source[]
 }
 export interface RawDayWeatherDataType {
@@ -100,6 +100,7 @@ export interface WeatherDataType {
   sunshine: number
   temperature: number
   icon: WeatherIconType
+  hours: number
 }
 
 interface dayTimeDataType {

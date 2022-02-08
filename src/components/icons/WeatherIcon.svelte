@@ -2,10 +2,10 @@
 
 <script context="module">
   const iconLookup = {
-    clearDay: ['sun', 'sun-rays'],
-    clearNight: ['sun'],
-    partlyCloudyDay: ['cloud', 'sun-part', 'sun-part-rays'],
-    partlyCloudyNight: ['cloud', 'sun-part'],
+    'clear-day': ['sun', 'sun-rays'],
+    'clear-night': ['sun'],
+    'partly-cloudy-day': ['cloud', 'sun-part', 'sun-part-rays'],
+    'partly-cloudy-night': ['cloud', 'sun-part'],
     cloudy: ['cloud', 'cloud-part'],
     fog: ['fog'],
     hail: ['cloud-open', 'hail'],

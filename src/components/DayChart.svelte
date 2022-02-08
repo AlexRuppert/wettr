@@ -119,20 +119,20 @@
 
       const sunninessPoints = weather.dayGraph.map(d => ({
         x: getX(dateToHoursFraction(new Date(d.timestamp))),
-        y: getGraphY(d.sunniness),
+        y: getGraphY(d.sunninessPercent),
       }))
       const precipitationPoints = weather.dayGraph.map(d => ({
         x: getX(dateToHoursFraction(new Date(d.timestamp))),
-        y: getGraphY(d.precipitation),
+        y: getGraphY(d.precipitationPercent),
       }))
       const temperaturePoints = weather.dayGraph
         .map(d => {
           const date = new Date(d.timestamp)
           return {
             x: getX(dateToHoursFraction(date)),
-            y: getGraphY(d.temperature),
-            flipY: d.temperature < 0.2,
-            temperature: getTotalTemperature(weather, d.temperature),
+            y: getGraphY(d.temperaturePercent),
+            flipY: d.temperaturePercent < 0.2,
+            temperature: getTotalTemperature(weather, d.temperaturePercent),
             hour: date.getHours(),
           }
         })

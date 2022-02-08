@@ -5,43 +5,33 @@ import type {
   WeatherIconType,
 } from './weatherTypes'
 import { getSunriseSunset } from './time'
-import { getWeatherIconColors } from './utils'
+import { getWeatherIconColors, isBetween } from './utils'
 import { getCachedRequest } from './cache'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
+
 let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
 
-export function normalizeIcon(icon) {
-  return icon.replace(/-\w/g, text => text.replace(/-/, '').toUpperCase())
+function trimCoordinates({ lon, lat }) {
+  return { lon: lon.toFixed(3), lat: lat.toFixed(3) }
 }
+
 export async function getCurrentWeather(lat: number, lon: number) {
   currentWeatherUrl.search = new URLSearchParams({
-    lat: lat.toFixed(3),
-    lon: lon.toFixed(3),
-    tz: 'Europe/Berlin',
+    ...trimCoordinates({ lon, lat }),
+    tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
   }).toString()
-  const result = processCurrentWeatherData(
+  return processCurrentWeatherData(
     await (await getCachedRequest(currentWeatherUrl.toString(), 9)).json()
   )
-
-  return result
-}
-
-function formatTimeZoneOffset(date = new Date()) {
-  let tzo = -date.getTimezoneOffset(),
-    dif = tzo >= 0 ? '+' : '-'
-  const pad = t => {
-    const normalized = Math.floor(Math.abs(t))
-    return (normalized < 10 ? '0' : '') + normalized
-  }
-  return dif + pad(tzo / 60) + ':' + pad(tzo % 60)
 }
 
 function addTimePortion(date = new Date(), beforeMidnight = false) {
-  return (
-    (beforeMidnight ? 'T23:59:00' : 'T00:00:00') + formatTimeZoneOffset(date)
-  )
+  const dateString = /[+-]\d{4}/.exec(date.toString())[0]
+  const timeZoneOffset = dateString.slice(0, 3) + ':' + dateString.slice(3)
+
+  return `T${beforeMidnight ? '23:59' : '00:00'}:00${timeZoneOffset}`
 }
 function dateToDateTime(date = new Date(), beforeMidnight = false) {
   return (
@@ -54,8 +44,7 @@ export async function getWeather(lat: number, lon: number, days = 3) {
   const future = new Date(now.getTime() + MS_IN_HOUR * 24 * days - 10)
 
   weatherUrl.search = new URLSearchParams({
-    lat: lat.toFixed(3),
-    lon: lon.toFixed(3),
+    ...trimCoordinates({ lon, lat }),
     days: days.toString(),
     date: dateToDateTime(now),
     last_date: dateToDateTime(future, true),
@@ -68,26 +57,85 @@ export async function getWeather(lat: number, lon: number, days = 3) {
   return result
 }
 
+function renameRaw(keys, raw) {
+  return Object.fromEntries(
+    keys.map(key => [
+      key
+        .replaceAll(/_([a-z])/g, (_, l) => l.toUpperCase())
+        .replaceAll(/_\d+/g, ''),
+      raw[key],
+    ])
+  )
+}
+
 function processCurrentWeatherData(
   weatherData: RawCurrentWeatherDataType
 ): WeatherDataType {
-  const weather = weatherData.weather
+  const renamed = renameRaw(
+    [
+      'timestamp',
+      'cloud_cover',
+      'condition',
+      'dew_point',
+      'precipitation_60',
+      'pressure_msl',
+      'relative_humidity',
+      'visibility',
+      'wind_direction_10',
+      'wind_speed_10',
+      'wind_gust_direction_10',
+      'wind_gust_speed_10',
+      'sunshine_30',
+      'temperature',
+      'icon',
+    ],
+    weatherData.weather
+  )
   return {
-    timestamp: weather.timestamp,
-    cloudCover: weather.cloud_cover,
-    condition: weather.condition,
-    dewPoint: weather.dew_point,
-    precipitation: weather.precipitation_60,
-    pressureMsl: weather.pressure_msl,
-    relativeHumidity: weather.relative_humidity,
-    visibility: weather.visibility,
-    windDirection: weather.wind_direction_10,
-    windSpeed: weather.wind_speed_10,
-    windGustDirection: weather.wind_gust_direction_10,
-    windGustSpeed: weather.wind_gust_speed_10,
-    sunshine: weather.sunshine_30,
-    temperature: Math.round(weather.temperature),
-    icon: normalizeIcon(weather.icon) as WeatherIconType,
+    ...renamed,
+    temperature: Math.round(renamed.temperature),
+  } as WeatherDataType
+}
+
+function getMostRelevantIcon(times) {
+  const iconValue = (icon: WeatherIconType) =>
+    /thunderstorm|hail/.test(icon) ? 12 : 1
+
+  const iconCount = new Map()
+  let maxIcon = 'clear-day'
+  let maxOccurrence = 0
+  times.forEach(time => {
+    const icon = time.icon.replace('night', 'day')
+    const value = (iconCount.get(icon) ?? 0) + iconValue(icon)
+    iconCount.set(icon, value)
+    if (value > maxOccurrence) {
+      maxOccurrence = value
+      maxIcon = icon
+    }
+  })
+  return maxIcon as WeatherIconType
+}
+
+function getDayGraphData(times: WeatherDataType[]) {
+  let temperatures = times.map(t => t.temperature).sort((a, b) => a - b)
+  const [min, max] = [temperatures[0], temperatures[temperatures.length - 1]]
+
+  const temperatureRange = max - min
+  return {
+    min: { temperature: min },
+    max: { temperature: max },
+    dayGraph: times.map(
+      ({ timestamp, temperature, precipitation, cloudCover }) => ({
+        timestamp: timestamp,
+        temperaturePercent:
+          temperatureRange === 0
+            ? 0
+            : Math.abs((temperature - min) / temperatureRange),
+        precipitationPercent:
+          Math.min(Math.pow(Math.sqrt(precipitation) * 1.7, 2), 6) / 6,
+        sunninessPercent: 1 - cloudCover / 100,
+      })
+    ),
   }
 }
 
@@ -96,119 +144,51 @@ function processWeatherData(
   lat,
   lon
 ): any[] {
-  const mapped = weatherData.weather.map(weather => ({
-    timestamp: weather.timestamp,
-    cloudCover: weather.cloud_cover,
-    condition: weather.condition,
-    dewPoint: weather.dew_point,
-    precipitation: weather.precipitation,
-    pressureMsl: weather.pressure_msl,
-    relativeHumidity: weather.relative_humidity,
-    visibility: weather.visibility,
-    windDirection: weather.wind_direction,
-    windSpeed: weather.wind_speed,
-    windGustDirection: weather.wind_gust_direction,
-    windGustSpeed: weather.wind_gust_speed,
-    sunshine: weather.sunshine,
-    temperature: Math.round(weather.temperature),
-    icon: normalizeIcon(weather.icon),
-  }))
+  const daysHash = new Map()
 
-  const daysHash = {}
-  mapped.forEach(element => {
-    const day = element.timestamp.split('T')[0]
-    if (!daysHash[day]) {
-      daysHash[day] = []
-    }
-    daysHash[day].push(element)
+  weatherData.weather.forEach(weather => {
+    const renamed = renameRaw(Object.keys(weather), weather)
+
+    const result = {
+      ...renamed,
+      temperature: Math.round(renamed.temperature),
+      hours: new Date(renamed.timestamp).getHours(),
+    } as WeatherDataType
+    const day = result.timestamp.split('T')[0]
+    daysHash.get(day)?.push(result) ?? daysHash.set(day, [result])
   })
 
-  let iconCount = {}
-  const between = (val: number, left: number, right: number) =>
-    val >= left && val <= right
-  const getHours = (timestamp: string | number | Date) =>
-    new Date(timestamp).getHours()
-  const mostRelevantIcon = times => {
-    const iconValue = (icon: WeatherIconType) => {
-      switch (icon) {
-        case 'thunderstorm':
-        case 'hail':
-          return 12
-        default:
-          return 1
-      }
-    }
-    iconCount = {}
-    times.forEach(
-      element =>
-        (iconCount[element.icon] =
-          iconValue(element.icon) + (iconCount[element.icon] ?? 0))
-    )
-    return Object.entries(iconCount)
-      .reduce(
-        (acc, [key, value]) => (value > acc[1] ? [key, value] : acc),
-        ['clear-day', 0]
-      )[0]
-      .replace('Night', 'Day') as WeatherIconType
-  }
-
-  const dayGraphData = (times: WeatherDataType[]) => {
-    let max = -Infinity,
-      min = Infinity
-
-    times.forEach(element => {
-      if (element.temperature > max) max = element.temperature
-      if (element.temperature < min) min = element.temperature
-    })
-
-    const temperatureRange = max - min
-    return {
-      min: { temperature: min },
-      max: { temperature: max },
-      dayGraph: times.map(time => {
-        return {
-          timestamp: time.timestamp,
-          temperature:
-            temperatureRange === 0
-              ? 0
-              : Math.abs((time.temperature - min) / temperatureRange),
-          precipitation:
-            Math.min(Math.pow(Math.sqrt(time.precipitation) * 1.7, 2), 6) / 6,
-          sunniness: 1 - time.cloudCover / 100,
-        }
-      }),
-    }
-  }
-  const result = Object.entries(daysHash).map(
-    ([key, value]: [string, (WeatherDataType & { hours?: number })[]]) => {
-      value = value.map(v => ({
-        ...v,
-        hours: getHours(v.timestamp),
-      }))
-
+  const result = Array.from(daysHash.entries()).map(
+    ([key, values]: [string, WeatherDataType[]]) => {
       const day = new Date(key)
-      const dayTimes = []
-      const morningTimes = []
-      const noonTimes = []
-      const eveningTimes = []
       const dayLight = getSunriseSunset(day, lat, lon)
+      let sections = {
+        day: [],
+        morning: [],
+        noon: [],
+        evening: [],
+      }
 
-      value.forEach(v => {
-        if (between(v.hours, 4, 22)) dayTimes.push(v)
-        if (between(v.hours, 4, 9)) morningTimes.push(v)
-        if (between(v.hours, 10, 17)) noonTimes.push(v)
-        if (between(v.hours, 18, 22)) eveningTimes.push(v)
+      values.forEach(v => {
+        ;[
+          ['day', 4, 22],
+          ['morning', 4, 9],
+          ['noon', 10, 22],
+          ['evening', 18, 22],
+        ].forEach(
+          ([name, start, end]) =>
+            isBetween(v.hours, +start, +end) && sections[name].push(v)
+        )
       })
-
       return {
         day,
         dayLight,
-        dayParts: [morningTimes, noonTimes, eveningTimes].map(t => {
-          const icon = mostRelevantIcon(t)
+        dayParts: [sections.morning, sections.noon, sections.evening].map(t => {
+          const icon = getMostRelevantIcon(t)
           return { icon, colors: getWeatherIconColors(icon) }
         }),
-        ...dayGraphData(dayTimes),
-        data: value as WeatherDataType[],
+        ...getDayGraphData(sections.day),
+        data: values as WeatherDataType[],
       }
     }
   )

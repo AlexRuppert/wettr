@@ -6,6 +6,7 @@
   import { fade, scale } from 'svelte/transition'
   import { humidity } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
+  import type { WeatherDataType } from '../logic/weatherTypes'
 
   function toLocalDecimal(num, precision = 0) {
     return Number.parseFloat(num).toFixed(precision).toLocaleString()
@@ -13,7 +14,7 @@
 
   const ANIMATION_DURATION = 150
   const MIN_PRECIPITATION = 0.3
-  let weather
+  let weather: WeatherDataType
   $: weather = $currentWeatherData
 </script>
 

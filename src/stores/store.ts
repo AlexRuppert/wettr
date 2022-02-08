@@ -9,6 +9,7 @@ import type { Coordinates } from './../logic/locations'
 import type { GeoBounds } from '../logic/radar/utils'
 
 import Worker from './../workers/worker.ts?worker'
+import type { WeatherDataType } from 'src/logic/weatherTypes'
 export const locationCoordinates = writable({ lat: 0, lon: 0 })
 
 const worker = new Worker()
@@ -39,7 +40,7 @@ worker.onmessage = function ({ data: { type, data } }) {
 export const thread = readable(worker)
 export const darkMode = writable(false)
 export const radarOpen = writable(false)
-export const currentWeatherData = writable({})
+export const currentWeatherData = writable<WeatherDataType>(null)
 export const weatherData = writable([])
 export const weatherWarningData = writable([])
 export const currentCloudData = writable({

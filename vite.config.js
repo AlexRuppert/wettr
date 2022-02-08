@@ -6,6 +6,7 @@ import { minifyHtml } from 'vite-plugin-html'
 import cssnano from 'cssnano'
 import postcss from 'postcss'
 import fs from 'fs'
+import { isVariableStatement } from 'typescript'
 
 const BASE = '/wettr/'
 // https://vitejs.dev/config/
@@ -28,6 +29,53 @@ function postPostCSS() {
       } else {
         css = css.replaceAll(variable, '--e' + i++)
       }
+    })
+
+    return css
+  }
+
+  function inlineCSSVariables(css) {
+    let scopeRegex = /\{[^\{]+\}/g
+    let declarationRegex = /(--e\d+):([^;]+);/g
+    let variableRegex = /var\((--e\d+)\)/g
+
+    const scopes = css.match(scopeRegex).map(scope => {
+      let result
+      const declarations = new Map()
+      const valiables = new Map()
+      while (null != (result = declarationRegex.exec(scope))) {
+        declarations.set(result[1], { original: result[0], value: result[2] })
+      }
+      while (null != (result = variableRegex.exec(scope))) {
+        valiables.set(result[1], { original: result[0] })
+      }
+
+      const declaredInScope = Array.from(valiables.keys()).filter(v =>
+        declarations.has(v)
+      )
+
+      let updated = scope
+      declaredInScope.forEach(d => {
+        declarations.forEach(v => {
+          v.value = v.value.replaceAll(
+            valiables.get(d).original,
+            declarations.get(d).value
+          )
+          v.original = v.original.replaceAll(
+            valiables.get(d).original,
+            declarations.get(d).value
+          )
+        })
+        updated = updated
+          .replaceAll(valiables.get(d).original, declarations.get(d).value)
+          .replaceAll(declarations.get(d).original, '')
+      })
+
+      return { original: scope, updated }
+    })
+
+    scopes.forEach(s => {
+      css = css.replaceAll(s.original, s.updated)
     })
 
     return css
@@ -68,6 +116,8 @@ function postPostCSS() {
 
         cssCode = minifyDark(cssCode)
         cssCode = simplify(cssCode)
+
+        cssCode = inlineCSSVariables(cssCode)
         postcss([
           cssnano({
             preset: 'advanced',
@@ -110,24 +160,11 @@ export default defineConfig({
         sourcemap: false,
       },
     }),
-    /* modify({
-      find: /:global\(([^\(]+)\)/g,
-      replace: (match, path) => path,
-    }),*/
-
     svelte(),
-
     visualizer(),
     minifyHtml(),
     postPostCSS(),
   ],
-
-  /*css: {
-    postcss: {
-     
-      plugins: [cssnano],
-    },
-  },*/
   base: BASE,
   build: {
     minify: 'terser',
@@ -144,21 +181,9 @@ export default defineConfig({
         unsafe_regexp: true,
         //
 
-        ecma: 2020,
         passes: 2,
       },
     },
-    /*rollupOptions: {
-      input: {
-        wetter: 'src/logic/weather.ts',
-      },
-      output: {
-        entryFileNames: '[name].js',
-        format: 'iife',
-        exports: 'named',
-        dir: 'dist',
-      },
-    },*/
   },
   server: {
     open: false,

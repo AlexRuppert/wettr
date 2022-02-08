@@ -35,10 +35,10 @@ export const getWeatherIconColors = (icon: WeatherIconType) => {
     case 'snow':
     case 'thunderstorm':
       return COLORS.rain
-    case 'clearDay':
-    case 'clearNight':
-    case 'partlyCloudyDay':
-    case 'partlyCloudyNight':
+    case 'clear-day':
+    case 'clear-night':
+    case 'partly-cloudy-day':
+    case 'partly-cloudy-night':
       return COLORS.sun
     default:
       return COLORS.foreground
@@ -50,3 +50,6 @@ export function sort<T>(array: T[], fn?: (a: T, b: T) => number) {
   copy.sort(fn)
   return copy
 }
+
+export const isBetween = (val: number, left: number, right: number) =>
+val >= left && val <= right
