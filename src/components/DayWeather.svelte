@@ -4,7 +4,8 @@
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
-  import { fade, fly, blur, scale, slide, crossfade } from 'svelte/transition'
+  import { fly, scale } from 'svelte/transition'
+  import { FORECAST_DAYS } from '../logic/reloader'
 
   let weather: {
     day: Date
@@ -34,14 +35,16 @@
     }
   })
 
-  let dummy = [...Array(6).keys()]
+  let dummy = [...Array(FORECAST_DAYS + 1).keys()]
 </script>
 
 <div
   class="flex flex-col flex-nowrap font-light space-y-1 mx-1 tabular-nums select-none"
 >
   {#each dummy as index, i (index)}
-    <div class="bg-white rounded-md h-30 shadow-md p-1 dark:bg-dark-600">
+    <div
+      class="bg-white rounded-md h-30 pt-1 shadow-md overflow-hidden flex flex-col dark:bg-dark-600"
+    >
       {#if weather && weather.length > 0}
         <div class="flex pr-1 pl-2 justify-between" transition:scale>
           <div class="text-3xl w-28">
@@ -77,7 +80,7 @@
             >
           </div>
         </div>
-        <div class="h-20 -mx-1" transition:fly={{ y: 15 }}>
+        <div class="overflow-hidden" transition:fly={{ y: 15 }}>
           <DayChart weather={weather[index]} />
         </div>
       {/if}

@@ -154,12 +154,22 @@ function processWeatherData(
       temperature: Math.round(renamed.temperature),
       hours: new Date(renamed.timestamp).getHours(),
     } as WeatherDataType
-    const day = result.timestamp.split('T')[0]
-    daysHash.get(day)?.push(result) ?? daysHash.set(day, [result])
+    const [dayString, timeString] = result.timestamp.split('T')
+    const tzOffset = +result.timestamp.split('+')[1].replace(':', '') / 100 //extremely simplified
+
+    let day = new Date(new Date(dayString).getTime() - tzOffset * MS_IN_HOUR)
+    if (timeString.startsWith('00')) {
+      const previousDay = new Date(day.getTime() - MS_IN_HOUR * 24)
+      daysHash.get(previousDay.toISOString())?.push({
+        ...result,
+      })
+    }
+    daysHash.get(day.toISOString())?.push(result) ??
+      daysHash.set(day.toISOString(), [result])
   })
 
   const result = Array.from(daysHash.entries()).map(
-    ([key, values]: [string, WeatherDataType[]]) => {
+    ([key, values]: [Date, WeatherDataType[]]) => {
       const day = new Date(key)
       const dayLight = getSunriseSunset(day, lat, lon)
       let sections = {
@@ -168,10 +178,11 @@ function processWeatherData(
         noon: [],
         evening: [],
       }
+      //console.log(day, values)
 
       values.forEach(v => {
         ;[
-          ['day', 4, 22],
+          ['day', 0, 24],
           ['morning', 4, 9],
           ['noon', 10, 22],
           ['evening', 18, 22],

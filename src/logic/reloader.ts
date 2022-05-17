@@ -4,7 +4,7 @@ import { locationCoordinates, thread } from './../stores/store'
 import { getLocationBounds } from './radar/utils'
 
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
-const FORECAST_DAYS = 6
+export const FORECAST_DAYS = 7
 let nextCheckTimeout
 let nextCheckTime = 0
 

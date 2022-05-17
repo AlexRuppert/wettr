@@ -8,7 +8,7 @@
   import { cubicOut } from 'svelte/easing'
   export let weather
 
-  let hours = [4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+  let hours = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
   let minHour = hours[0]
   let maxHour = hours[hours.length - 1]
   let hoursTotal = maxHour - minHour + 1
@@ -63,11 +63,15 @@
     colors = updateColors(value)
   })
 
-  function dateToHoursFraction(date: Date) {
+  function dateToHoursFraction(day: Date, date: Date) {
+    if (date.getTime() > day.getTime() && day.getDate() !== date.getDate()) {
+      return 24
+    }
     return (date.getHours() * 60 + date.getMinutes()) / 60
   }
   function getX(hour) {
-    return hourWidth * (hour - minHour) + hourWidth / 2
+    const padding = hourWidth * 24 * 0.02
+    return padding + hourWidth * (hour - minHour) * 0.96
   }
 
   function getY(value) {
@@ -98,15 +102,27 @@
       width = rect.width
       height = rect.height - 13
 
-      hourWidth = width / hoursTotal
+      hourWidth = width / (hoursTotal - 1)
     }
   }
-
+  const XSHIFT = 10
+  function extendPoints(points) {
+    const first = { x: 0, y: points[0].y }
+    let shiftedPoints = points.map(({ x, y }) => ({ x: x + XSHIFT, y }))
+    const last = {
+      x: points[points.length - 1].x + 50,
+      y: points[points.length - 1].y,
+    }
+    return [first, ...shiftedPoints, last]
+  }
   $: {
     if (weather && hourWidth) {
       clipPercent.set(0, { duration: 0 })
       const { sunrise, sunset } = weather.dayLight
-      dayLengthsX = [sunrise, sunset].map(t => getX(dateToHoursFraction(t)))
+
+      dayLengthsX = [sunrise, sunset].map(t =>
+        getX(dateToHoursFraction(weather.day, t))
+      )
 
       const now = new Date()
       const today =
@@ -114,22 +130,22 @@
         new Date(weather.dayGraph[weather.dayGraph.length - 1].timestamp) > now
 
       if (today) {
-        nowLineX = getX(dateToHoursFraction(now))
+        nowLineX = getX(dateToHoursFraction(weather.day, now))
       }
 
       const sunninessPoints = weather.dayGraph.map(d => ({
-        x: getX(dateToHoursFraction(new Date(d.timestamp))),
+        x: getX(dateToHoursFraction(weather.day, new Date(d.timestamp))),
         y: getGraphY(d.sunninessPercent),
       }))
       const precipitationPoints = weather.dayGraph.map(d => ({
-        x: getX(dateToHoursFraction(new Date(d.timestamp))),
+        x: getX(dateToHoursFraction(weather.day, new Date(d.timestamp))),
         y: getGraphY(d.precipitationPercent),
       }))
       const temperaturePoints = weather.dayGraph
         .map(d => {
           const date = new Date(d.timestamp)
           return {
-            x: getX(dateToHoursFraction(date)),
+            x: getX(dateToHoursFraction(weather.day, date)),
             y: getGraphY(d.temperaturePercent),
             flipY: d.temperaturePercent < 0.2,
             temperature: getTotalTemperature(weather, d.temperaturePercent),
@@ -146,9 +162,21 @@
       temperatureLabelPoints = temperaturePoints.filter((point, i, points) =>
         isCurrentValueDifferent(i, points)
       )
-      sunninessPath = getPathData(sunninessPoints, height, PADDING / 2)
-      temperaturePath = getPathData(temperaturePoints, height, PADDING / 2)
-      precipitationPath = getPathData(precipitationPoints, height, PADDING / 2)
+      sunninessPath = getPathData(
+        extendPoints(sunninessPoints),
+        height,
+        PADDING / 2
+      )
+      temperaturePath = getPathData(
+        extendPoints(temperaturePoints),
+        height,
+        PADDING / 2
+      )
+      precipitationPath = getPathData(
+        extendPoints(precipitationPoints),
+        height,
+        PADDING / 2
+      )
 
       clipPercent.set(100)
     }
@@ -167,7 +195,7 @@
   {#if weather && hourWidth}
     <defs>
       <clipPath id="cut-off-bottom">
-        <rect x="0" y="0" width="100%" height={height - 1} />
+        <rect x="0" y="0" width="120%" height={height - 1} />
       </clipPath>
       <clipPath id="swipe-in">
         <rect x="0" y="0" width={$clipPercent + '%'} height="100%" />
@@ -176,15 +204,15 @@
 
     <g fill={colors.night}>
       <path
-        d={`M${getX(minHour)},${height - 1}a5 5 0 1 0 0 ${14}h${
+        d={`M${getX(minHour) - 10},${height - 1}v${15 - 1} h${
           dayLengthsX[0] - getX(minHour)
-        }v-${14}z`}
+        }v-${15 - 1}z`}
       />
 
       <path
-        d={`M${dayLengthsX[1]},${height - 1}v${14}h${
+        d={`M${dayLengthsX[1] + 5},${height - 1}v${15 - 1} h${
           getX(maxHour) - dayLengthsX[1] + 2
-        }a-5 5 0 1 0 0 -${14}z`}
+        } v-${15 - 1}z`}
       />
     </g>
     <g
@@ -195,19 +223,21 @@
       font-weight="400"
     >
       {#each hours as hour, i}
-        <text x={getX(hour)} y="96%"> {hour}</text>
+        <text x={getX(hour)} y="96%">
+          {hour.toString().replace('24', '0')}</text
+        >
       {/each}
     </g>
     <g clip-path="url(#swipe-in)">
-      <g clip-path="url(#cut-off-bottom)">
+      <g clip-path="url(#cut-off-bottom)" transform={`translate(-${XSHIFT} 0)`}>
         <path
           fill={colors.sunniness + '10'}
-          d={sunninessPath + `V${height + 1}H${getX(4)}z`}
+          d={sunninessPath + `V${height + 1}H${getX(0)}z`}
         />
         <path stroke={colors.sunniness} d={sunninessPath} />
         <path
           fill={colors.precipitation + '20'}
-          d={precipitationPath + `V${height + 1}H${getX(4)}z`}
+          d={precipitationPath + `V${height + 1}H${getX(0)}z`}
         />
         <path
           stroke={colors.precipitation}
