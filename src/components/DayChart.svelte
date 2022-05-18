@@ -26,6 +26,8 @@
   let temperaturePath = ''
   let precipitationPath = ''
 
+  let dayString = weather.day.toISOString().slice(0, 10)
+
   const clipPercent = tweened(0, {
     duration: 500,
     easing: cubicOut,
@@ -230,11 +232,19 @@
     </g>
     <g clip-path="url(#swipe-in)">
       <g clip-path="url(#cut-off-bottom)" transform={`translate(-${XSHIFT} 0)`}>
+        <clipPath id={`precipitation-clip-${dayString}`}>
+          <path d={precipitationPath + 'V0H0V100z'} />
+        </clipPath>
         <path
+          clip-path={`url(#precipitation-clip-${dayString})`}
           fill={colors.sunniness + '10'}
           d={sunninessPath + `V${height + 1}H${getX(0)}z`}
         />
-        <path stroke={colors.sunniness} d={sunninessPath} />
+        <path
+          clip-path={`url(#precipitation-clip-${dayString})`}
+          stroke={colors.sunniness}
+          d={sunninessPath}
+        />
         <path
           fill={colors.precipitation + '20'}
           d={precipitationPath + `V${height + 1}H${getX(0)}z`}
@@ -244,7 +254,7 @@
           stroke-dasharray="4, 5"
           d={precipitationPath}
         />
-        <path stroke={colors.temperature + '70'} d={temperaturePath} />
+        <path stroke={colors.temperature + '50'} d={temperaturePath} />
       </g>
 
       <g font-size="10" font-weight="400" text-anchor="middle">
