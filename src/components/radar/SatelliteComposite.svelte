@@ -29,8 +29,8 @@
       .join(',')
 
     return `https://sgx.geodatenzentrum.de/wms_topplus_open?service=wms&version=1.3.0&request=GetMap&Layers=web&STYLES=default&BBOX=${bbox}&CRS=EPSG:4326&width=${
-      width * 1.5
-    }&Height=${width * 1.5}&Format=image/jpeg`
+      width * 2
+    }&Height=${width * 2}&Format=image/jpeg`
   }
 
   $: (async () => {
@@ -41,7 +41,7 @@
         YEAR
       )
       //const blob = await (await getCachedRequest(satelliteImageUrl)).blob()
-      satelliteImage = satelliteImageUrl//URL.createObjectURL(blob)
+      satelliteImage = satelliteImageUrl //URL.createObjectURL(blob)
     }
   })()
 </script>
@@ -51,7 +51,6 @@
   style={`min-height:${WIDTH - 22}px`}
 >
   {#if satelliteImage}
-    <img class="sharpen2" src={satelliteImage} alt="" aria-hidden="true" />
     <img src={satelliteImage} alt="" transition:fade={{ duration: 150 }} />
   {/if}
   <RadarCanvas {clouds} {viewBounds} />
