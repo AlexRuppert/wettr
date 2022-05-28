@@ -22,7 +22,7 @@
   import type { WeatherIconType } from '../../logic/weatherTypes'
   import { darkMode } from '../../stores/store'
   export let icon: WeatherIconType
-  let color: string = '#444'
+  let color: string = 'currentColor'
 
   let iconData: string[]
 
@@ -33,10 +33,9 @@
 </script>
 
 <svg
-  viewBox="0 0 30 30"
-  xmlns="http://www.w3.org/2000/svg"
   stroke-linejoin="round"
   stroke-linecap="round"
+  viewBox="0 0 30 30"
   fill="none"
   stroke-width="1.5"
   stroke={color}

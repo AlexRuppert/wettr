@@ -13,5 +13,6 @@
 <style global>
   button {
     touch-action: manipulation;
+    color: inherit;
   }
 </style>

@@ -188,11 +188,11 @@
 <svg
   width="100%"
   height="100%"
-  bind:this={svg}
-  fill="none"
-  stroke="none"
   stroke-linecap="round"
   stroke-linejoin="round"
+  fill="none"
+  stroke="none"
+  bind:this={svg}
 >
   {#if weather && hourWidth}
     <defs>

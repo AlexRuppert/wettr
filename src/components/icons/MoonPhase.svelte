@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { round } from '../../logic/utils'
-
   export let timestamp = new Date()
   let l = 1
   let r = 1
@@ -26,12 +24,12 @@
 <svg
   width="100%"
   height="100%"
-  fill="currentColor"
-  stroke="currentColor"
-  stroke-width={l < -0.85 || r < -0.85 ? '0.1' : '0'}
   stroke-linecap="butt"
   stroke-linejoin="round"
   viewBox="-3 0 6 6"
+  fill="currentColor"
+  stroke="currentColor"
+  stroke-width={l < -0.85 || r < -0.85 ? '0.1' : '0'}
 >
   <path
     shape-rendering="geometricPrecision"
