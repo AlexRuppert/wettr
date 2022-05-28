@@ -83,7 +83,7 @@
         </div>
         <div class="overflow-hidden relative" transition:fly={{ y: 15 }}>
           <DayChart weather={weather[index]} />
-          <div class="absolute w-2 h-2 bottom-3.05 left-1 z-20">
+          <div class="absolute w-2 h-2 bottom-3 left-1 z-20">
             <MoonPhase timestamp={weather[index].day} />
           </div>
         </div>

@@ -13,8 +13,6 @@
     const under50 = -Math.min(0, phase - 0.5)
     l = 1 - 4 * under50
     r = 1 - 4 * over50
-
-    console.log(r, l)
   }
   $: {
     phase = getMoonRatio(timestamp)
