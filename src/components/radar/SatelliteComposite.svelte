@@ -27,13 +27,10 @@
     ]
       .map(num => Number.parseFloat(num).toFixed(3))
       .join(',')
-    /*return `https://sgx.geodatenzentrum.de/wms_sentinel2_de?service=wms&version=1.3.0&request=GetMap&Layers=rgb&STYLES=&BBOX=${bbox}&CRS=EPSG:4326&width=${
-      width * 2
-    }&Height=${width * 2}&Format=image/jpeg&TIME=${year}`*/
 
-    return `https://sgx.geodatenzentrum.de/wms_topplus_open?service=wms&version=1.3.0&request=GetMap&Layers=p25&STYLES=default&BBOX=${bbox}&CRS=EPSG:4326&width=${
-      width * 2
-    }&Height=${width * 2}&Format=image/jpeg`
+    return `https://sgx.geodatenzentrum.de/wms_topplus_open?service=wms&version=1.3.0&request=GetMap&Layers=web&STYLES=default&BBOX=${bbox}&CRS=EPSG:4326&width=${
+      width * 1.5
+    }&Height=${width * 1.5}&Format=image/jpeg`
   }
 
   $: (async () => {
@@ -43,8 +40,8 @@
         WIDTH,
         YEAR
       )
-      const blob = await (await getCachedRequest(satelliteImageUrl)).blob()
-      satelliteImage = URL.createObjectURL(blob)
+      //const blob = await (await getCachedRequest(satelliteImageUrl)).blob()
+      satelliteImage = satelliteImageUrl//URL.createObjectURL(blob)
     }
   })()
 </script>
