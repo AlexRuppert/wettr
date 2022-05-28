@@ -52,4 +52,9 @@ export function sort<T>(array: T[], fn?: (a: T, b: T) => number) {
 }
 
 export const isBetween = (val: number, left: number, right: number) =>
-val >= left && val <= right
+  val >= left && val <= right
+
+export const round = (num: number, decimals: number = 0) => {
+  const factor = 10 ** decimals
+  return Math.round(num * factor) / factor
+}

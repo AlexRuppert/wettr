@@ -226,7 +226,7 @@
     >
       {#each hours as hour, i}
         <text x={getX(hour)} y="96%">
-          {hour.toString().replace('24', '0')}</text
+          {hour.toString().replace('0', '').replace('24', '0')}</text
         >
       {/each}
     </g>

@@ -6,6 +6,7 @@
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { fly, scale } from 'svelte/transition'
   import { FORECAST_DAYS } from '../logic/reloader'
+  import MoonPhase from './icons/MoonPhase.svelte'
 
   let weather: {
     day: Date
@@ -80,8 +81,11 @@
             >
           </div>
         </div>
-        <div class="overflow-hidden" transition:fly={{ y: 15 }}>
+        <div class="overflow-hidden relative" transition:fly={{ y: 15 }}>
           <DayChart weather={weather[index]} />
+          <div class="absolute w-2 h-2 bottom-3.05 left-1 z-20">
+            <MoonPhase timestamp={weather[index].day} />
+          </div>
         </div>
       {/if}
     </div>
