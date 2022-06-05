@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { WeatherDataType } from 'src/logic/weatherTypes'
+  import type { DayWeatherDataType, WeatherDataType, WeatherIconType } from 'src/logic/weatherTypes'
 
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
@@ -8,15 +8,7 @@
   import { FORECAST_DAYS } from '../logic/reloader'
   import MoonPhase from './icons/MoonPhase.svelte'
 
-  let weather: {
-    day: Date
-    dayParts: any
-    max: any
-    min: any
-    dayGraph: any
-    dayLight: any
-    data: WeatherDataType[]
-  }[]
+  let weather: DayWeatherDataType[]
   $: {
     weather = $weatherData
   }
@@ -53,7 +45,7 @@
             <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
           </div>
           <div class="flex w-32 justify-between">
-            {#each weather[index].dayParts as { icon, colors }, j (i + '' + j)}
+            {#each weather[index].dayParts as { icon }, j (i + '' + j)}
               <div class="flex h-8 w-8 items-center relative self-end">
                 {#key weather[index].dayParts}
                   <div

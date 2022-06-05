@@ -54,7 +54,11 @@ function bezier(a, i, height, paddingBottom) {
   return `C${startPoint.x},${startPoint.y} ${endPoint.x},${endPoint.y} ${a[i].x},${a[i].y}`
 }
 
-export function getPathData(points, height, paddingBottom) {
+export function getPathData(
+  points: { x: number; y: number }[],
+  height: number,
+  paddingBottom: number
+) {
   if (points.length > 0) {
     let beziers = ''
     for (let i = 1; i < points.length; i++) {

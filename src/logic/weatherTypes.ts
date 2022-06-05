@@ -103,13 +103,19 @@ export interface WeatherDataType {
   hours: number
 }
 
-interface dayTimeDataType {
-  icon: WeatherIconType
-}
+
 export interface DayWeatherDataType {
   day: Date
-  morning: dayTimeDataType
-  noon: dayTimeDataType
-  evening: dayTimeDataType
+  dayParts: { icon: WeatherIconType }[]
+  max: { temperature: number }
+  min: { temperature: number }
+  dayGraph: {
+    timestamp: Date
+    sunninessPercent: number
+    precipitationPercent: number
+    temperaturePercent: number
+    temperature: number
+  }[]
+  dayLight: { sunrise: Date; sunset: Date }
   data: WeatherDataType[]
 }

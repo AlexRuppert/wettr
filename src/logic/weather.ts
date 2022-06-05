@@ -126,11 +126,12 @@ function getDayGraphData(times: WeatherDataType[]) {
     max: { temperature: max },
     dayGraph: times.map(
       ({ timestamp, temperature, precipitation, cloudCover }) => ({
-        timestamp: timestamp,
+        timestamp: new Date(timestamp),
         temperaturePercent:
           temperatureRange === 0
             ? 0
             : Math.abs((temperature - min) / temperatureRange),
+        temperature,
         precipitationPercent:
           Math.min(Math.pow(Math.sqrt(precipitation) * 1.7, 2), 6) / 6,
         sunninessPercent: 1 - cloudCover / 100,
@@ -196,7 +197,7 @@ function processWeatherData(
         dayLight,
         dayParts: [sections.morning, sections.noon, sections.evening].map(t => {
           const icon = getMostRelevantIcon(t)
-          return { icon, colors: getWeatherIconColors(icon) }
+          return { icon }
         }),
         ...getDayGraphData(sections.day),
         data: values as WeatherDataType[],

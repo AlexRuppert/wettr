@@ -6,182 +6,183 @@
   import { getPathData } from '../logic/chart/path'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
-  export let weather
+  import type { DayWeatherDataType } from 'src/logic/weatherTypes'
+  export let weather: DayWeatherDataType
 
-  let hours = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
-  let minHour = hours[0]
-  let maxHour = hours[hours.length - 1]
-  let hoursTotal = maxHour - minHour + 1
+  type GraphPoint = {
+    x: number
+    y: number
+  }
+  type TemperatureGraphPoint = GraphPoint & {
+    flipY: boolean
+    temperature: number
+    hour: number
+  }
+  const [minHour, maxHour] = [0, 24]
+  const hours = [...new Array(13)].map((_, i) => i * 2)
+  const hoursTotal = maxHour
 
-  let hourWidth
-  let width
-  let height
+  const PADDING_X = 7.5
+  const PADDING_Y = 5
+
+  let hourWidth: number
+  let width: number
+  let height: number
   let svg: SVGSVGElement
+
+  let pathFillCloseSuffix
 
   let dayLengthsX = [0, 100]
   let nowLineX = -5
 
-  let temperatureLabelPoints = []
-  let sunninessPath = ''
-  let temperaturePath = ''
-  let precipitationPath = ''
+  let temperatureLabelPoints: TemperatureGraphPoint[] = []
 
-  let dayString = weather.day.toISOString().slice(0, 10)
+  let sunninessPath = ''
+  let precipitationPath = ''
+  let temperaturePath = ''
+
+  let dayString = weather.day.toISOString()
 
   const clipPercent = tweened(0, {
-    duration: 500,
+    duration: 600,
+    delay: 100,
     easing: cubicOut,
   })
 
-  const updateColors = darkMode => {
-    if (darkMode) {
-      return {
-        dataLabelBackgroundColor: '#222222' + '70',
-        pointBackgroundColor: '#222',
-        currentTime: '#f66',
-        tick: COLORS.foreground.dark + 'f0',
-        night: '#000000' + '32',
-        temperature: COLORS.foreground.dark,
-        precipitation: COLORS.rain.dark,
-        sunniness: COLORS.sun.dark,
-      }
-    } else {
-      return {
-        dataLabelBackgroundColor: '#ffffff' + 'a0',
-        pointBackgroundColor: '#fff',
-        currentTime: '#a00',
-        tick: COLORS.foreground.light + 'c0',
-        night: '#444464' + '10',
-        temperature: COLORS.foreground.light,
-        precipitation: COLORS.rain.light,
-        sunniness: COLORS.sun.light,
-      }
+  const updateColors = (darkMode: boolean) => {
+    const variation = darkMode ? 'dark' : 'light'
+    return {
+      dataLabelBackgroundColor: darkMode ? '#22222270' : '#ffffffa0',
+      pointBackgroundColor: darkMode ? '#222' : '#fff',
+      currentTime: darkMode ? '#f66' : '#a00',
+      tick: COLORS.foreground[variation] + 'a0',
+      night: darkMode ? '#00000050' : '#44446420',
+      temperature: COLORS.foreground[variation],
+      precipitation: COLORS.rain[variation],
+      precipitationFill: COLORS.rain[variation] + '20',
+      sunniness: COLORS.sun[variation],
+      sunninessFill: COLORS.sun[variation] + '10',
     }
   }
 
-  let colors = updateColors($darkMode)
-  const PADDING = 5
-  darkMode.subscribe(async value => {
-    colors = updateColors(value)
-  })
+  let colors
+  $: {
+    colors = updateColors($darkMode)
+  }
+  clipPercent.set(0, { duration: 0 })
+  $: {
+    if (weather && svg) {
+      clipPercent.set(0, { duration: 0 })
+      updateDimensions(svg.getBoundingClientRect())
+      updateData(weather)
+      clipPercent.set(110)
+    }
+  }
 
+  function updateData(weather: DayWeatherDataType) {
+    const { sunrise, sunset } = weather.dayLight
+
+    dayLengthsX = [sunrise, sunset].map(t =>
+      getX(dateToHoursFraction(weather.day, t))
+    )
+
+    const now = new Date()
+    const today = weather.dayGraph[0].timestamp.getDate() === now.getDate()
+
+    if (today) {
+      nowLineX = getX(dateToHoursFraction(weather.day, now))
+    }
+
+    const sunninessPoints = []
+    const temperaturePoints = []
+    const precipitationPoints = []
+
+    weather.dayGraph.forEach(
+      ({
+        timestamp,
+        temperature,
+        sunninessPercent,
+        temperaturePercent,
+        precipitationPercent,
+      }) => {
+        const hourFraction = dateToHoursFraction(weather.day, timestamp)
+        const x = getX(hourFraction)
+        const flipY = temperaturePercent < 0.2
+        const hour = timestamp.getHours()
+
+        sunninessPoints.push({
+          x,
+          y: getGraphY(sunninessPercent),
+        })
+        if (
+          temperature >= weather.max.temperature ||
+          temperature <= weather.min.temperature ||
+          hour % 2 === 0
+        )
+          temperaturePoints.push({
+            x,
+            y: getGraphY(temperaturePercent),
+            temperature,
+            flipY,
+          })
+        precipitationPoints.push({ x, y: getGraphY(precipitationPercent) })
+      }
+    )
+
+    temperatureLabelPoints = temperaturePoints.filter((point, i, points) =>
+      isCurrentValueDifferent(i, points)
+    )
+    ;[sunninessPath, temperaturePath, precipitationPath] = [
+      sunninessPoints,
+      temperaturePoints,
+      precipitationPoints,
+    ].map((points, i) =>
+      getPathData(extendPoints(points, width), height, PADDING_Y / 2)
+    )
+  }
+
+  function updateDimensions(rect: DOMRect) {
+    width = rect.width
+    height = rect.height - 13
+    hourWidth = width / hoursTotal
+    pathFillCloseSuffix = `V${height + 1}H${getX(-1)}z`
+  }
   function dateToHoursFraction(day: Date, date: Date) {
     if (date.getTime() > day.getTime() && day.getDate() !== date.getDate()) {
       return 24
     }
-    return (date.getHours() * 60 + date.getMinutes()) / 60
+    return date.getHours() + date.getMinutes() / 60
   }
-  function getX(hour) {
-    const padding = hourWidth * 24 * 0.02
-    return padding + hourWidth * (hour - minHour) * 0.96
+  function getX(hour: number) {
+    return PADDING_X + hourWidth * (hour - minHour) * 0.96
   }
 
-  function getY(value) {
+  function getY(value: number) {
     return Math.max(
-      PADDING,
-      Math.min((1 - value) * height, height - PADDING / 2)
+      PADDING_Y,
+      Math.min((1 - value) * height, height - PADDING_Y / 2)
     )
   }
 
-  function getGraphY(value) {
+  function getGraphY(value: number) {
     return value < 0.01 ? height : getY(value)
   }
 
-  function isCurrentValueDifferent(index, points) {
+  function isCurrentValueDifferent(index: number, points: { y: number }[]) {
     const value = points[index].y
     const valuePrevious = points[index - 1]?.y ?? undefined
     return value !== valuePrevious
   }
 
-  function getTotalTemperature(weather, value) {
-    const l = weather.min.temperature
-    const r = weather.max.temperature
-    return l + value * (r - l)
-  }
-  $: {
-    if (svg) {
-      const rect = svg.getBoundingClientRect()
-      width = rect.width
-      height = rect.height - 13
-
-      hourWidth = width / (hoursTotal - 1)
-    }
-  }
-  const XSHIFT = 10
-  function extendPoints(points) {
-    const first = { x: 0, y: points[0].y }
-    let shiftedPoints = points.map(({ x, y }) => ({ x: x + XSHIFT, y }))
-    const last = {
-      x: points[points.length - 1].x + 50,
-      y: points[points.length - 1].y,
-    }
-    return [first, ...shiftedPoints, last]
-  }
-  $: {
-    if (weather && hourWidth) {
-      clipPercent.set(0, { duration: 0 })
-      const { sunrise, sunset } = weather.dayLight
-
-      dayLengthsX = [sunrise, sunset].map(t =>
-        getX(dateToHoursFraction(weather.day, t))
-      )
-
-      const now = new Date()
-      const today =
-        new Date(weather.dayGraph[0].timestamp) < now &&
-        new Date(weather.dayGraph[weather.dayGraph.length - 1].timestamp) > now
-
-      if (today) {
-        nowLineX = getX(dateToHoursFraction(weather.day, now))
-      }
-
-      const sunninessPoints = weather.dayGraph.map(d => ({
-        x: getX(dateToHoursFraction(weather.day, new Date(d.timestamp))),
-        y: getGraphY(d.sunninessPercent),
-      }))
-      const precipitationPoints = weather.dayGraph.map(d => ({
-        x: getX(dateToHoursFraction(weather.day, new Date(d.timestamp))),
-        y: getGraphY(d.precipitationPercent),
-      }))
-      const temperaturePoints = weather.dayGraph
-        .map(d => {
-          const date = new Date(d.timestamp)
-          return {
-            x: getX(dateToHoursFraction(weather.day, date)),
-            y: getGraphY(d.temperaturePercent),
-            flipY: d.temperaturePercent < 0.2,
-            temperature: getTotalTemperature(weather, d.temperaturePercent),
-            hour: date.getHours(),
-          }
-        })
-        .filter(
-          ({ hour, temperature }) =>
-            temperature >= weather.max.temperature ||
-            temperature <= weather.min.temperature ||
-            hour % 2 === 0
-        )
-
-      temperatureLabelPoints = temperaturePoints.filter((point, i, points) =>
-        isCurrentValueDifferent(i, points)
-      )
-      sunninessPath = getPathData(
-        extendPoints(sunninessPoints),
-        height,
-        PADDING / 2
-      )
-      temperaturePath = getPathData(
-        extendPoints(temperaturePoints),
-        height,
-        PADDING / 2
-      )
-      precipitationPath = getPathData(
-        extendPoints(precipitationPoints),
-        height,
-        PADDING / 2
-      )
-
-      clipPercent.set(100)
-    }
+  function extendPoints(points: GraphPoint[], width: number) {
+    return [
+      { x: 0, y: points[0].y },
+      ...points,
+      {
+        x: width + 10,
+        y: points[points.length - 1].y,
+      },
+    ]
   }
 </script>
 
@@ -191,106 +192,75 @@
   stroke-linecap="round"
   stroke-linejoin="round"
   fill="none"
-  stroke="none"
   bind:this={svg}
+  font-size="10"
+  font-weight="400"
+  text-anchor="middle"
 >
   {#if weather && hourWidth}
     <defs>
-      <clipPath id="cut-off-bottom">
-        <rect x="0" y="0" width="120%" height={height - 1} />
+      <clipPath id="cut-off">
+        <rect width={$clipPercent + '%'} height={height - 1} />
       </clipPath>
-      <clipPath id="swipe-in">
-        <rect x="0" y="0" width={$clipPercent + '%'} height="100%" />
+      <clipPath id={`precipitation-clip-${dayString}`}>
+        <path d={precipitationPath + 'V0H0V100z'} />
       </clipPath>
     </defs>
 
-    <g fill={colors.night}>
-      <path
-        d={`M${getX(minHour) - 10},${height - 1}v${15 - 1} h${
-          dayLengthsX[0] - getX(minHour)
-        }v-${15 - 1}z`}
-      />
+    <path
+      fill={colors.night}
+      d={`M${getX(-1)} ${height - 1}v${20}H${dayLengthsX[0]}v-${20}zM${
+        dayLengthsX[1]
+      } ${height - 1}v${20}H${getX(maxHour + 1)}v-${20}z`}
+    />
 
+    {#each hours.slice(1) as hour, i}
+      <text fill={colors.tick} x={getX(hour)} y="96%">
+        {hour >= maxHour ? 0 : hour}</text
+      >
+    {/each}
+
+    <g clip-path="url(#cut-off)">
       <path
-        d={`M${dayLengthsX[1] + 5},${height - 1}v${15 - 1} h${
-          getX(maxHour) - dayLengthsX[1] + 2
-        } v-${15 - 1}z`}
+        clip-path={`url(#precipitation-clip-${dayString})`}
+        fill={colors.sunninessFill}
+        stroke={colors.sunniness}
+        d={sunninessPath + pathFillCloseSuffix}
       />
-    </g>
-    <g
-      stroke-width="0"
-      fill={colors.tick}
-      text-anchor="middle"
-      font-size="10"
-      font-weight="400"
-    >
-      {#each hours as hour, i}
-        <text x={getX(hour)} y="96%">
-          {hour.toString().replace('0', '').replace('24', '0')}</text
+      <path
+        stroke-dasharray="4,5"
+        fill={colors.precipitationFill}
+        stroke={colors.precipitation}
+        d={precipitationPath + pathFillCloseSuffix}
+      />
+      <path stroke={colors.temperature + '50'} d={temperaturePath} />
+      <line
+        x1={nowLineX}
+        x2={nowLineX}
+        y2={height}
+        stroke={colors.currentTime}
+        stroke-width="0.5"
+      />
+      {#each temperatureLabelPoints as point, i}
+        <circle
+          stroke={colors.temperature}
+          stroke-width="0.7"
+          cx={point.x}
+          cy={Math.min(point.y, height - 2.7)}
+          r="1.2"
+          fill={colors.pointBackgroundColor}
+        />
+        <g
+          transform={`translate(${point.x + (i === 0 ? 5 : -7)} ${
+            point.y + (point.flipY ? -3 : 8)
+          })`}
         >
+          <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
+            >{point.temperature}
+          </text>
+          <text fill={colors.temperature}>{point.temperature}</text>
+        </g>
       {/each}
-    </g>
-    <g clip-path="url(#swipe-in)">
-      <g clip-path="url(#cut-off-bottom)" transform={`translate(-${XSHIFT} 0)`}>
-        <clipPath id={`precipitation-clip-${dayString}`}>
-          <path d={precipitationPath + 'V0H0V100z'} />
-        </clipPath>
-        <path
-          clip-path={`url(#precipitation-clip-${dayString})`}
-          fill={colors.sunniness + '10'}
-          d={sunninessPath + `V${height + 1}H${getX(0)}z`}
-        />
-        <path
-          clip-path={`url(#precipitation-clip-${dayString})`}
-          stroke={colors.sunniness}
-          d={sunninessPath}
-        />
-        <path
-          fill={colors.precipitation + '20'}
-          d={precipitationPath + `V${height + 1}H${getX(0)}z`}
-        />
-        <path
-          stroke={colors.precipitation}
-          stroke-dasharray="4, 5"
-          d={precipitationPath}
-        />
-        <path stroke={colors.temperature + '50'} d={temperaturePath} />
-      </g>
-
-      <g font-size="10" font-weight="400" text-anchor="middle">
-        {#each temperatureLabelPoints as point, i}
-          <circle
-            stroke={colors.temperature}
-            stroke-width="0.7"
-            cx={point.x}
-            cy={Math.min(point.y, height - 2)}
-            r="1.2"
-            fill={colors.pointBackgroundColor}
-          />
-          <g
-            transform={`translate(${point.x + (i === 0 ? 5 : -7)} ${
-              point.y + (point.flipY ? -3 : 8)
-            })`}
-          >
-            <text
-              fill={colors.dataLabelBackgroundColor}
-              stroke={colors.dataLabelBackgroundColor}
-              stroke-width="3"
-              >{point.temperature}
-            </text>
-            <text fill={colors.temperature}>{point.temperature} </text>
-          </g>
-        {/each}
-      </g>
-      {#if nowLineX > 0}
-        <line
-          x1={nowLineX}
-          x2={nowLineX}
-          y2={height}
-          stroke={colors.currentTime}
-          stroke-width="0.5"
-        />
-      {/if}
     </g>
   {/if}
 </svg>
