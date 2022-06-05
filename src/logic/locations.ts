@@ -6,17 +6,37 @@ export interface Coordinates {
   lon: number
 }
 
+const UMLAUT_REGEX = /[äöüß]/gi
+const UMLAUT_REPLACEMENTS = [
+  { regex: /ä/gi, replacement: 'a' },
+  { regex: /ö/gi, replacement: 'o' },
+  { regex: /ü/gi, replacement: 'u' },
+  { regex: /ß/gi, replacement: 'ss' },
+]
 export const loadLocations = async () => {
   const locationList = await (
     await getCachedRequest(locationsUrl, 7 * 60 * 24)
   ).json()
-  const locations = locationList.map(location => ({
-    ...location,
-    search: location.name
+
+  const locations = locationList.map((location: { name: string }) => {
+    let normalizedName = location.name
       .split(/,|(\s(bei|am|in)\s)/)[0]
       .trim()
-      .toLowerCase(),
-  }))
+      .toLowerCase()
+
+    let normalizedName2 = UMLAUT_REGEX.test(normalizedName)
+      ? ' ' +
+        UMLAUT_REPLACEMENTS.reduce(
+          (acc, val) => acc.replaceAll(val.regex, val.replacement),
+          normalizedName
+        )
+      : ''
+    let search = normalizedName + normalizedName2
+    return {
+      ...location,
+      search,
+    }
+  })
   return locations
 }
 let locations = []
