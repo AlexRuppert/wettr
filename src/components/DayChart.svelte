@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { darkMode } from '../stores/store'
-  import { COLORS } from '../logic/utils'
+  import { clamp, COLORS } from '../logic/utils'
   import { getPathData } from '../logic/chart/path'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
@@ -112,7 +112,9 @@
 
         sunninessPoints.push({
           x,
-          y: getGraphY(sunninessPercent),
+          y: getGraphY(
+            clamp((Math.tanh(4 * sunninessPercent - 2) + 0.9) / 1.8, 0, 1)
+          ),
         })
         if (
           temperature >= weather.max.temperature ||

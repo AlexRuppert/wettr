@@ -58,3 +58,7 @@ export const round = (num: number, decimals: number = 0) => {
   const factor = 10 ** decimals
   return Math.round(num * factor) / factor
 }
+
+export const clamp = (num: number, min: number, max: number) => {
+  return Math.min(Math.max(num, min), max)
+}
