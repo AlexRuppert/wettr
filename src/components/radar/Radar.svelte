@@ -42,7 +42,7 @@
 
   function update(cloudData) {
     viewBounds = cloudData.viewBounds
-    times = cloudData.times
+    times = cloudData.times.slice(0, cloudData.times.length - 1)
     clouds = cloudData.clouds
 
     times.forEach(time => {

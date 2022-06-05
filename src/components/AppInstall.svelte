@@ -46,7 +46,7 @@
 
 {#if showInstallButton}
   <button
-    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:(bg-dark-400 text-gray-300) light:(text-gray-800) "
+    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:(bg-dark-400 text-gray-300) light:(text-gray-800)"
     on:click={install}>Als App installieren</button
   >
 {/if}

@@ -73,9 +73,11 @@
   $: {
     if (weather && svg) {
       clipPercent.set(0, { duration: 0 })
-      updateDimensions(svg.getBoundingClientRect())
-      updateData(weather)
-      clipPercent.set(110)
+      setTimeout(() => {
+        updateDimensions(svg.getBoundingClientRect())
+        updateData(weather)
+        clipPercent.set(110)
+      }, 50)
     }
   }
 

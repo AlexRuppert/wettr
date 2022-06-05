@@ -100,7 +100,7 @@
           stroke="none"
           preserveAspectRatio="none"
         >
-          <path d="m0 0h24c-12 6-12 18 0 24h-24c12 -6 12-18 0-24z" />
+          <path d="m0 0h24c-12 6-12 18 0 24h-24c12-6 12-18 0-24z" />
         </svg>
       </div>
     </div>

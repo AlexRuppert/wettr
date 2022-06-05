@@ -3,8 +3,6 @@
 <script lang="ts">
   import { fade } from 'svelte/transition'
 
-  import { getCachedRequest } from './../../logic/cache'
-
   import { isLocationSet } from './../../logic/locations'
   import { getLocationBounds } from './../../logic/radar/utils'
   import { locationCoordinates } from './../../stores/store'
@@ -46,20 +44,14 @@
   })()
 </script>
 
-<div
-  class="relative children:(w-full rounded-md) "
-  style={`min-height:${WIDTH - 22}px`}
->
+<div class="relative" style={`min-height:${WIDTH - 22}px`}>
   {#if satelliteImage}
-    <img src={satelliteImage} alt="" transition:fade={{ duration: 150 }} />
+    <img
+      class="w-full rounded-md"
+      src={satelliteImage}
+      alt=""
+      transition:fade={{ duration: 150 }}
+    />
   {/if}
   <RadarCanvas {clouds} {viewBounds} />
 </div>
-
-<style global>
-  .sharpen2 {
-    position: absolute;
-    filter: blur(1px) invert(1) contrast(2);
-    mix-blend-mode: overlay;
-  }
-</style>

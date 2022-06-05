@@ -1,4 +1,5 @@
 <svelte:options immutable />
+
 <script lang="ts">
   import { filterClouds } from '../../logic/radar/clouds'
   import type { Cloud } from '../../logic/radar/clouds'
@@ -6,7 +7,7 @@
   import { getNowestTime } from '../../logic/radar/utils'
   import { currentCloudData, radarOpen } from '../../stores/store'
   import RadarCanvas from './RadarCanvas.svelte'
-import { fade } from 'svelte/transition';
+  import { fade } from 'svelte/transition'
 
   let cloudData: Cloud[]
   let viewBounds: GeoBounds
@@ -28,6 +29,3 @@ import { fade } from 'svelte/transition';
 >
   <RadarCanvas clouds={cloudData} {viewBounds} mini={true} />
 </div>
-<style global>
-  
-</style>

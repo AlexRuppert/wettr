@@ -28,7 +28,7 @@
   <meta name="theme-color" content={$darkMode ? '#000' : '#fff'} />
 </svelte:head>
 <SvgLib />
-<main class="m-auto max-w-sm grid gap-1 grid-cols-1">
+<main class="m-auto max-w-sm grid gap-1 grid-cols-1 relative">
   <Location />
   <CurrentWeather />
   <WeatherWarning />
