@@ -244,12 +244,11 @@
         stroke-width="0.5"
       />
       {#each temperatureLabelPoints as point, i}
-        <circle
+        <use
+          href={'#celsius-circle'}
+          x={point.x}
+          y={Math.min(point.y, height - 2.7)}
           stroke={colors.temperature}
-          stroke-width="0.7"
-          cx={point.x}
-          cy={Math.min(point.y, height - 2.7)}
-          r="1.2"
           fill={colors.pointBackgroundColor}
         />
         <g

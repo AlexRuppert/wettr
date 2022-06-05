@@ -7,19 +7,20 @@
 </script>
 
 <div
-  class="outlined-path"
-  style="transform: rotate({direction + 90}deg); transform-origin: center;"
+  class="outlined-path origin-center"
+  style="transform: rotate({direction + 90}deg)"
 >
   <SvgIcon d={windDirection} outline />
 </div>
 
 <style global>
   .outlined-path {
-    filter: drop-shadow(0 0 1px #fff) !important;
+    --wind-drop-shadow: #fff;
+    filter: drop-shadow(0 0 1px var(--wind-drop-shadow)) !important;
   }
   @media (prefers-color-scheme: dark) {
     .outlined-path {
-      filter: drop-shadow(0 0 1px #111) !important;
+      --wind-drop-shadow: #111;
     }
   }
 </style>

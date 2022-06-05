@@ -2,11 +2,11 @@
 
 <script lang="ts">
   export let d: string
-  export let fill = null
+  export let fill: string | null = null
   export let outline = false
-  export let strokeWidth = 1.5
+  export let strokeWidth = 1
 
-  let _fill
+  let _fill: string
 
   $: {
     _fill = fill ?? 'currentColor'
@@ -25,6 +25,3 @@
 >
   <path {d} />
 </svg>
-
-<style global>
-</style>

@@ -155,7 +155,6 @@
         label="Get Current Location"
         icon={gps}
         outline
-        strokeWidth={1}
         on:click={getGeoLocation}
       />
     </div>

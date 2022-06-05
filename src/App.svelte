@@ -8,6 +8,7 @@
   import WeatherWarning from './components/warnings/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
   import './logic/colorScheme'
+  import SvgLib from './components/common/SvgLib.svelte'
   const links = [
     {
       label: 'Code',
@@ -26,8 +27,8 @@
 <svelte:head>
   <meta name="theme-color" content={$darkMode ? '#000' : '#fff'} />
 </svelte:head>
-
-<main class="m-auto grid gap-1">
+<SvgLib />
+<main class="m-auto max-w-sm grid gap-1 grid-cols-1">
   <Location />
   <CurrentWeather />
   <WeatherWarning />
