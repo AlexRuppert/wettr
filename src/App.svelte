@@ -22,7 +22,19 @@
   }
   setColorScheme(colorSchemeQueryList)
   colorSchemeQueryList.addEventListener('change', setColorScheme)
-  
+  const links = [
+    {
+      label: 'Code',
+      name: 'GitHub',
+      href: '"https://github.com/AlexRuppert/wettr',
+    },
+    {
+      label: 'Datenquelle',
+      name: 'Deutscher Wetterdienst',
+      href: 'https://www.dwd.de',
+    },
+    { label: 'via', name: 'brightsky.dev', href: '"https://brightsky.dev' },
+  ]
 </script>
 
 <svelte:head>
@@ -42,15 +54,18 @@
   <span class="self-center">
     <AppInstall />
   </span>
-  <span
-    >Quelle:
-    <a class="footer-link" href="https://www.dwd.de">Deutscher Wetterdienst</a
-    ></span
-  >
-  <span
-    >via
-    <a class="footer-link" href="https://brightsky.dev">brightsky.dev</a></span
-  >
+
+  {#each links as { label, name, href }}
+    <span>
+      {label}
+      <a
+        {href}
+        class="text-gray-800 no-underline dark:text-gray-300 hover:underline"
+        target="_blank"
+        rel="noopener noreferrer">{name}</a
+      >
+    </span>
+  {/each}
 </footer>
 
 <style global>
@@ -63,9 +78,6 @@
   }
   html.dark {
     @apply bg-dark-900 text-gray-400;
-  }
-  .footer-link {
-    @apply text-gray-800 no-underline dark:text-gray-300 hover:underline;
   }
 
   body {
@@ -84,6 +96,6 @@
 
   .custom-scrollbar,
   body {
-    @apply scrollbar scrollbar-thumb-gray-400 scrollbar-track-light-900 dark:(scrollbar-thumb-dark-50 scrollbar-track-dark-300) ;
+    @apply scrollbar scrollbar-thumb-gray-400 scrollbar-track-light-900 dark:(scrollbar-thumb-dark-50 scrollbar-track-dark-300);
   }
 </style>
