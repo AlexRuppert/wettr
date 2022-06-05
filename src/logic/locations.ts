@@ -6,12 +6,11 @@ export interface Coordinates {
   lon: number
 }
 
-const UMLAUT_REGEX = /[äöüß]/gi
 const UMLAUT_REPLACEMENTS = [
-  { regex: /ä/gi, replacement: 'a' },
-  { regex: /ö/gi, replacement: 'o' },
-  { regex: /ü/gi, replacement: 'u' },
-  { regex: /ß/gi, replacement: 'ss' },
+  { regex: /ä/g, replacement: 'a' },
+  { regex: /ö/g, replacement: 'o' },
+  { regex: /ü/g, replacement: 'u' },
+  { regex: /ß/g, replacement: 'ss' },
 ]
 export const loadLocations = async () => {
   const locationList = await (
@@ -20,18 +19,15 @@ export const loadLocations = async () => {
 
   const locations = locationList.map((location: { name: string }) => {
     let normalizedName = location.name
+      .toLowerCase()
       .split(/,|(\s(bei|am|in)\s)/)[0]
       .trim()
-      .toLowerCase()
 
-    let normalizedName2 = UMLAUT_REGEX.test(normalizedName)
-      ? ' ' +
-        UMLAUT_REPLACEMENTS.reduce(
-          (acc, val) => acc.replaceAll(val.regex, val.replacement),
-          normalizedName
-        )
-      : ''
-    let search = normalizedName + normalizedName2
+    let normalizedName2 = UMLAUT_REPLACEMENTS.reduce(
+      (acc, val) => acc.replaceAll(val.regex, val.replacement),
+      normalizedName
+    )
+    let search = [normalizedName, normalizedName2].join(' ')
     return {
       ...location,
       search,
@@ -42,10 +38,7 @@ export const loadLocations = async () => {
 let locations = []
 
 const getLocations = async () => {
-  if (locations.length < 1) {
-    locations = await loadLocations()
-  }
-  return locations
+  return locations.length < 1 ? await loadLocations() : locations
 }
 
 export async function filterLocations(search: string, maxResults = 5) {

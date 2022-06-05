@@ -7,21 +7,7 @@
   import Radar from './components/radar/Radar.svelte'
   import WeatherWarning from './components/warnings/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
-  let colorSchemeQueryList = window.matchMedia('(prefers-color-scheme: dark)')
-
-  const setColorScheme = e => {
-    if (e.matches) {
-      // Dark
-      document.documentElement.classList.add('dark')
-      $darkMode = true
-    } else {
-      // Light
-      document.documentElement.classList.remove('dark')
-      $darkMode = false
-    }
-  }
-  setColorScheme(colorSchemeQueryList)
-  colorSchemeQueryList.addEventListener('change', setColorScheme)
+  import './logic/colorScheme'
   const links = [
     {
       label: 'Code',
@@ -41,7 +27,7 @@
   <meta name="theme-color" content={$darkMode ? '#000' : '#fff'} />
 </svelte:head>
 
-<main class="m-auto max-w-sm mt-0 w-full grid gap-1 grid-cols-1 relative">
+<main class="m-auto grid gap-1">
   <Location />
   <CurrentWeather />
   <WeatherWarning />
@@ -49,14 +35,14 @@
   <Radar />
 </main>
 <footer
-  class="space-y-2 bg-gray-200 mt-5 text-sm text-center py-10 dark:bg-dark-800 children:block"
+  class="space-y-1 mt-1 text-sm text-center py-10 bg-gray-200 dark:bg-dark-800"
 >
-  <span class="self-center">
+  <div class="self-center">
     <AppInstall />
-  </span>
+  </div>
 
   {#each links as { label, name, href }}
-    <span>
+    <div>
       {label}
       <a
         {href}
@@ -64,7 +50,7 @@
         target="_blank"
         rel="noopener noreferrer">{name}</a
       >
-    </span>
+    </div>
   {/each}
 </footer>
 

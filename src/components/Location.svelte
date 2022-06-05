@@ -164,7 +164,7 @@
     <input
       id="location"
       type="text"
-      class="bg-transparent border-none h-full outline-none flex-1 text-center text-xl w-full text-gray-800 dark:text-gray-400"
+      class="bg-transparent border-none h-full outline-none flex-1 text-center text-xl w-full dark:text-gray-400"
       placeholder="Ort"
       autocomplete="off"
       bind:this={inputElement}
