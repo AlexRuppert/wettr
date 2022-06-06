@@ -21,7 +21,7 @@
       d="M18.2 7.1a4 4 0 016.7 2.9h1a3.1 3 0 010 6.4h-0.2"
     />
     <path id="fog" d="M8 13h15M10 16h16M6 19h16" />
-    <path id="wind" d="M8 13h13a2.5 2.5 0 10-2-4M6 16h17a2.5 2.5 0 11-2 4" />
+    <path id="wind" d="M8 12h13a2.5 2.5 0 10-2-4M10 14h10.5q4 0 4-2M6 16h17a2.5 2.5 0 11-2 4" />
     <path id="rain" d="M10 20l-1 5M13.3 20l-1.4 7M16.5 20l-.8 4.2" />
     <path
       id="sleet"
@@ -42,5 +42,10 @@
       d="M12.6 17h3.5l-2.5 4h1.8l-5 6.9l2-5.3h-2.5z"
     />
     <circle id="celsius-circle" stroke-width="0.7" r="1.2" />
+    <path
+      id="wind-indicator"
+      d='M8 13h13a2.5 2.5 0 10-2-4M6 16h17a2.5 2.5 0 11-2 4'
+      transform="scale(0.5 0.5)"
+    />
   </defs>
 </svg>

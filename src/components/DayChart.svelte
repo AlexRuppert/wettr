@@ -41,6 +41,7 @@
   let precipitationPath = ''
   let temperaturePath = ''
 
+  let windGustPoints = []
   let dayString = weather.day.toISOString()
 
   const clipPercent = tweened(0, {
@@ -98,6 +99,7 @@
     const sunninessPoints = []
     const temperaturePoints = []
     const precipitationPoints = []
+    windGustPoints = []
 
     weather.dayGraph.forEach(
       ({
@@ -106,6 +108,7 @@
         sunninessPercent,
         temperaturePercent,
         precipitationPercent,
+        windGust,
       }) => {
         const hourFraction = dateToHoursFraction(weather.day, timestamp)
         const x = getX(hourFraction)
@@ -130,6 +133,13 @@
             flipY,
           })
         precipitationPoints.push({ x, y: getGraphY(precipitationPercent) })
+
+        if (windGust > 30 && hour % 2 === 0) {
+          windGustPoints.push({
+            x,
+            y: 0,
+          })
+        }
       }
     )
 
@@ -223,6 +233,14 @@
         {hour >= maxHour ? 0 : hour}</text
       >
     {/each}
+    {#each windGustPoints as windGust}
+      <use
+        href="#wind-indicator"
+        x={windGust.x + 7}
+        y={height - 1}
+        stroke={colors.tick}
+      />
+    {/each}
 
     <g clip-path="url(#cut-off)">
       <path
@@ -238,6 +256,7 @@
         d={precipitationPath + pathFillCloseSuffix}
       />
       <path stroke={colors.temperature + '50'} d={temperaturePath} />
+
       <line
         x1={nowLineX}
         x2={nowLineX}

@@ -115,6 +115,8 @@ export interface DayWeatherDataType {
     precipitationPercent: number
     temperaturePercent: number
     temperature: number
+    wind: number
+    windGust: number
   }[]
   dayLight: { sunrise: Date; sunset: Date }
   data: WeatherDataType[]

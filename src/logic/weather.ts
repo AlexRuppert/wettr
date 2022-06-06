@@ -125,7 +125,7 @@ function getDayGraphData(times: WeatherDataType[]) {
     min: { temperature: min },
     max: { temperature: max },
     dayGraph: times.map(
-      ({ timestamp, temperature, precipitation, cloudCover }) => ({
+      ({ timestamp, temperature, precipitation, cloudCover, windSpeed, windGustSpeed }) => ({
         timestamp: new Date(timestamp),
         temperaturePercent:
           temperatureRange === 0
@@ -135,6 +135,8 @@ function getDayGraphData(times: WeatherDataType[]) {
         precipitationPercent:
           Math.min(Math.pow(Math.sqrt(precipitation) * 1.7, 2), 6) / 6,
         sunninessPercent: 1 - cloudCover / 100,
+        wind: windSpeed,
+        windGust: windGustSpeed
       })
     ),
   }
