@@ -55,7 +55,7 @@
     return {
       dataLabelBackgroundColor: darkMode ? '#22222270' : '#ffffffa0',
       pointBackgroundColor: darkMode ? '#222' : '#fff',
-      currentTime: darkMode ? '#f66' : '#a00',
+      currentTime: COLORS.warning[variation],
       tick: COLORS.foreground[variation] + 'a0',
       night: darkMode ? '#00000050' : '#44446420',
       temperature: COLORS.foreground[variation],
@@ -257,12 +257,13 @@
       />
       <path stroke={colors.temperature + '50'} d={temperaturePath} />
 
-      <line
-        x1={nowLineX}
-        x2={nowLineX}
-        y2={height}
+      <path
+        d={`M${nowLineX + 0.5} 0v8M${nowLineX + 0.5} ${height}v-6`}
+        stroke={'#11111190'}
+      />
+      <path
+        d={`M${nowLineX} 0v7M${nowLineX} ${height}v-7`}
         stroke={colors.currentTime}
-        stroke-width="0.5"
       />
       {#each temperatureLabelPoints as point, i}
         <use
