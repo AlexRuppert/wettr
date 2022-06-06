@@ -2,11 +2,9 @@
 
 <script lang="ts">
   import { fade } from 'svelte/transition'
-
   import { isLocationSet } from './../../logic/locations'
   import { getLocationBounds } from './../../logic/radar/utils'
   import { locationCoordinates } from './../../stores/store'
-
   import RadarCanvas from './RadarCanvas.svelte'
 
   export let clouds
@@ -14,9 +12,8 @@
   let satelliteImage
 
   const WIDTH = 350
-  const YEAR = 2019
 
-  function getSatelliteImageUrl(viewBounds, width, year = 2019) {
+  function getSatelliteImageUrl(viewBounds, width) {
     const bbox = [
       viewBounds.lb.lat,
       viewBounds.lb.lon,
@@ -35,11 +32,9 @@
     if (isLocationSet($locationCoordinates)) {
       const satelliteImageUrl = getSatelliteImageUrl(
         getLocationBounds($locationCoordinates),
-        WIDTH,
-        YEAR
+        WIDTH
       )
-      //const blob = await (await getCachedRequest(satelliteImageUrl)).blob()
-      satelliteImage = satelliteImageUrl //URL.createObjectURL(blob)
+      satelliteImage = satelliteImageUrl
     }
   })()
 </script>

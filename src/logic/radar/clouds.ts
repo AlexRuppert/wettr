@@ -88,8 +88,7 @@ export async function getClouds(viewBounds: GeoBounds, onlyNow = false) {
       ])
     ).values()
   )
-  //const times = [...new Set(clouds.map(c => c.time))].map(t => new Date(t))
-  //times.sort((a, b) => a.getTime() - b.getTime())
+  
   const times = getTimes()
   return { times, clouds, viewBounds }
 }

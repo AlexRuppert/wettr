@@ -23,10 +23,6 @@
     updateSliderValue(getNowestTime(times)?.index ?? 0)
   }
 
-  function updateSliderValue(value) {
-    sliderValue = value
-  }
-
   $: {
     const selectedTime = times[sliderValue]
     if (selectedTime) {
@@ -46,6 +42,9 @@
     if (labelElement) {
       labelWidth = labelElement.offsetWidth
     }
+  }
+  function updateSliderValue(value) {
+    sliderValue = value
   }
 
   function displayTime(time) {

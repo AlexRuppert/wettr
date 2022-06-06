@@ -44,9 +44,9 @@
   function drawDot() {
     drawLocation(
       ctx,
-      mini ? 'transparent' : '#a30',
-      mini ? 'transparent' : getDarkLightColor(COLORS.sun, $darkMode),
-      6
+      '#a30',
+      getDarkLightColor(COLORS.sun, $darkMode),
+      mini ? 0 : 6
     )
   }
 
@@ -61,6 +61,6 @@
   bind:clientWidth={width}
   bind:this={canvas}
 />
+
 <style global>
-  
 </style>
