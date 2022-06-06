@@ -1,6 +1,6 @@
 # Wettr
 
-Wettr is a simple weather app for Germany.
+Wettr is a simple [weather app](https://alexruppert.github.io/wettr/) for Germany.
 
 It uses the weather data from [Deutscher Wetterdienst](https://www.dwd.de) vie the [brightsky.dev API](https://brightsky.dev).
 
