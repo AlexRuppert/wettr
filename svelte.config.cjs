@@ -8,4 +8,8 @@ module.exports = {
     windicss({ configPath: 'windi.config.mjs', siltent: true }),
     sveltePreprocess(),
   ],
+  onwarn: (warning, handler) => {
+    if (warning.code.startsWith('a11y-')) return
+    handler(warning)
+  },
 }

@@ -1,7 +1,6 @@
 <script lang="ts">
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import WindDirection from './icons/WindDirection.svelte'
-  import MiniRadar from './radar/MiniRadar.svelte'
   import { currentWeatherData } from '../stores/store'
   import { fade, scale } from 'svelte/transition'
   import { humidity } from './icons/icons'
@@ -27,9 +26,7 @@
         <div
           class="inset-0 absolute"
           transition:fade={{ duration: ANIMATION_DURATION }}
-        >
-          <MiniRadar />
-        </div>
+        />
 
         <div class="text-shadow-light pointer-events-none">
           <div class="h-8 -m-4 inset-1/2 w-8 z-10 absolute">

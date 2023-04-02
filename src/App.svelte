@@ -4,7 +4,7 @@
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
-  import Radar from './components/radar/Radar.svelte'
+
   import WeatherWarning from './components/warnings/WeatherWarning.svelte'
   import { darkMode } from './stores/store'
   import './logic/colorScheme'
@@ -13,7 +13,7 @@
     {
       label: 'Code',
       name: 'GitHub',
-      href: '"https://github.com/AlexRuppert/wettr',
+      href: 'https://github.com/AlexRuppert/wettr',
     },
     {
       label: 'Datenquelle',
@@ -33,7 +33,6 @@
   <CurrentWeather />
   <WeatherWarning />
   <DayWeather />
-  <Radar />
 </main>
 <footer
   class="space-y-1 mt-1 text-sm text-center py-10 bg-gray-200 dark:bg-dark-800"

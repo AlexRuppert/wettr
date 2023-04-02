@@ -20,10 +20,6 @@ export async function reload() {
       type: 'weatherData',
       data: { ...coordinates, days: FORECAST_DAYS },
     })
-    worker.postMessage({
-      type: 'currentCloudData',
-      data: { bounds: getLocationBounds(coordinates), onlyNow: true },
-    })
 
     worker.postMessage({
       type: 'weatherWarningData',

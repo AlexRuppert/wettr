@@ -34,10 +34,7 @@ function addTimePortion(date = new Date(), beforeMidnight = false) {
   return `T${beforeMidnight ? '23:59' : '00:00'}:00${timeZoneOffset}`
 }
 function dateToDateTime(date = new Date(), beforeMidnight = false) {
-  return (
-    new Intl.DateTimeFormat('eu').format(date).replace(/\//g, '-') +
-    addTimePortion(date, beforeMidnight)
-  )
+  return date.toISOString().split('T')[0] + addTimePortion(date, beforeMidnight)
 }
 export async function getWeather(lat: number, lon: number, days = 3) {
   const now = new Date()
@@ -125,7 +122,14 @@ function getDayGraphData(times: WeatherDataType[]) {
     min: { temperature: min },
     max: { temperature: max },
     dayGraph: times.map(
-      ({ timestamp, temperature, precipitation, cloudCover, windSpeed, windGustSpeed }) => ({
+      ({
+        timestamp,
+        temperature,
+        precipitation,
+        cloudCover,
+        windSpeed,
+        windGustSpeed,
+      }) => ({
         timestamp: new Date(timestamp),
         temperaturePercent:
           temperatureRange === 0
@@ -136,7 +140,7 @@ function getDayGraphData(times: WeatherDataType[]) {
           Math.min(Math.pow(Math.sqrt(precipitation) * 1.7, 2), 6) / 6,
         sunninessPercent: 1 - cloudCover / 100,
         wind: windSpeed,
-        windGust: windGustSpeed
+        windGust: windGustSpeed,
       })
     ),
   }
@@ -148,7 +152,7 @@ function processWeatherData(
   lon
 ): any[] {
   const daysHash = new Map()
-
+  console.log(weatherData)
   weatherData.weather.forEach(weather => {
     const renamed = renameRaw(Object.keys(weather), weather)
 

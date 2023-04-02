@@ -22,10 +22,6 @@
   }
 </script>
 
-<div
-  class="rounded-md h-full w-full relative clickable"
-  transition:fade
-  on:click={() => ($radarOpen = true)}
->
+<div class="rounded-md h-full w-full relative clickable" transition:fade>
   <RadarCanvas clouds={cloudData} {viewBounds} mini={true} />
 </div>
