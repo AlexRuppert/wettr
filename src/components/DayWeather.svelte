@@ -40,7 +40,7 @@
 >
   {#each dummy as index, i (index)}
     <div
-      class="bg-white rounded-md h-30 pt-1 shadow-md overflow-hidden flex flex-col dark:bg-dark-600"
+      class="bg-white rounded-md flex flex-col h-30 shadow-md pt-1 overflow-hidden dark:bg-dark-600"
     >
       {#if weather && weather.length > 0}
         <div class="flex pr-1 pl-2 justify-between" transition:scale>
@@ -77,9 +77,9 @@
             >
           </div>
         </div>
-        <div class="overflow-hidden relative" transition:fly={{ y: 15 }}>
+        <div class="overflow-hidden relative">
           <DayChart weather={weather[index]} />
-          <div class="absolute w-2 h-2 bottom-3 left-1 z-10">
+          <div class="h-2 bottom-3 left-1 w-2 z-10 absolute">
             <MoonPhase timestamp={weather[index].day} />
           </div>
         </div>

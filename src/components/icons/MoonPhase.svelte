@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
   export let timestamp = new Date()
   let l = 1

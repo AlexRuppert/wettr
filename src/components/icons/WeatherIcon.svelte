@@ -35,7 +35,8 @@
   viewBox="0 0 30 30"
   fill="none"
   stroke="currentColor"
-  style={`color: ${color};`}
+  style:color
+  class={$$props.class || ''}
 >
   {#each iconData as href}
     <use {href} />

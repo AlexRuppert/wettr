@@ -12,15 +12,13 @@
   const iOSCanInstall = 'standalone' in window.navigator
   const iOSIsInstalled = window.navigator['standalone'] === true
 
-  window.addEventListener('beforeinstallprompt', e => {
-    deferredInstallPrompt = e
-    if (
-      !(
-        window.matchMedia('(display-mode: standalone)').matches ||
-        navigator['standalone']
-      )
+  window.addEventListener('beforeinstallprompt', evt => {
+    deferredInstallPrompt = evt
+
+    showInstallButton = !(
+      window.matchMedia('(display-mode: standalone)').matches ||
+      navigator['standalone']
     )
-      showInstallButton = true
   })
   window.addEventListener('appinstalled', evt => {
     showInstallButton = false
@@ -61,13 +59,9 @@
       on:click={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:
-      <span class="install-icon">
-        <SvgIcon d={shareIcon} fill="#16c" outline />
-      </span>
+      <SvgIcon class="inline install-icon" d={shareIcon} fill="#16c" outline />
       und
-      <span class="install-icon">
-        <SvgIcon d={addBox} fill="#16c" outline />
-      </span>
+      <SvgIcon class="inline install-icon" d={addBox} fill="#16c" outline />
     </div>
   </div>
 {/if}

@@ -14,7 +14,7 @@
 </script>
 
 <div
-  class="outlined-path origin-center"
+  class="{$$props.class || ''} outlined-path origin-center"
   style="transform: scale({scale}) rotate({direction + 90}deg)"
 >
   <SvgIcon d={windDirection} outline />

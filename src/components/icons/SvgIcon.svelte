@@ -6,22 +6,31 @@
   export let outline = false
   export let strokeWidth = 1
 
-  let _fill: string
-
+  let svgStroke: string
+  let svgFill: string
   $: {
-    _fill = fill ?? 'currentColor'
+    let _fill = fill ?? 'currentColor'
+
+    if (outline) {
+      svgStroke = _fill
+      svgFill = 'none'
+    } else {
+      svgStroke = 'none'
+      svgFill = _fill
+    }
   }
 </script>
 
 <svg
   width="100%"
   height="100%"
+  viewBox="0 0 30 30"
   stroke-linejoin="round"
   stroke-linecap="round"
-  viewBox="0 0 30 30"
-  fill={!outline ? _fill : 'none'}
-  stroke={outline ? _fill : 'none'}
   stroke-width={strokeWidth}
+  stroke={svgStroke}
+  fill={svgFill}
+  class={$$props.class || ''}
 >
   <path {d} />
 </svg>

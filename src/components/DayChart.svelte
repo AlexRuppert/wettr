@@ -45,8 +45,8 @@
   let dayString = weather.day.toISOString()
 
   const clipPercent = tweened(0, {
-    duration: 600,
-    delay: 100,
+    duration: 300,
+    delay: 0,
     easing: cubicOut,
   })
 
@@ -77,11 +77,13 @@
       setTimeout(() => {
         updateDimensions(svg.getBoundingClientRect())
         updateData(weather)
-        clipPercent.set(110)
+        clipPercent.set(1)
       }, 50)
     }
   }
-
+  $: {
+    console.log(clipPercent)
+  }
   function updateData(weather: DayWeatherDataType) {
     const { sunrise, sunset } = weather.dayLight
 
@@ -214,18 +216,18 @@
   {#if weather && hourWidth}
     <defs>
       <clipPath id="cut-off">
-        <rect width={$clipPercent + '%'} height={height - 1} />
+        <rect width={'100%'} height={height - 1} />
       </clipPath>
-      <clipPath id={`precipitation-clip-${dayString}`}>
+      <clipPath id="precipitation-clip-{dayString}">
         <path d={precipitationPath + 'V0H0V100z'} />
       </clipPath>
     </defs>
 
     <path
       fill={colors.night}
-      d={`M${getX(-1)} ${height - 1}v${20}H${dayLengthsX[0]}v-${20}zM${
-        dayLengthsX[1]
-      } ${height - 1}v${20}H${getX(maxHour + 1)}v-${20}z`}
+      d="M{getX(-1)} {height -
+        1}v{20}H{dayLengthsX[0]}v-{20}zM{dayLengthsX[1]} {height -
+        1}v{20}H{getX(maxHour + 1)}v-{20}z"
     />
 
     {#each hours.slice(1) as hour, i}
@@ -242,9 +244,13 @@
       />
     {/each}
 
-    <g clip-path="url(#cut-off)">
+    <g
+      clip-path="url(#cut-off)"
+      class="origin-bottom"
+      transform="scale(1 {$clipPercent})"
+    >
       <path
-        clip-path={`url(#precipitation-clip-${dayString})`}
+        clip-path="url(#precipitation-clip-{dayString})"
         fill={colors.sunninessFill}
         stroke={colors.sunniness}
         d={sunninessPath + pathFillCloseSuffix}
@@ -258,11 +264,11 @@
       <path stroke={colors.temperature + '50'} d={temperaturePath} />
 
       <path
-        d={`M${nowLineX + 0.5} 0v8M${nowLineX + 0.5} ${height}v-6`}
+        d="M{nowLineX + 0.5} 0v8M{nowLineX + 0.5} {height}v-6"
         stroke={'#11111190'}
       />
       <path
-        d={`M${nowLineX} 0v7M${nowLineX} ${height}v-7`}
+        d="M{nowLineX} 0v7M{nowLineX} {height}v-7"
         stroke={colors.currentTime}
       />
       {#each temperatureLabelPoints as point, i}
@@ -274,9 +280,8 @@
           fill={colors.pointBackgroundColor}
         />
         <g
-          transform={`translate(${point.x + (i === 0 ? 9 : -9)} ${
-            point.y + (point.flipY ? -3 : 8)
-          })`}
+          transform="translate({point.x + (i === 0 ? 9 : -9)} {point.y +
+            (point.flipY ? -3 : 8)})"
         >
           <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
             >{point.temperature}

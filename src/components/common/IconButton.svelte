@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
   import SvgIcon from '../icons/SvgIcon.svelte'
   import Button from './Button.svelte'
@@ -8,6 +10,6 @@
   export let strokeWidth = 1
 </script>
 
-<Button on:click {label}>
+<Button class={$$props.class || ''} on:click {label}>
   <SvgIcon d={icon} {outline} {strokeWidth} />
 </Button>
