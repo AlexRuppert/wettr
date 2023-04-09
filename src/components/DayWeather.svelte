@@ -67,7 +67,7 @@
               class="text-lg"
               class:cold={weather[index].min.temperature < 0}
               >{weather[index].min.temperature}<span
-                class="text-sm align-text-top">°</span
+                class="text-sm align-text-top inline-block push-up">°</span
               ></span
             >
             <span class:cold={weather[index].max.temperature < 0}
@@ -91,5 +91,8 @@
 <style global>
   .cold {
     @apply text-blue-600 dark:text-blue-400;
+  }
+  .push-up {
+    transform: translate(0, -2px);
   }
 </style>

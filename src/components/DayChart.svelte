@@ -231,7 +231,7 @@
     />
 
     {#each hours.slice(1) as hour, i}
-      <text fill={colors.tick} x={getX(hour)} y="98%">
+      <text fill={colors.tick} x={getX(hour)} y="97%">
         {hour >= maxHour ? 0 : hour}</text
       >
     {/each}
@@ -280,8 +280,12 @@
           fill={colors.pointBackgroundColor}
         />
         <g
-          transform="translate({point.x + (i === 0 ? 9 : -9)} {point.y +
-            (point.flipY ? -3 : 8)})"
+          transform="translate({point.x +
+            (i === 0
+              ? 9
+              : point.temperature.toString().length > 1
+              ? -9
+              : -6)} {point.y + (point.flipY ? -3 : 8)})"
         >
           <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
             >{point.temperature}
