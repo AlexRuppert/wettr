@@ -28,14 +28,14 @@
   <meta name="theme-color" content={$darkMode ? '#000' : '#fff'} />
 </svelte:head>
 <SvgLib />
-<main class="m-auto max-w-sm grid gap-1 grid-cols-1 relative">
+<main class="m-auto max-w-sm w-full grid gap-1 grid-cols-1 relative">
   <Location />
   <CurrentWeather />
   <WeatherWarning />
   <DayWeather />
 </main>
 <footer
-  class="space-y-1 mt-1 text-sm text-center py-10 bg-gray-200 dark:bg-dark-800"
+  class="space-y-1 bg-gray-200 mt-1 text-sm text-center py-10 dark:bg-dark-800"
 >
   <div class="self-center">
     <AppInstall />

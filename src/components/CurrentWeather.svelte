@@ -21,13 +21,14 @@
 <div
   class="flex space-x-1 h-32 mx-0.5 relative tabular-nums select-none children:(shadow-md rounded-md bg-white w-32 h-32 relative) children:dark:bg-dark-600"
 >
-  {#if weather && weather.timestamp}
-    <div>
+  <div>
+    {#if weather && weather.timestamp}
       <WindDirection
         class="h-8 -m-4 inset-1/2 w-8 z-10 absolute"
         direction={weather.windDirection}
         strength={weather.windSpeed}
       />
+
       <div class="bottom-info children:(flex space-x-1)">
         <div class:!hidden={weather.precipitation < MIN_PRECIPITATION}>
           {toLocalDecimal(
@@ -47,11 +48,15 @@
           <UnitXperY top="km" bottom="h" />
         </div>
       </div>
-    </div>
-    <div>
+    {/if}
+  </div>
+  <div>
+    {#if weather && weather.timestamp}
       <WeatherIcon class="m-2 pt-1 inset-0 absolute" icon={weather.icon} />
-    </div>
-    <div class="flex p-2 box-border justify-center dark:bg-dark-600">
+    {/if}
+  </div>
+  <div class="flex p-2 box-border justify-center">
+    {#if weather && weather.timestamp}
       <div class="flex font-light h-full mt-3 text-right ml-1 text-7xl">
         <span
           class="max-w-4 overflow-hidden"
@@ -67,8 +72,8 @@
           <span class="ml-0.5 text-size-[0.6rem] self-center">%</span>
         </div>
       </div>
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>
 
 <style global>
