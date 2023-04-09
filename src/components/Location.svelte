@@ -146,7 +146,7 @@
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
 
 <div
-  class="bg-white rounded-md h-10 shadow-md mx-1 mt-1 relative dark:bg-dark-600"
+  class="bg-white rounded-md h-10 shadow-md mx-0.5 mt-1 relative dark:bg-dark-600"
   class:z-50={openedSuggestions}
 >
   {#if openedSuggestions}

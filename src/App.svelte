@@ -11,16 +11,16 @@
   import SvgLib from './components/common/SvgLib.svelte'
   const links = [
     {
-      label: 'Code',
-      name: 'GitHub',
-      href: 'https://github.com/AlexRuppert/wettr',
-    },
-    {
       label: 'Datenquelle',
       name: 'Deutscher Wetterdienst',
       href: 'https://www.dwd.de',
     },
     { label: 'via', name: 'brightsky.dev', href: '"https://brightsky.dev' },
+    {
+      label: 'Code',
+      name: 'GitHub',
+      href: 'https://github.com/AlexRuppert/wettr',
+    },
   ]
 </script>
 

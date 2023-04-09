@@ -1,5 +1,9 @@
 <script lang="ts">
-  import type { DayWeatherDataType, WeatherDataType, WeatherIconType } from 'src/logic/weatherTypes'
+  import type {
+    DayWeatherDataType,
+    WeatherDataType,
+    WeatherIconType,
+  } from 'src/logic/weatherTypes'
 
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
@@ -32,7 +36,7 @@
 </script>
 
 <div
-  class="flex flex-col flex-nowrap font-light space-y-1 mx-1 tabular-nums select-none"
+  class="flex flex-col flex-nowrap font-light space-y-1 mx-0.5 tabular-nums select-none"
 >
   {#each dummy as index, i (index)}
     <div

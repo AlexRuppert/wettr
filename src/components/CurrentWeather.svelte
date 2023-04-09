@@ -18,7 +18,7 @@
 </script>
 
 <div
-  class="flex space-x-1 h-32 mx-1 relative tabular-nums select-none children:(shadow-md rounded-md bg-white w-32 h-32 relative) "
+  class="flex space-x-1 h-32 mx-0.5 relative tabular-nums select-none children:(shadow-md rounded-md bg-white w-32 h-32 relative) "
 >
   {#if weather && weather.timestamp}
     <div class="dark:bg-dark-600">
