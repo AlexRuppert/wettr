@@ -23,14 +23,17 @@
   {#if weather && weather.timestamp}
     <div class="dark:bg-dark-600">
       {#key weather.timestamp}
-        <div
+        <divS
           class="inset-0 absolute"
           transition:fade={{ duration: ANIMATION_DURATION }}
         />
 
         <div class="text-shadow-light pointer-events-none">
           <div class="h-8 -m-4 inset-1/2 w-8 z-10 absolute">
-            <WindDirection direction={weather.windDirection} />
+            <WindDirection
+              direction={weather.windDirection}
+              strength={weather.windSpeed}
+            />
           </div>
 
           <div

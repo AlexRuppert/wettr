@@ -1,26 +1,24 @@
 <svelte:options immutable />
 
 <script lang="ts">
+  import { clamp } from '../../logic/utils'
   import { windDirection } from './icons'
   import SvgIcon from './SvgIcon.svelte'
   export let direction = 0
+  export let strength = 0
+
+  let scale = 1
+  $: {
+    scale = 0.8 + clamp(strength / 20, 0, 1.7)
+  }
 </script>
 
 <div
   class="outlined-path origin-center"
-  style="transform: rotate({direction + 90}deg)"
+  style="transform: scale({scale}) rotate({direction + 90}deg)"
 >
   <SvgIcon d={windDirection} outline />
 </div>
 
 <style global>
-  .outlined-path {
-    --wind-drop-shadow: #fff;
-    filter: drop-shadow(0 0 1px var(--wind-drop-shadow)) !important;
-  }
-  @media (prefers-color-scheme: dark) {
-    .outlined-path {
-      --wind-drop-shadow: #111;
-    }
-  }
 </style>
