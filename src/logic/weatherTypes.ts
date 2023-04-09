@@ -75,6 +75,7 @@ export interface RawCurrentWeatherDataType {
 export interface RawDayWeatherDataType {
   weather: (common & {
     precipitation: number
+    precipitation_probability: number
     wind_direction: number
     wind_speed: number
     wind_gust_direction: number
@@ -90,6 +91,7 @@ export interface WeatherDataType {
   condition: string
   dewPoint: number
   precipitation: number
+  precipitationProbability: number
   pressureMsl: number
   relativeHumidity: number
   visibility: number
@@ -102,7 +104,6 @@ export interface WeatherDataType {
   icon: WeatherIconType
   hours: number
 }
-
 
 export interface DayWeatherDataType {
   day: Date

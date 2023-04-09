@@ -81,9 +81,6 @@
       }, 50)
     }
   }
-  $: {
-    console.log(clipPercent)
-  }
   function updateData(weather: DayWeatherDataType) {
     const { sunrise, sunset } = weather.dayLight
 

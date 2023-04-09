@@ -75,6 +75,7 @@ function processCurrentWeatherData(
       'condition',
       'dew_point',
       'precipitation_60',
+      'precipitation_probability',
       'pressure_msl',
       'relative_humidity',
       'visibility',
@@ -126,6 +127,7 @@ function getDayGraphData(times: WeatherDataType[]) {
         timestamp,
         temperature,
         precipitation,
+        precipitationProbability,
         cloudCover,
         windSpeed,
         windGustSpeed,
@@ -137,7 +139,13 @@ function getDayGraphData(times: WeatherDataType[]) {
             : Math.abs((temperature - min) / temperatureRange),
         temperature,
         precipitationPercent:
-          Math.min(Math.pow(Math.sqrt(precipitation) * 1.7, 2), 6) / 6,
+          Math.min(
+            Math.pow(
+              (1 + precipitationProbability / 100) * precipitation * 1.6,
+              2
+            ),
+            6
+          ) / 6,
         sunninessPercent: 1 - cloudCover / 100,
         wind: windSpeed,
         windGust: windGustSpeed,
