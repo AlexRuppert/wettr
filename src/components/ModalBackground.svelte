@@ -14,10 +14,10 @@
 {#if show}
   <div
     transition:fade={{ duration: 200 }}
-    class="bg-dark-800/90 inset-0 z-20 fixed"
+    class="bg-neutral-950800/90 inset-0 z-20 fixed"
     on:click|stopPropagation={close}
   />
 {/if}
+
 <style global>
-  
 </style>

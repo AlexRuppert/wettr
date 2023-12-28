@@ -19,7 +19,7 @@
 </script>
 
 <div
-  class="flex space-x-1 h-32 mx-0.5 relative tabular-nums select-none children:(shadow-md rounded-md bg-white w-32 h-32 relative) children:dark:bg-dark-600"
+  class="flex space-x-1 h-32 mx-0.5 relative tabular-nums select-none children:(shadow-md rounded-md bg-white w-32 h-32 relative) children:dark:bg-neutral-950600"
 >
   <div>
     {#if weather && weather.timestamp}
@@ -33,7 +33,7 @@
         <div class:!hidden={weather.precipitation < MIN_PRECIPITATION}>
           {toLocalDecimal(
             weather.precipitation,
-            weather.precipitation % 1 === weather.precipitation ? 0 : 1
+            weather.precipitation % 1 === weather.precipitation ? 0 : 1,
           )}
           <UnitXperY top="mm" bottom="h" />
         </div>

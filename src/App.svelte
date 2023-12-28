@@ -1,4 +1,5 @@
 <script lang="ts">
+  import './app.css'
   import AppInstall from './components/AppInstall.svelte'
 
   import CurrentWeather from './components/CurrentWeather.svelte'
@@ -35,7 +36,7 @@
   <DayWeather />
 </main>
 <footer
-  class="space-y-1 bg-gray-200 mt-1 text-sm text-center py-10 dark:bg-dark-800"
+  class="space-y-1 bg-gray-200 mt-1 text-sm text-center py-10 dark:bg-neutral-800"
 >
   <div class="self-center">
     <AppInstall />
@@ -58,12 +59,12 @@
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    @apply bg-cool-gray-200 text-gray-800;
+    @apply bg-gray-200 text-gray-800;
     height: 100%;
     margin: 0;
   }
   html.dark {
-    @apply bg-dark-900 text-gray-400;
+    @apply bg-neutral-900 text-gray-400;
   }
 
   body {
@@ -77,11 +78,6 @@
   }
 
   .clickable {
-    @apply cursor-pointer hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-dark-400 dark:active:bg-dark-800;
-  }
-
-  .custom-scrollbar,
-  body {
-    @apply scrollbar scrollbar-thumb-gray-400 scrollbar-track-light-900 dark:(scrollbar-thumb-dark-50 scrollbar-track-dark-300);
+    @apply cursor-pointer hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-neutral-400 dark:active:bg-neutral-800;
   }
 </style>

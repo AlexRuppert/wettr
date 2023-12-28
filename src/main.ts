@@ -1,6 +1,5 @@
-//@ts-ignore
 import App from './App.svelte'
-
+//@ts-ignore
 import { registerSW } from 'virtual:pwa-register'
 
 const updateSW = registerSW({

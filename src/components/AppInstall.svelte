@@ -44,7 +44,7 @@
 
 {#if showInstallButton}
   <button
-    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:(bg-dark-400 text-gray-300) light:(text-gray-800)"
+    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:(bg-neutral-900 text-gray-300) light:(text-gray-800)"
     on:click={install}>Als App installieren</button
   >
 {/if}
@@ -55,7 +55,7 @@
     transition:scale
   >
     <div
-      class="rounded bg-light-100 shadow-md p-2 text-dark-400 helper relative"
+      class="rounded bg-neutral-100 shadow-md p-2 text-neutral-900 helper relative"
       on:click={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:

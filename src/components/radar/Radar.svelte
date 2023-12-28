@@ -63,7 +63,7 @@
 
 {#if $radarOpen}
   <div
-    class="flex flex-col space-y-2 top-0 right-0 left-0 z-20 absolute select-none children:(shadow-md rounded-md max-w-sm p-2 bg-white mx-5 z-20) "
+    class="flex flex-col space-y-2 top-0 right-0 left-0 z-20 absolute select-none children:(shadow-md rounded-md max-w-sm p-2 bg-white mx-5 z-20)"
     transition:fly={{ y: -300 }}
     use:swipe={{ timeframe: 500, minSwipeDistance: 35, touchAction: 'none' }}
     on:swipe={({ detail }) =>
@@ -71,7 +71,7 @@
         ? close()
         : null}
   >
-    <div class="flex-col mt-2 dark:bg-dark-600">
+    <div class="flex-col mt-2 dark:bg-neutral-950600">
       <div class="text-size-xl text-center pt-2 pb-4" on:click={close}>
         <span>Regenradar</span>
         <span
@@ -88,7 +88,9 @@
         />
       </div>
     </div>
-    <div class="text-center leading-3 dark:bg-dark-600 dark:text-gray-500">
+    <div
+      class="text-center leading-3 dark:bg-neutral-950600 dark:text-gray-500"
+    >
       <a class="source-link" href={QUELLEN_LINK1}>{QUELLENVERMERK1}</a><span
         >,
       </span>

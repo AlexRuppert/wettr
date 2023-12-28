@@ -55,7 +55,7 @@
       case 'ArrowDown':
         selectedSuggestion = Math.min(
           suggestions.length - 1,
-          selectedSuggestion + 1
+          selectedSuggestion + 1,
         )
         event.preventDefault()
         break
@@ -146,7 +146,7 @@
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
 
 <div
-  class="bg-white rounded-md h-10 shadow-md mx-0.5 mt-1 relative dark:bg-dark-600"
+  class="bg-white rounded-md h-10 shadow-md mx-0.5 mt-1 relative dark:bg-neutral-950600"
   class:z-50={openedSuggestions}
 >
   {#if openedSuggestions}
@@ -178,7 +178,7 @@
 
   {#if openedSuggestions}
     <div
-      class="rounded-md outline-none bg-gray-100 shadow-lg w-full transform origin-top-right origin-top transition-transform left-0 z-20 absolute m1-2 dark:bg-dark-800"
+      class="rounded-md outline-none bg-gray-100 shadow-lg w-full transform origin-top-right origin-top transition-transform left-0 z-20 absolute m1-2 dark:bg-neutral-950800"
       transition:fly={{ duration: TRANSITION_TIME, y: -50 }}
     >
       <div class="shadow-lg py-1">
@@ -201,6 +201,6 @@
     -webkit-tap-highlight-color: transparent;
   }
   .selected {
-    @apply bg-gray-200 dark:bg-dark-400;
+    @apply bg-gray-200 dark:bg-neutral-900;
   }
 </style>

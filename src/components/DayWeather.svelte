@@ -40,7 +40,7 @@
 >
   {#each dummy as index, i (index)}
     <div
-      class="bg-white rounded-md flex flex-col h-30 shadow-md pt-1 overflow-hidden dark:bg-dark-600"
+      class="bg-white rounded-md flex flex-col h-30 shadow-md pt-1 overflow-hidden dark:bg-neutral-950600"
     >
       {#if weather && weather.length > 0}
         <div class="flex pr-1 pl-2 justify-between" transition:scale>

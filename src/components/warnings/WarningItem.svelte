@@ -59,7 +59,7 @@
 
 <style global>
   .warning-sub-item-header {
-    @apply bg-light-400 dark:bg-dark-500;
+    @apply bg-neutral-100 dark:bg-neutral-500;
   }
   .mirrored-y {
     transform: scaleY(-1);

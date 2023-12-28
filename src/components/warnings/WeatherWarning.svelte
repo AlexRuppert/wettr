@@ -50,7 +50,7 @@
               isInBounds(location, region.bounds) &&
               nested(point, region.polygon)
             )
-          })
+          }),
         ) /**/
 
       warning = warnings?.[0] ?? DEFAULT_WARNING
@@ -99,7 +99,7 @@
 
 {#if warnings.length > 0}
   <div
-    class="bg-white rounded-md shadow-md mx-1 select-none dark:bg-dark-600"
+    class="bg-white rounded-md shadow-md mx-1 select-none dark:bg-neutral-950600"
     in:fade={{ duration: 150 }}
   >
     <WarningItem
@@ -111,7 +111,7 @@
     />
 
     <div
-      class="rounded-b-md max-h-60 transform origin-top transition-all relative height-transition overflow-hidden dark:bg-dark-800"
+      class="rounded-b-md max-h-60 transform origin-top transition-all relative height-transition overflow-hidden dark:bg-neutral-950800"
       class:max-h-0={collapsed}
       class:pb-2={!collapsed}
     >
