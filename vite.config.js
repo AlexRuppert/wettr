@@ -7,7 +7,7 @@ import cssnano from 'cssnano'
 import postcss from 'postcss'
 import fs from 'fs'
 
-const BASE = '/wettr/'
+const BASE = '/dist/'
 // https://vitejs.dev/config/
 
 function postPostCSS() {
@@ -80,6 +80,7 @@ function postPostCSS() {
     return css
   }
   function minifyDark(css) {
+    let result
     const regex =
       /@media \(prefers-color-scheme: dark\)\{(([^\}]|\}(?!\}))*\})\}/g
     let temp = ''
@@ -117,6 +118,7 @@ function postPostCSS() {
         cssCode = simplify(cssCode)
 
         cssCode = inlineCSSVariables(cssCode)
+
         postcss([
           cssnano({
             preset: 'advanced',
@@ -162,7 +164,7 @@ export default defineConfig({
     svelte({}),
     visualizer(),
     createHtmlPlugin(),
-    postPostCSS(),
+    //postPostCSS(),
   ],
   base: BASE,
   build: {
