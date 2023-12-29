@@ -1,6 +1,5 @@
 <script lang="ts">
   import './app.css'
-  import AppInstall from './components/AppInstall.svelte'
 
   import CurrentWeather from './components/CurrentWeather.svelte'
   import DayWeather from './components/DayWeather.svelte'

@@ -11,22 +11,22 @@
   let weather: DayWeatherDataType[]
   $: {
     weather = $weatherData
+    formattedDay = weather.map(w => {
+      const formatted = new Intl.DateTimeFormat('de-DE', {
+        day: '2-digit',
+        weekday: 'short',
+      }).formatToParts(w.day)
+
+      return {
+        day: formatted.find(f => f.type === 'day').value.replace(/^0/g, ''),
+        weekday: formatted
+          .find(f => f.type === 'weekday')
+          .value.replace(/\./g, ''),
+      }
+    })
   }
 
-  let formattedDay
-  $: formattedDay = weather.map(w => {
-    const formatted = new Intl.DateTimeFormat('de-DE', {
-      day: '2-digit',
-      weekday: 'short',
-    }).formatToParts(w.day)
-
-    return {
-      day: formatted.find(f => f.type === 'day').value.replace(/^0/g, ''),
-      weekday: formatted
-        .find(f => f.type === 'weekday')
-        .value.replace(/\./g, ''),
-    }
-  })
+  let formattedDay = []
 
   let dummy = [...Array(FORECAST_DAYS + 1).keys()]
 </script>

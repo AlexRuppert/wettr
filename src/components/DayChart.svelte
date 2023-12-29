@@ -20,7 +20,8 @@
     hour: number
   }
   const [minHour, maxHour] = [0, 24]
-  const hours = [...new Array(13)].map((_, i) => i * 2)
+  const hours = [...new Array(13)].map((_, i) => i * 2).slice(1)
+
   const hoursTotal = maxHour
 
   const PADDING_X = 7.5
@@ -232,7 +233,7 @@
         1}v{20}H{getX(maxHour + 1)}v-{20}z"
     />
 
-    {#each hours.slice(1) as hour, i}
+    {#each hours as hour, i}
       <text fill={colors.tick} x={getX(hour)} y="97%">
         {hour >= maxHour ? 0 : hour}</text
       >
