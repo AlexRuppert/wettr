@@ -2,8 +2,7 @@
 
 <script lang="ts">
   import type { WeatherIconType } from '../../logic/weatherTypes'
-  import { getDarkLightColor, getWeatherIconColors } from '../../logic/utils'
-  import { darkMode } from '../../stores/store'
+  import { getWeatherIconClass } from '../../logic/utils'
   export let icon: WeatherIconType
 
   const iconLookup: { [key in WeatherIconType]: string } = {
@@ -20,11 +19,11 @@
     thunderstorm: 'cloud-open,thunderstorm',
     wind: 'wind',
   }
-  let color: string = 'currentColor'
+  let colorClass: string = 'other'
   let iconData: string[]
 
   $: {
-    color = getDarkLightColor(getWeatherIconColors(icon), $darkMode)
+    colorClass = getWeatherIconClass(icon)
     iconData = iconLookup[icon].split(',').map(icon => '#' + icon)
   }
 </script>
@@ -35,8 +34,9 @@
   viewBox="0 0 30 30"
   fill="none"
   stroke="currentColor"
-  style:color
   class={$$props.class || ''}
+  class:text-rain={colorClass === 'rain'}
+  class:text-sun={colorClass === 'sun'}
 >
   {#each iconData as href}
     <use {href} />

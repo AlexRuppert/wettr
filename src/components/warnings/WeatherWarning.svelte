@@ -99,7 +99,7 @@
 
 {#if warnings.length > 0}
   <div
-    class="bg-white rounded-md shadow-md mx-1 select-none dark:bg-neutral-950600"
+    class="select-none rounded-default bg-surface-500 shadow-md"
     in:fade={{ duration: 150 }}
   >
     <WarningItem
@@ -111,16 +111,16 @@
     />
 
     <div
-      class="rounded-b-md max-h-60 transform origin-top transition-all relative height-transition overflow-hidden dark:bg-neutral-950800"
-      class:max-h-0={collapsed}
+      class="height-transition relative max-h-64 origin-top transform overflow-hidden rounded-b-md transition-all"
+      class:!max-h-0={collapsed}
       class:pb-2={!collapsed}
     >
-      <div class="h-60">
+      <div class="h-64">
         <div
-          class="h-7 w-full bottom-0 linear-fade absolute"
+          class="linear-fade absolute bottom-0 h-7 w-full"
           class:dark={$darkMode}
         />
-        <div class="h-full text-sm overflow-y-auto box-border custom-scrollbar">
+        <div class="custom-scrollbar box-border h-full overflow-y-auto text-sm">
           <WarningDescription
             description={warning.description}
             instruction={warning.instruction}
@@ -143,23 +143,6 @@
 
 <style global>
   .height-transition {
-    transition: max-height 0.5s ease-in-out;
-  }
-
-  .linear-fade {
-    background: linear-gradient(
-      0,
-      rgb(255, 255, 255) 0 20%,
-      rgb(255, 255, 255, 0.7),
-      rgba(255, 255, 255, 0)
-    );
-  }
-  .dark.linear-fade {
-    background: linear-gradient(
-      0,
-      rgb(24, 24, 24) 0 20%,
-      rgb(24, 24, 24, 0.7),
-      rgba(24, 24, 24, 0)
-    );
+    transition: max-height 0.3s ease-in-out;
   }
 </style>

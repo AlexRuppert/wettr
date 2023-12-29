@@ -7,7 +7,7 @@ import cssnano from 'cssnano'
 import postcss from 'postcss'
 import fs from 'fs'
 
-const BASE = '/dist/'
+const BASE = '/wettr/'
 // https://vitejs.dev/config/
 
 function postPostCSS() {

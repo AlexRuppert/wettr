@@ -106,12 +106,14 @@
     selectedSuggestion = 0
     place = ''
   }
-  function getGeoLocation() {
-    closeSuggestions()
-    getGeolocationCoordinates(({ closestCity, coordinates }) => {
-      place = closestCity
-      updateCoordinates(closestCity, coordinates)
-    })
+  async function getGeoLocation() {
+    try {
+      await getGeolocationCoordinates(({ closestCity, coordinates }) => {
+        place = closestCity
+        updateCoordinates(closestCity, coordinates)
+      })
+      closeSuggestions()
+    } catch (ex) {}
   }
   async function init() {
     const urlSearchParams = new URLSearchParams(window.location.search)
@@ -146,24 +148,16 @@
 <ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
 
 <div
-  class="bg-white rounded-md h-10 shadow-md mx-0.5 mt-1 relative dark:bg-neutral-950600"
+  class="relative rounded-default bg-surface-500 leading-10 shadow-md"
   class:z-50={openedSuggestions}
+  class:!bg-surface-400={openedSuggestions}
 >
-  {#if openedSuggestions}
-    <div class="z-20 absolute" transition:fade={{ duration: TRANSITION_TIME }}>
-      <IconButton
-        label="Get Current Location"
-        icon={gps}
-        outline
-        on:click={getGeoLocation}
-      />
-    </div>
-  {/if}
-  <div class="h-full relative">
+  <label>
+    <span class="hidden">Ort</span>
     <input
       id="location"
       type="text"
-      class="bg-transparent border-none h-full outline-none flex-1 text-center text-xl w-full dark:text-gray-400"
+      class="w-full bg-transparent text-center text-xl outline-none"
       placeholder="Ort"
       autocomplete="off"
       bind:this={inputElement}
@@ -172,35 +166,30 @@
       on:focus={openSuggestions}
       on:click={openSuggestions}
     />
-
-    <label for="location" class="hidden">Ort</label>
-  </div>
+  </label>
 
   {#if openedSuggestions}
+    <div class="absolute left-0 top-0">
+      <IconButton
+        label="Get Current Location"
+        icon={gps}
+        outline
+        on:click={getGeoLocation}
+      />
+    </div>
     <div
-      class="rounded-md outline-none bg-gray-100 shadow-lg w-full transform origin-top-right origin-top transition-transform left-0 z-20 absolute m1-2 dark:bg-neutral-950800"
-      transition:fly={{ duration: TRANSITION_TIME, y: -50 }}
+      class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
+      transition:fly={{ duration: TRANSITION_TIME, y: -5 }}
     >
-      <div class="shadow-lg py-1">
-        {#each suggestions as entry, i}
-          <a
-            href={'#'}
-            class="font-semibold text-md text-lg py-3 px-4 text-gray-700 block no-underline dark:(text-gray-400)"
-            class:selected={i === selectedSuggestion}
-            on:click={() => selectSuggestion(entry)}
-            on:mouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
-          >
-        {/each}
-      </div>
+      {#each suggestions as entry, i}
+        <a
+          href={'#'}
+          class="block cursor-pointer px-3 py-2 text-lg no-underline"
+          class:selected={i === selectedSuggestion}
+          on:click={() => selectSuggestion(entry)}
+          on:mouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
+        >
+      {/each}
     </div>
   {/if}
 </div>
-
-<style global>
-  input {
-    -webkit-tap-highlight-color: transparent;
-  }
-  .selected {
-    @apply bg-gray-200 dark:bg-neutral-900;
-  }
-</style>

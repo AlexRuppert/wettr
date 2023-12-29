@@ -1,47 +1,24 @@
 import type { WeatherIconType } from './weatherTypes'
 
-export function getForegroundColor(darkMode) {
-  return getDarkLightColor(COLORS.foreground, darkMode)
-}
-
 export function getDarkLightColor(color, darkMode) {
   return darkMode ? color.dark : color.light
 }
 
-export const COLORS = {
-  foreground: {
-    light: '#444444',
-    dark: '#9ca3aa',
-  },
-  rain: {
-    light: '#0066ED',
-    dark: '#2784FF',
-  },
-  sun: {
-    light: '#FFB901',
-    dark: '#FFC637',
-  },
-  warning: {
-    light: '#EA580C',
-    dark: '#EA580C',
-  },
-}
-
-export const getWeatherIconColors = (icon: WeatherIconType) => {
+export const getWeatherIconClass = (icon: WeatherIconType) => {
   switch (icon) {
     case 'rain':
     case 'sleet':
     case 'hail':
     case 'snow':
     case 'thunderstorm':
-      return COLORS.rain
+      return 'rain'
     case 'clear-day':
     case 'clear-night':
     case 'partly-cloudy-day':
     case 'partly-cloudy-night':
-      return COLORS.sun
+      return 'sun'
     default:
-      return COLORS.foreground
+      return 'other'
   }
 }
 

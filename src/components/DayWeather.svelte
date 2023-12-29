@@ -1,14 +1,10 @@
 <script lang="ts">
-  import type {
-    DayWeatherDataType,
-    WeatherDataType,
-    WeatherIconType,
-  } from 'src/logic/weatherTypes'
+  import type { DayWeatherDataType } from 'src/logic/weatherTypes'
 
   import DayChart from './DayChart.svelte'
   import { weatherData } from '../stores/store'
   import WeatherIcon from './icons/WeatherIcon.svelte'
-  import { fly, scale } from 'svelte/transition'
+  import { scale } from 'svelte/transition'
   import { FORECAST_DAYS } from '../logic/reloader'
   import MoonPhase from './icons/MoonPhase.svelte'
 
@@ -35,64 +31,47 @@
   let dummy = [...Array(FORECAST_DAYS + 1).keys()]
 </script>
 
-<div
-  class="flex flex-col flex-nowrap font-light space-y-1 mx-0.5 tabular-nums select-none"
->
-  {#each dummy as index, i (index)}
+<div class="grid select-none gap-1 font-light tabular-nums">
+  {#each weather as day, i (day)}
     <div
-      class="bg-white rounded-md flex flex-col h-30 shadow-md pt-1 overflow-hidden dark:bg-neutral-950600"
+      class="flex h-32 flex-col overflow-hidden rounded-default bg-surface-500 pt-1 shadow-md"
     >
-      {#if weather && weather.length > 0}
-        <div class="flex pr-1 pl-2 justify-between" transition:scale>
-          <div class="text-3xl w-28">
-            <span>{formattedDay[i].day}</span>
-            <span class="text-lg -ml-1">{formattedDay[i].weekday}</span>
-          </div>
-          <div class="flex w-32 justify-between">
-            {#each weather[index].dayParts as { icon }, j (i + '' + j)}
-              <div class="flex h-8 w-8 items-center relative self-end">
-                {#key weather[index].dayParts}
-                  <div
-                    class="inset-0 absolute"
-                    transition:scale={{ delay: j * 50 }}
-                  >
-                    <WeatherIcon {icon} />
-                  </div>
-                {/key}
-              </div>
-            {/each}
-          </div>
-          <div class="text-right text-3xl w-28">
-            <span
-              class="text-lg"
-              class:cold={weather[index].min.temperature < 0}
-              >{weather[index].min.temperature}<span
-                class="text-sm align-text-top inline-block push-up">°</span
-              ></span
-            >
-            <span class:cold={weather[index].max.temperature < 0}
-              >{weather[index].max.temperature}<span class="text-sm align-top"
-                >°</span
-              ></span
-            >
-          </div>
+      <div class="flex justify-between pl-2 pr-1" transition:scale>
+        <div class="w-28 text-3xl">
+          <span>{formattedDay[i].day}</span>
+          <span class="-ml-1 text-lg">{formattedDay[i].weekday}</span>
         </div>
-        <div class="overflow-hidden relative">
-          <DayChart weather={weather[index]} />
-          <div class="h-2 bottom-3 left-1 w-2 z-10 absolute">
-            <MoonPhase timestamp={weather[index].day} />
-          </div>
+        <div class="flex w-32 justify-between">
+          {#each day.dayParts as { icon }, j (i + '' + j)}
+            <div class="relative flex h-8 w-8 items-center self-end">
+              {#key day.dayParts}
+                <div
+                  class="absolute inset-0"
+                  transition:scale={{ delay: j * 50 }}
+                >
+                  <WeatherIcon {icon} />
+                </div>
+              {/key}
+            </div>
+          {/each}
         </div>
-      {/if}
+        <div class="w-28 text-right text-3xl">
+          <span class="text-lg"
+            >{day.min.temperature}<span
+              class="inline-block align-text-top text-sm">°</span
+            ></span
+          >
+          <span class:cold={day.max.temperature < 0}
+            >{day.max.temperature}<span class="align-top text-sm">°</span></span
+          >
+        </div>
+      </div>
+      <div class="relative overflow-hidden">
+        <DayChart weather={day} />
+        <div class="absolute bottom-0.5 left-1 z-10 size-2">
+          <MoonPhase timestamp={day.day} />
+        </div>
+      </div>
     </div>
   {/each}
 </div>
-
-<style global>
-  .cold {
-    @apply text-blue-600 dark:text-blue-400;
-  }
-  .push-up {
-    transform: translate(0, -2px);
-  }
-</style>

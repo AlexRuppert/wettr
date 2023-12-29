@@ -2,11 +2,12 @@
 
 <script lang="ts">
   import { darkMode } from '../stores/store'
-  import { clamp, COLORS } from '../logic/utils'
+  import { clamp } from '../logic/utils'
   import { getPathData } from '../logic/chart/path'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import type { DayWeatherDataType } from 'src/logic/weatherTypes'
+  import { light, dark } from '../../themes'
   export let weather: DayWeatherDataType
 
   type GraphPoint = {
@@ -51,18 +52,22 @@
   })
 
   const updateColors = (darkMode: boolean) => {
-    const variation = darkMode ? 'dark' : 'light'
+    const theme = darkMode ? dark : light
+    function hslOpacity(hsl: string, opacity = 1) {
+      return hsl.replace(')', '/ ' + opacity + ')')
+    }
     return {
-      dataLabelBackgroundColor: darkMode ? '#22222270' : '#ffffffa0',
-      pointBackgroundColor: darkMode ? '#222' : '#fff',
-      currentTime: COLORS.warning[variation],
-      tick: COLORS.foreground[variation] + 'a0',
-      night: darkMode ? '#00000050' : '#44446420',
-      temperature: COLORS.foreground[variation],
-      precipitation: COLORS.rain[variation],
-      precipitationFill: COLORS.rain[variation] + '20',
-      sunniness: COLORS.sun[variation],
-      sunninessFill: COLORS.sun[variation] + '10',
+      dataLabelBackgroundColor: hslOpacity(theme.surface[500], 0.5),
+      pointBackgroundColor: hslOpacity(theme.surface[500], 1),
+      currentTime: theme.warning,
+      tick: hslOpacity(theme.text.soft, 0.9),
+      night: hslOpacity(theme.surface[100], 0.1),
+      temperature: theme.text.hard,
+      temperatureGraph: hslOpacity(theme.text.soft, 0.5),
+      precipitation: theme.rain,
+      precipitationFill: hslOpacity(theme.rain, 0.2),
+      sunniness: theme.sun,
+      sunninessFill: hslOpacity(theme.sun, 0.1),
     }
   }
 
@@ -85,7 +90,7 @@
     const { sunrise, sunset } = weather.dayLight
 
     dayLengthsX = [sunrise, sunset].map(t =>
-      getX(dateToHoursFraction(weather.day, t))
+      getX(dateToHoursFraction(weather.day, t)),
     )
 
     const now = new Date()
@@ -117,7 +122,7 @@
         sunninessPoints.push({
           x,
           y: getGraphY(
-            clamp((Math.tanh(4 * sunninessPercent - 2) + 0.9) / 1.8, 0, 1)
+            clamp((Math.tanh(4 * sunninessPercent - 2) + 0.9) / 1.8, 0, 1),
           ),
         })
         if (
@@ -139,18 +144,18 @@
             y: 0,
           })
         }
-      }
+      },
     )
 
     temperatureLabelPoints = temperaturePoints.filter((point, i, points) =>
-      isCurrentValueDifferent(i, points)
+      isCurrentValueDifferent(i, points),
     )
     ;[sunninessPath, temperaturePath, precipitationPath] = [
       sunninessPoints,
       temperaturePoints,
       precipitationPoints,
     ].map((points, i) =>
-      getPathData(extendPoints(points, width), height, PADDING_Y / 2)
+      getPathData(extendPoints(points, width), height, PADDING_Y / 2),
     )
   }
 
@@ -173,7 +178,7 @@
   function getY(value: number) {
     return Math.max(
       PADDING_Y,
-      Math.min((1 - value) * height, height - PADDING_Y / 2)
+      Math.min((1 - value) * height, height - PADDING_Y / 2),
     )
   }
 
@@ -258,7 +263,7 @@
         stroke={colors.precipitation}
         d={precipitationPath + pathFillCloseSuffix}
       />
-      <path stroke={colors.temperature + '50'} d={temperaturePath} />
+      <path stroke={colors.temperatureGraph} d={temperaturePath} />
 
       <path
         d="M{nowLineX + 0.5} 0v8M{nowLineX + 0.5} {height}v-6"
@@ -281,8 +286,8 @@
             (i === 0
               ? 9
               : point.temperature.toString().length > 1
-              ? -9
-              : -6)} {point.y + (point.flipY ? -3 : 8)})"
+                ? -9
+                : -6)} {point.y + (point.flipY ? -3 : 8)})"
         >
           <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
             >{point.temperature}
@@ -293,6 +298,3 @@
     </g>
   {/if}
 </svg>
-
-<style global>
-</style>

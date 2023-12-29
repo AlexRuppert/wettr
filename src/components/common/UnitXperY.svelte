@@ -5,12 +5,6 @@
   export let bottom: string
 </script>
 
-<div class="pt-1 self-center">
+<div class="self-center pt-0.5 text-[0.6rem]">
   <sup>{top}</sup>/<sub>{bottom}</sub>
 </div>
-
-<style>
-  div {
-    font-size: 0.6rem;
-  }
-</style>

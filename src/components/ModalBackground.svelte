@@ -13,8 +13,9 @@
 
 {#if show}
   <div
+    aria-hidden="true"
     transition:fade={{ duration: 200 }}
-    class="bg-neutral-950800/90 inset-0 z-20 fixed"
+    class="fixed inset-0 z-20 bg-gray-900/60"
     on:click|stopPropagation={close}
   />
 {/if}
