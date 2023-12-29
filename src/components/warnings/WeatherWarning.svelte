@@ -20,7 +20,7 @@
   } from '../../stores/store'
 
   import { nested } from 'point-in-polygon'
-  import { isInBounds } from '../../logic/radar/utils'
+  import { isInBounds } from '../../logic/utils'
 
   let collapsed = true
   let warning = DEFAULT_WARNING

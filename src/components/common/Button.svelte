@@ -6,17 +6,9 @@
 
 <button
   class="{$$props.class ||
-    ''} bg-transparent border-none rounded flex h-10 p-1 w-10 appearance-none clickable items-center"
+    ''} clickable flex h-10 w-10 appearance-none items-center rounded border-none bg-transparent p-1"
   on:click
   aria-label={label}
 >
   <slot />
 </button>
-°
-
-<style global>
-  button {
-    touch-action: manipulation;
-    color: inherit;
-  }
-</style>

@@ -30,6 +30,3 @@
     ><br />
   {/each}
 </footer>
-
-<style>
-</style>

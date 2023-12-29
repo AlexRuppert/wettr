@@ -39,3 +39,37 @@ export const round = (num: number, decimals: number = 0) => {
 export const clamp = (num: number, min: number, max: number) => {
   return Math.min(Math.max(num, min), max)
 }
+
+export function isInBounds({ lon, lat }, viewBounds: GeoBounds) {
+  const EPSILON = 0.02
+  return (
+    lon + EPSILON >= viewBounds.lb.lon &&
+    lon - EPSILON <= viewBounds.rt.lon &&
+    lat + EPSILON >= viewBounds.lb.lat &&
+    lat - EPSILON <= viewBounds.rt.lat
+  )
+}
+export interface GeoBounds {
+  lb: {
+    lat: number
+    lon: number
+  }
+  rt: {
+    lat: number
+    lon: number
+  }
+}
+
+export function getLocationBounds({ lon, lat }, radiusKm = 8) {
+  const deg = radiusKm / 70
+  return {
+    lb: {
+      lat: lat - deg,
+      lon: lon - deg,
+    },
+    rt: {
+      lat: lat + deg,
+      lon: lon + deg,
+    },
+  }
+}

@@ -44,43 +44,34 @@
 
 {#if showInstallButton}
   <button
-    class="border border-solid rounded-md border-gray-400 mb-4 p-2 inline-block dark:(bg-neutral-900 text-gray-300) light:(text-gray-800)"
+    class="dark:(bg-neutral-900 text-gray-300) light:(text-gray-800) mb-4 inline-block rounded-md border border-solid border-gray-400 p-2"
     on:click={install}>Als App installieren</button
   >
 {/if}
 
 {#if showInstallButton && showInstallOverlay}
   <div
-    class="flex right-0 bottom-1 left-0 justify-center fixed"
+    class="fixed bottom-1 left-0 right-0 flex justify-center"
     transition:scale
   >
     <div
-      class="rounded bg-neutral-100 shadow-md p-2 text-neutral-900 helper relative"
+      class="helper relative rounded bg-neutral-100 p-2 text-neutral-900 shadow-md"
       on:click={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:
-      <SvgIcon class="inline install-icon" d={shareIcon} fill="#16c" outline />
+      <SvgIcon
+        class="-mx-1 inline-block h-5 w-5 align-middle "
+        d={shareIcon}
+        fill="#16c"
+        outline
+      />
       und
-      <SvgIcon class="inline install-icon" d={addBox} fill="#16c" outline />
+      <SvgIcon
+        class="-mx-1 inline-block h-5 w-5 align-middle "
+        d={addBox}
+        fill="#16c"
+        outline
+      />
     </div>
   </div>
 {/if}
-
-<style global>
-  .helper:after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-top: solid 5px #fefefe;
-    border-left: solid 5px transparent;
-    border-right: solid 5px transparent;
-  }
-
-  .install-icon {
-    @apply h-5 -mx-1 w-5 inline-block align-middle;
-  }
-</style>

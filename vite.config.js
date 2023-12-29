@@ -2,8 +2,9 @@ import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { createHtmlPlugin } from 'vite-plugin-html'
+import createHtmlPlugin from 'vite-plugin-simple-html'
 import cssnano from 'cssnano'
+import postcssVariableCompress from 'postcss-variable-compress'
 import postcss from 'postcss'
 import fs from 'fs'
 
@@ -50,7 +51,7 @@ function postPostCSS() {
       }
 
       const declaredInScope = Array.from(valiables.keys()).filter(v =>
-        declarations.has(v)
+        declarations.has(v),
       )
 
       let updated = scope
@@ -58,11 +59,11 @@ function postPostCSS() {
         declarations.forEach(v => {
           v.value = v.value.replaceAll(
             valiables.get(d).original,
-            declarations.get(d).value
+            declarations.get(d).value,
           )
           v.original = v.original.replaceAll(
             valiables.get(d).original,
-            declarations.get(d).value
+            declarations.get(d).value,
           )
         })
         updated = updated
@@ -109,20 +110,22 @@ function postPostCSS() {
         .map(key => bundle[key])
 
       cssFiles.forEach(css => {
-        let cssCode = removeGlobal(css.source)
+        //let cssCode = removeGlobal(css.source)
+        let cssCode = css.source
         for (let i = 0; i <= 3; i++) {
-          cssCode = minifyCSSVariables(cssCode)
+          //cssCode = minifyCSSVariables(cssCode)
         }
 
-        cssCode = minifyDark(cssCode)
+        /*cssCode = minifyDark(cssCode)
         cssCode = simplify(cssCode)
 
-        cssCode = inlineCSSVariables(cssCode)
+        cssCode = inlineCSSVariables(cssCode)*/
 
         postcss([
           cssnano({
             preset: 'advanced',
           }),
+          postcssVariableCompress(),
         ])
           .process(cssCode)
           .then(result => {
@@ -163,9 +166,10 @@ export default defineConfig({
     }),
     svelte({}),
     visualizer(),
-    createHtmlPlugin(),
-    //postPostCSS(),
+    createHtmlPlugin({ minify: true }),
+    postPostCSS(),
   ],
+
   base: BASE,
   build: {
     minify: 'terser',

@@ -1,7 +1,7 @@
 import { get } from 'svelte/store'
 import { locationCoordinates, thread } from './../stores/store'
 
-import { getLocationBounds } from './radar/utils'
+import { getLocationBounds } from './utils'
 
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
 export const FORECAST_DAYS = 7

@@ -30,7 +30,7 @@
         />
       </div>
 
-      <div class="bottom-info center grow !space-x-2">
+      <div class="center absolute bottom-2 z-10 w-full grow space-x-2">
         <div
           class="center space-x-0.5"
           class:!hidden={weather.precipitation < MIN_PRECIPITATION}
@@ -65,7 +65,7 @@
         <span class="mt-1 text-base">°</span>
       </div>
 
-      <div class="bottom-info center">
+      <div class="center absolute bottom-2 z-10 w-full space-x-0.5">
         <SvgIcon class="mt-[0.2em] block size-5" d={humidity} outline />
         <div>{weather.relativeHumidity}</div>
         <div class="text-[0.8em]">%</div>
@@ -77,8 +77,5 @@
 <style>
   .current-warning-text {
     @apply font-semibold text-warning;
-  }
-  .bottom-info {
-    @apply absolute bottom-2 z-10 w-full space-x-0.5;
   }
 </style>

@@ -32,6 +32,22 @@ input {
 .selected {
   @apply text-text-primary bg-primary;
 }
+button {
+  touch-action: manipulation;
+  color: inherit;
+}
+.helper:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-top: solid 5px #fefefe;
+  border-left: solid 5px transparent;
+  border-right: solid 5px transparent;
+}
 
 /* ===== Scrollbar CSS ===== */
 /* Firefox */

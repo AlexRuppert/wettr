@@ -19,6 +19,3 @@
 >
   <SvgIcon d={windDirection} outline />
 </div>
-
-<style global>
-</style>
