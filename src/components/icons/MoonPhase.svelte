@@ -1,22 +1,21 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  export let timestamp = new Date()
-  let l = 1
-  let r = 1
+  interface Props {
+    timestamp?: Date
+  }
+  let { timestamp = new Date() } = $props<Props>()
 
-  const LUNAR_MS = 2551442777.777664
-  const KNOWN_NEW_MOON = new Date('2022-01-02T19:33+01:00').getTime()
-
-  $: {
-    let phase = getMoonRatio(timestamp) - 0.5
-    ;[l, r] = [
+  let phase = $derived(getMoonRatio(timestamp) - 0.5)
+  let [l, r] = $derived(
+    [
       { mul: -4, fn: Math.min },
       { mul: 4, fn: Math.max },
-    ].map(({ mul, fn }) => 1 - mul * fn(0, phase))
-  }
-
+    ].map(({ mul, fn }) => 1 - mul * fn(0, phase)),
+  )
   function getMoonRatio(timestamp: Date) {
+    const LUNAR_MS = 2551442777.777664
+    const KNOWN_NEW_MOON = new Date('2022-01-02T19:33+01:00').getTime()
     return ((timestamp.getTime() - KNOWN_NEW_MOON) % LUNAR_MS) / LUNAR_MS
   }
 </script>

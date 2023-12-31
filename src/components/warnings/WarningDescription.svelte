@@ -1,10 +1,19 @@
 <script lang="ts">
-  export let description
-  export let instruction
-  export let hintText
+  import { classProp, type CustomElement } from '@/logic/svelte'
+
+  interface Props extends CustomElement {
+    description: string
+    instruction: string
+    hintText: string
+  }
+  let { description, instruction, hintText, className, ...other } =
+    $props<Props>()
 </script>
 
-<div class="bg-surface-400 p-3 pr-6 leading-4">
+<div
+  class={classProp('bg-surface-400 p-3 pr-6 leading-4', className)}
+  {...other}
+>
   <div>
     {description}
   </div>
@@ -13,6 +22,3 @@
     {instruction}
   </p>
 </div>
-
-<style global>
-</style>

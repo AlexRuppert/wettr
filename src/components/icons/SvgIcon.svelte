@@ -1,22 +1,31 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  export let d: string
-  export let fill: string | null = null
-  export let outline = false
-  export let strokeWidth = 1
+  import { classProp, type CustomElement } from '@/logic/svelte'
+  interface Props extends CustomElement {
+    d: string
+    fill?: string
+    outline?: boolean
+    strokeWidth?: number
+  }
 
-  let svgStroke: string
-  let svgFill: string
-  $: {
+  let {
+    d,
+    fill,
+    outline = false,
+    strokeWidth = 1,
+    className,
+    ...other
+  } = $props<Props>()
+
+  let { svgStroke, svgFill } = $derived(getStrokeFill(fill))
+
+  function getStrokeFill(fill: Props['fill']) {
     let _fill = fill ?? 'currentColor'
-
     if (outline) {
-      svgStroke = _fill
-      svgFill = 'none'
+      return { svgStroke: _fill, svgFill: 'none' }
     } else {
-      svgStroke = 'none'
-      svgFill = _fill
+      return { svgStroke: 'none', svgFill: _fill }
     }
   }
 </script>
@@ -30,7 +39,8 @@
   stroke-width={strokeWidth}
   stroke={svgStroke}
   fill={svgFill}
-  class={$$props.class || ''}
+  class={className}
+  {...other}
 >
   <path {d} />
 </svg>

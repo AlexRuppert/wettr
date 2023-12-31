@@ -5,16 +5,15 @@
   import { addBox, shareIcon } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
   let isIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
-  let showInstallButton = false
-  let showInstallOverlay = false
-  let alreadyInstalled = false
+  let showInstallButton = $state(false)
+  let showInstallOverlay = $state(false)
+  let alreadyInstalled = $state(false)
   let deferredInstallPrompt
   const iOSCanInstall = 'standalone' in window.navigator
   const iOSIsInstalled = window.navigator['standalone'] === true
 
   window.addEventListener('beforeinstallprompt', evt => {
     deferredInstallPrompt = evt
-
     showInstallButton = !(
       window.matchMedia('(display-mode: standalone)').matches ||
       navigator['standalone']
@@ -37,15 +36,18 @@
       }
     }
   }
-  if (!alreadyInstalled && iOSCanInstall && !iOSIsInstalled) {
-    showInstallButton = true
-  }
+
+  $effect(() => {
+    if (!alreadyInstalled && iOSCanInstall && !iOSIsInstalled) {
+      showInstallButton = true
+    }
+  })
 </script>
 
 {#if showInstallButton}
   <button
     class="dark:(bg-neutral-900 text-gray-300) light:(text-gray-800) mb-4 inline-block rounded-md border border-solid border-gray-400 p-2"
-    on:click={install}>Als App installieren</button
+    onclick={install}>Als App installieren</button
   >
 {/if}
 
@@ -56,18 +58,20 @@
   >
     <div
       class="helper relative rounded bg-neutral-100 p-2 text-neutral-900 shadow-md"
-      on:click={() => (showInstallOverlay = false)}
+      role="button"
+      tabindex="0"
+      onclick={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:
       <SvgIcon
-        class="-mx-1 inline-block h-5 w-5 align-middle "
+        className="-mx-1 inline-block h-5 w-5 align-middle "
         d={shareIcon}
         fill="#16c"
         outline
       />
       und
       <SvgIcon
-        class="-mx-1 inline-block h-5 w-5 align-middle "
+        className="-mx-1 inline-block h-5 w-5 align-middle "
         d={addBox}
         fill="#16c"
         outline

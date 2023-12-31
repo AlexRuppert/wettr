@@ -8,27 +8,23 @@
   import { FORECAST_DAYS } from '../logic/reloader'
   import MoonPhase from './icons/MoonPhase.svelte'
 
-  let weather: DayWeatherDataType[]
-  $: {
-    weather = $weatherData
-    formattedDay = weather.map(w => {
+  let weather: DayWeatherDataType[] = $derived($weatherData)
+
+  let formattedDay = $derived(
+    weather.map(w => {
       const formatted = new Intl.DateTimeFormat('de-DE', {
         day: '2-digit',
         weekday: 'short',
       }).formatToParts(w.day)
-
+      console.log(weather)
       return {
         day: formatted.find(f => f.type === 'day').value.replace(/^0/g, ''),
         weekday: formatted
           .find(f => f.type === 'weekday')
           .value.replace(/\./g, ''),
       }
-    })
-  }
-
-  let formattedDay = []
-
-  let dummy = [...Array(FORECAST_DAYS + 1).keys()]
+    }),
+  )
 </script>
 
 <div class="grid select-none gap-1 font-light tabular-nums">
@@ -57,12 +53,14 @@
         </div>
         <div class="w-28 text-right text-3xl">
           <span class="text-lg"
-            >{day.min.temperature}<span
+            ><span>{day.min.temperature}</span><span
               class="inline-block align-text-top text-sm">°</span
             ></span
           >
           <span class:cold={day.max.temperature < 0}
-            >{day.max.temperature}<span class="align-top text-sm">°</span></span
+            ><span>{day.max.temperature}</span><span class="align-top text-sm"
+              >°</span
+            ></span
           >
         </div>
       </div>

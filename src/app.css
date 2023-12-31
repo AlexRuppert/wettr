@@ -15,7 +15,7 @@
   margin: 0;
 }
 html.dark {
-  @apply bg-neutral-950;
+  @apply bg-[#000];
 }
 
 body {

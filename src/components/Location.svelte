@@ -15,22 +15,24 @@
   import { fade, fly } from 'svelte/transition'
   import { gps } from './icons/icons'
 
+  import { classProp, type CustomElement } from '@/logic/svelte'
+
+  interface Props extends CustomElement {}
+  let { ...other } = $props<Props>()
+
   const TRANSITION_TIME = 250
   const FALLBACK_SUGGESTION = {
     location: '',
     coordinates: { lon: 0, lat: 0 },
   }
-  let inputElement
+  let inputElement = $state(null)
+  let place = $state('')
+  let openedSuggestions = $state(false)
 
-  let place = ''
+  let suggestions: { name: string; lon: number; lat: number }[] = $state([])
+  let selectedSuggestion = $state(0)
 
-  let suggestions: { name: string; lon: number; lat: number }[] = []
-  const setFilterLocations = place =>
-    filterLocations(place).then(s => (suggestions = s))
-
-  let openedSuggestions = false
-  let selectedSuggestion = 0
-  $: {
+  $effect.pre(() => {
     if (openedSuggestions) {
       if (place.length <= 0) {
         const history = getHistory()
@@ -44,7 +46,10 @@
       } else setFilterLocations(place)
       selectedSuggestion = 0
     }
-  }
+  })
+
+  const setFilterLocations = place =>
+    filterLocations(place).then(s => (suggestions = s))
 
   function handleInputKeys(event: KeyboardEvent) {
     switch (event.code) {
@@ -145,7 +150,7 @@
   init()
 </script>
 
-<ModalBackground show={openedSuggestions} on:close={closeSuggestions} />
+<ModalBackground show={openedSuggestions} onclose={closeSuggestions} />
 
 <div
   class="relative rounded-default bg-surface-500 leading-10 shadow-md"
@@ -162,9 +167,9 @@
       autocomplete="off"
       bind:this={inputElement}
       bind:value={place}
-      on:keydown={handleInputKeys}
-      on:focus={openSuggestions}
-      on:click={openSuggestions}
+      onkeydown={handleInputKeys}
+      onfocus={openSuggestions}
+      onclick={openSuggestions}
     />
   </label>
 
@@ -174,7 +179,7 @@
         label="Get Current Location"
         icon={gps}
         outline
-        on:click={getGeoLocation}
+        onclick={getGeoLocation}
       />
     </div>
     <div
@@ -186,8 +191,8 @@
           href={'#'}
           class="block cursor-pointer px-3 py-2 text-lg no-underline"
           class:selected={i === selectedSuggestion}
-          on:click={() => selectSuggestion(entry)}
-          on:mouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
+          onclick={() => selectSuggestion(entry)}
+          onmouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
         >
       {/each}
     </div>

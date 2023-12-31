@@ -1,14 +1,20 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { classProp, type CustomElement } from '@/logic/svelte'
   import { fade } from 'svelte/transition'
-  const dispatch = createEventDispatcher()
 
-  function close() {
-    dispatch('close')
+  interface Props extends CustomElement {
+    show?: boolean
+    onclose: () => void
   }
-  export let show = false
+
+  let { show = false, onclose, className = '', ...other } = $props<Props>()
+
+  function close(e: Event) {
+    e.stopPropagation()
+    onclose()
+  }
 </script>
 
 {#if show}
@@ -16,6 +22,6 @@
     aria-hidden="true"
     transition:fade={{ duration: 200 }}
     class="fixed inset-0 z-20 bg-gray-900/60"
-    on:click|stopPropagation={close}
+    onclick={close}
   />
 {/if}

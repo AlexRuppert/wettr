@@ -7,6 +7,7 @@ import cssnano from 'cssnano'
 import postcssVariableCompress from 'postcss-variable-compress'
 import postcss from 'postcss'
 import fs from 'fs'
+import { fileURLToPath, URL } from 'url'
 
 const BASE = '/wettr/'
 // https://vitejs.dev/config/
@@ -196,5 +197,13 @@ export default defineConfig({
       key: fs.readFileSync('localhost-key.pem'),
       cert: fs.readFileSync('localhost.pem'),
     },
+  },
+  resolve: {
+    alias: [
+      {
+        find: '@',
+        replacement: fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    ],
   },
 })

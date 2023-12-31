@@ -1,14 +1,21 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  export let label = 'Button'
+  import { classProp, type CustomElement } from '@/logic/svelte'
+  interface Props extends CustomElement {
+    label?: string
+  }
+
+  let { label = 'Button', className = '', ...other } = $props<Props>()
 </script>
 
 <button
-  class="{$$props.class ||
-    ''} clickable flex h-10 w-10 appearance-none items-center rounded border-none bg-transparent p-1"
-  on:click
+  class={classProp(
+    'clickable flex size-10 appearance-none items-center rounded-default border-none bg-transparent p-1',
+    className,
+  )}
   aria-label={label}
+  {...other}
 >
   <slot />
 </button>

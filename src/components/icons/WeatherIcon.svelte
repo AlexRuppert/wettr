@@ -1,9 +1,14 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import type { WeatherIconType } from '../../logic/weatherTypes'
-  import { getWeatherIconClass } from '../../logic/utils'
-  export let icon: WeatherIconType
+  import type { WeatherIconType } from '@/logic/weatherTypes'
+  import { getWeatherIconClass } from '@/logic/utils'
+  import { classProp, type CustomElement } from '@/logic/svelte'
+
+  interface Props extends CustomElement {
+    icon: WeatherIconType
+  }
+  let { icon, className = '', ...other } = $props<Props>()
 
   const iconLookup: { [key in WeatherIconType]: string } = {
     'clear-day': 'sun,sun-rays',
@@ -19,13 +24,8 @@
     thunderstorm: 'cloud-open,thunderstorm',
     wind: 'wind',
   }
-  let colorClass: string = 'other'
-  let iconData: string[]
-
-  $: {
-    colorClass = getWeatherIconClass(icon)
-    iconData = iconLookup[icon].split(',').map(icon => '#' + icon)
-  }
+  let colorClass = $derived(getWeatherIconClass(icon))
+  let iconData = $derived(iconLookup[icon].split(',').map(icon => '#' + icon))
 </script>
 
 <svg
@@ -34,9 +34,10 @@
   viewBox="0 0 30 30"
   fill="none"
   stroke="currentColor"
-  class={$$props.class || ''}
+  class={classProp('', className)}
   class:text-rain={colorClass === 'rain'}
   class:text-sun={colorClass === 'sun'}
+  {...other}
 >
   {#each iconData as href}
     <use {href} />

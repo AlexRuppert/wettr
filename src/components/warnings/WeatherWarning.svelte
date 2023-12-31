@@ -10,8 +10,9 @@
 </script>
 
 <script lang="ts">
-  import WarningItem from './WarningItem.svelte'
-  import WarningDescription from './WarningDescription.svelte'
+  import WarningItem from '@/components/warnings/WarningItem.svelte'
+  import WarningDescription from '@/components/warnings/WarningDescription.svelte'
+
   import { fade } from 'svelte/transition'
   import {
     darkMode,
@@ -22,39 +23,42 @@
   import { nested } from 'point-in-polygon'
   import { isInBounds } from '../../logic/utils'
 
-  let collapsed = true
-  let warning = DEFAULT_WARNING
-  let warnings = []
-  let restWarnings = []
-
+  let collapsed = $state(true)
   const hintText = 'ACHTUNG! Hinweis auf mögliche Gefahren: '
 
-  $: {
-    let location = $locationCoordinates
-    let point = [location.lon, location.lat]
-    if ($weatherWarningData.length > 0) {
-      const now = new Date()
-      warnings = $weatherWarningData
-        .map(warning => ({
-          time: formatTimes(now, warning.time),
-          level: warning.level,
-          icon: warning.type,
-          title: warning.event,
-          description: warning.description,
-          instruction: warning.instruction.replace(hintText, ''),
-          regions: warning.regions,
-        }))
-        /**/ .filter(warning =>
-          warning.regions.some(region => {
-            return (
-              isInBounds(location, region.bounds) &&
-              nested(point, region.polygon)
-            )
-          }),
-        ) /**/
+  let { warning, warnings, restWarnings } = $derived(
+    getWarnings($locationCoordinates, $weatherWarningData),
+  )
 
-      warning = warnings?.[0] ?? DEFAULT_WARNING
-      restWarnings = warnings.slice(1)
+  function getWarnings(
+    location: { lat: number; lon: number },
+    weatherWarnings: any[],
+  ) {
+    let point = [location.lon, location.lat]
+
+    const now = new Date()
+    let warnings = weatherWarnings
+      .map(warning => ({
+        time: formatTimes(now, warning.time),
+        level: warning.level,
+        icon: warning.type,
+        title: warning.event,
+        description: warning.description,
+        instruction: warning.instruction.replace(hintText, ''),
+        regions: warning.regions,
+      }))
+      /**/ .filter(warning =>
+        warning.regions.some(region => {
+          return (
+            isInBounds(location, region.bounds) && nested(point, region.polygon)
+          )
+        }),
+      ) /**/
+
+    return {
+      warning: warnings?.[0] ?? DEFAULT_WARNING,
+      warnings,
+      restWarnings: warnings.slice(1),
     }
   }
 
@@ -104,7 +108,7 @@
   >
     <WarningItem
       suffix={warnings.length > 1 ? `+${warnings.length - 1}` : ''}
-      on:click={toggleCollapsed}
+      onclick={toggleCollapsed}
       title={warning.title}
       time={warning.time}
       {collapsed}

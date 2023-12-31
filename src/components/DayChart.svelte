@@ -8,7 +8,12 @@
   import { cubicOut } from 'svelte/easing'
   import type { DayWeatherDataType } from 'src/logic/weatherTypes'
   import { light, dark } from '../../themes'
-  export let weather: DayWeatherDataType
+  import { classProp, type CustomElement } from '@/logic/svelte'
+  interface Props extends CustomElement {
+    weather: DayWeatherDataType
+  }
+
+  let { weather, className = '', ...other } = $props<Props>()
 
   type GraphPoint = {
     x: number
@@ -21,38 +26,49 @@
   }
   const [minHour, maxHour] = [0, 24]
   const hours = [...new Array(13)].map((_, i) => i * 2).slice(1)
-
   const hoursTotal = maxHour
-
   const PADDING_X = 7.5
   const PADDING_Y = 5
 
-  let hourWidth: number
-  let width: number
-  let height: number
-  let svg: SVGSVGElement
+  let hourWidth: number = $state(0)
+  let width: number = $state(0)
+  let height: number = $state(0)
+  let svg: SVGSVGElement = $state(null)
 
-  let pathFillCloseSuffix
+  let pathFillCloseSuffix = $state('')
 
-  let dayLengthsX = [0, 100]
-  let nowLineX = -5
+  let dayLengthsX = $state([0, 100])
+  let nowLineX = $state(-5)
 
-  let temperatureLabelPoints: TemperatureGraphPoint[] = []
+  let temperatureLabelPoints: TemperatureGraphPoint[] = $state([])
 
-  let sunninessPath = ''
-  let precipitationPath = ''
-  let temperaturePath = ''
+  let sunninessPath = $state('')
+  let precipitationPath = $state('')
+  let temperaturePath = $state('')
 
-  let windGustPoints = []
-  let dayString = weather.day.toISOString()
+  let windGustPoints = $state([])
+  let dayString = $derived(weather.day.toISOString())
+
+  let colors = $derived(updateColors($darkMode))
 
   const clipPercent = tweened(0, {
     duration: 300,
     delay: 0,
     easing: cubicOut,
   })
+  clipPercent.set(0, { duration: 0 })
 
-  const updateColors = (darkMode: boolean) => {
+  $effect(() => {
+    if (weather && svg) {
+      clipPercent.set(0, { duration: 0 })
+      setTimeout(() => {
+        updateDimensions(svg.getBoundingClientRect())
+        updateData(weather)
+        clipPercent.set(1)
+      }, 50)
+    }
+  })
+  function updateColors(darkMode: boolean) {
     const theme = darkMode ? dark : light
     function hslOpacity(hsl: string, opacity = 1) {
       return hsl.replace(')', '/ ' + opacity + ')')
@@ -69,22 +85,6 @@
       precipitationFill: hslOpacity(theme.rain, 0.2),
       sunniness: theme.sun,
       sunninessFill: hslOpacity(theme.sun, 0.1),
-    }
-  }
-
-  let colors
-  $: {
-    colors = updateColors($darkMode)
-  }
-  clipPercent.set(0, { duration: 0 })
-  $: {
-    if (weather && svg) {
-      clipPercent.set(0, { duration: 0 })
-      setTimeout(() => {
-        updateDimensions(svg.getBoundingClientRect())
-        updateData(weather)
-        clipPercent.set(1)
-      }, 50)
     }
   }
   function updateData(weather: DayWeatherDataType) {

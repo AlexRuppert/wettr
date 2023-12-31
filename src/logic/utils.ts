@@ -73,3 +73,7 @@ export function getLocationBounds({ lon, lat }, radiusKm = 8) {
     },
   }
 }
+
+export function toLocalDecimal(num, precision = 0) {
+  return Number.parseFloat(num).toFixed(precision).toLocaleString()
+}

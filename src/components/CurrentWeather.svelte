@@ -6,15 +6,15 @@
   import SvgIcon from './icons/SvgIcon.svelte'
   import UnitXperY from './common/UnitXperY.svelte'
   import type { WeatherDataType } from '../logic/weatherTypes'
+  import { toLocalDecimal } from '@/logic/utils'
+  import { type CustomElement } from '@/logic/svelte'
 
-  function toLocalDecimal(num, precision = 0) {
-    return Number.parseFloat(num).toFixed(precision).toLocaleString()
-  }
+  interface Props extends CustomElement {}
+  let { ...other } = $props<Props>()
 
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
-  let weather: WeatherDataType
-  $: weather = $currentWeatherData
+  let weather: WeatherDataType = $derived($currentWeatherData)
 </script>
 
 {#if weather && weather.timestamp}
@@ -24,7 +24,7 @@
     <div>
       <div class="">
         <WindDirection
-          class="absolute left-12 top-12 size-8 "
+          className="absolute left-12 top-12 size-8 "
           direction={weather.windDirection}
           strength={weather.windSpeed}
         />
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="text-text-hard">
-      <WeatherIcon class="p-3 pt-4" icon={weather.icon} />
+      <WeatherIcon className="p-3 pt-4" icon={weather.icon} />
     </div>
     <div class="flex justify-center p-2 pt-5">
       <div class="flex text-7xl font-light">
@@ -66,7 +66,7 @@
       </div>
 
       <div class="center absolute bottom-2 z-10 w-full space-x-0.5">
-        <SvgIcon class="mt-[0.2em] block size-5" d={humidity} outline />
+        <SvgIcon className="mt-[0.2em] block size-5" d={humidity} outline />
         <div>{weather.relativeHumidity}</div>
         <div class="text-[0.8em]">%</div>
       </div>
