@@ -3,10 +3,10 @@
 <script lang="ts">
   import { dark, light } from '@/../themes'
   import { getPathData } from '@/logic/chart/path'
-  import { type CustomElement } from '@/logic/svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   import { clamp } from '@/logic/utils'
   import { type DayWeatherDataType } from '@/logic/weatherTypes'
-  import { darkMode } from '@/stores/store'
+  import { darkMode } from '@/stores/store.svelte'
   import { cubicOut } from 'svelte/easing'
   import { tweened } from 'svelte/motion'
   interface Props extends CustomElement {
@@ -49,7 +49,7 @@
   let windGustPoints = $state([])
   let dayString = $derived(weather.day.toISOString())
 
-  let colors = $derived(updateColors($darkMode))
+  let colors = $derived(updateColors(darkMode.value))
 
   const clipPercent = tweened(0, {
     duration: 300,

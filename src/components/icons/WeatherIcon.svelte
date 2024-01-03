@@ -3,7 +3,7 @@
 <script lang="ts">
   import type { WeatherIconType } from '@/logic/weatherTypes'
   import { getWeatherIconClass } from '@/logic/utils'
-  import { classProp, type CustomElement } from '@/logic/svelte'
+  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
 
   interface Props extends CustomElement {
     icon: WeatherIconType

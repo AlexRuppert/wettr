@@ -1,7 +1,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte'
+  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
     label?: string
   }

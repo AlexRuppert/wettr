@@ -13,10 +13,11 @@
     type Coordinates,
     isLocationSet,
   } from '@/logic/locations'
-  import { locationCoordinates } from '@/stores/store'
+  import { locationCoordinates } from '@/stores/store.svelte'
   import { fly } from 'svelte/transition'
 
-  import { type CustomElement } from '@/logic/svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { stageReload } from '@/logic/reloader'
 
   interface Props extends CustomElement {}
   let { ...other } = $props<Props>()
@@ -32,6 +33,25 @@
 
   let suggestions: { name: string; lon: number; lat: number }[] = $state([])
   let selectedSuggestion = $state(0)
+
+  let noLocation = $derived(!isLocationSet(locationCoordinates.value))
+
+  let coordinates: Coordinates
+
+  $effect(() => {
+    if (
+      isLocationSet(locationCoordinates.value) &&
+      (!coordinates ||
+        serializeCoordinates(coordinates) !==
+          serializeCoordinates(locationCoordinates.value))
+    ) {
+      coordinates = locationCoordinates.value
+
+      stageReload(true)
+    }
+  })
+
+  locationCoordinates.value = getCoordinatesFromUrl()
 
   $effect.pre(() => {
     if (openedSuggestions) {
@@ -74,16 +94,15 @@
     }
   }
   function closeSuggestions() {
-    console.log(place, $locationCoordinates)
-    if (!place && isLocationSet($locationCoordinates)) {
-      getClosestCity($locationCoordinates).then(city => (place = city))
+    if (!place && isLocationSet(locationCoordinates.value)) {
+      getClosestCity(locationCoordinates.value).then(city => (place = city))
     }
     openedSuggestions = false
     inputElement?.blur()
   }
 
   function updateCoordinates(place: string, coordinates: Coordinates) {
-    $locationCoordinates = coordinates
+    locationCoordinates.value = coordinates
     pushHistory(place, coordinates)
     const urlSearchParams = new URLSearchParams(window.location.search)
     urlSearchParams.set('location', place)
@@ -132,7 +151,7 @@
     if (params?.location) {
       name = params.location
     }
-    console.log(name, coordinates)
+
     if (!name && isLocationSet(coordinates)) {
       name = await getClosestCity(coordinates)
     } else if (name && !isLocationSet(coordinates)) {
@@ -147,13 +166,13 @@
         coordinates = FALLBACK_SUGGESTION.coordinates
       }
     }
-    console.log(name, coordinates)
+
     if (isLocationSet(coordinates)) {
       selectSuggestion({ name, ...coordinates })
     }
   }
+
   init()
-  let noLocation = $derived(!isLocationSet($locationCoordinates))
 </script>
 
 <ModalBackground show={openedSuggestions} onclose={closeSuggestions} />

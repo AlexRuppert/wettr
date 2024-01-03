@@ -36,3 +36,20 @@ export function stopImmediatePropagation(fn: {
     fn.call(this, event)
   }
 }
+
+export function writable<T>(initial: T) {
+  let value = $state<T>(initial)
+
+  return {
+    get value() {
+      return value
+    },
+    set value(val) {
+      value = val
+    },
+  }
+}
+
+export function get<T>(w: { value: T }) {
+  return { ...w.value } //shallow clone
+}

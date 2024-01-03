@@ -1,4 +1,4 @@
-import { light, dark } from './themes.js'
+import { light, dark } from './themes'
 const { createThemes } = require('tw-colors')
 /** @type {import('tailwindcss').Config} */
 export default {

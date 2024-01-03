@@ -4,7 +4,7 @@
   import { chevronDown, alertWarning } from '@/components/icons/icons'
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
 
-  import { classProp, type CustomElement } from '@/logic/svelte'
+  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
 
   interface Props extends CustomElement {
     collapsed?: boolean

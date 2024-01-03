@@ -1,6 +1,11 @@
-import { locationCoordinates, thread } from '@/stores/store'
-import { get } from 'svelte/store'
-import { getLocationBounds } from '@/logic/utils'
+import {
+  currentWeatherData,
+  locationCoordinates,
+  weatherData,
+  weatherWarningData,
+} from '@/stores/store.svelte'
+import Worker from '@/workers/worker.ts?worker'
+import { get } from '@/logic/svelte.svelte'
 
 export const FORECAST_DAYS = 7
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
@@ -8,10 +13,28 @@ const CHECK_INTERVAL_MS = 10 * 60 * 1000
 let nextCheckTimeout
 let nextCheckTime = 0
 
+export const worker = new Worker()
+
+worker.onmessage = function ({ data: { type, data } }) {
+  switch (type) {
+    case 'currentWeatherData':
+      currentWeatherData.value = data
+      break
+    case 'weatherData':
+      weatherData.value = data
+      break
+    case 'weatherWarningData':
+      weatherWarningData.value = data
+      break
+    default:
+      break
+  }
+}
+
 export async function reload() {
   try {
     const coordinates = get(locationCoordinates)
-    const worker = get(thread)
+
     worker.postMessage({
       type: 'currentWeatherData',
       data: coordinates,
@@ -42,7 +65,7 @@ export async function stageReload(force = false) {
       force ||
       (state === 'visible' &&
         Date.now() > nextCheckTime &&
-        get(locationCoordinates))
+        locationCoordinates.value)
     ) {
       reload()
     }
@@ -54,19 +77,5 @@ function init() {
     document.addEventListener('visibilitychange', () => stageReload())
     document.addEventListener('pagehide', () => stageReload())
     initialized = true
-  }
-}
-
-export async function reloadClouds() {
-  try {
-    get(thread).postMessage({
-      type: 'cloudData',
-      data: {
-        bounds: getLocationBounds(get(locationCoordinates)),
-        onlyNow: false,
-      },
-    })
-  } catch (err) {
-    console.error(err)
   }
 }

@@ -3,10 +3,10 @@
   import MoonPhase from '@/components/icons/MoonPhase.svelte'
   import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import { type DayWeatherDataType } from '@/logic/weatherTypes'
-  import { weatherData } from '@/stores/store'
+  import { weatherData } from '@/stores/store.svelte'
   import { scale } from 'svelte/transition'
 
-  let weather: DayWeatherDataType[] = $derived($weatherData)
+  let weather: DayWeatherDataType[] = $derived(weatherData.value)
 
   let formattedDay = $derived(
     weather.map(w => {

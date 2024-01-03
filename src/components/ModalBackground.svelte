@@ -1,7 +1,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { type CustomElement } from '@/logic/svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   import { fade } from 'svelte/transition'
 
   interface Props extends CustomElement {

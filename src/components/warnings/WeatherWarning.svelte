@@ -18,16 +18,16 @@
     darkMode,
     weatherWarningData,
     locationCoordinates,
-  } from '../../stores/store'
+  } from '@/stores/store.svelte'
 
   import { nested } from 'point-in-polygon'
-  import { isInBounds } from '../../logic/utils'
+  import { isInBounds } from '@/logic/utils'
 
   let collapsed = $state(true)
   const hintText = 'ACHTUNG! Hinweis auf mögliche Gefahren: '
 
   let { warning, warnings, restWarnings } = $derived(
-    getWarnings($locationCoordinates, $weatherWarningData),
+    getWarnings(locationCoordinates.value, weatherWarningData.value),
   )
 
   function getWarnings(
@@ -122,7 +122,7 @@
       <div class="h-64">
         <div
           class="linear-fade absolute bottom-0 h-7 w-full"
-          class:dark={$darkMode}
+          class:dark={darkMode.value}
         />
         <div class="custom-scrollbar box-border h-full overflow-y-auto text-sm">
           <WarningDescription

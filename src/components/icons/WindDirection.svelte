@@ -1,7 +1,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte'
+  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
   import { clamp } from '@/logic/utils'
   import { windDirection } from '@/components/icons/icons'
   import SvgIcon from '@/components/icons/SvgIcon.svelte'

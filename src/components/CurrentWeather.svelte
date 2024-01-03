@@ -4,17 +4,17 @@
   import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import WindDirection from '@/components/icons/WindDirection.svelte'
   import { humidity } from '@/components/icons/icons'
-  import { type CustomElement } from '@/logic/svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   import { toLocalDecimal } from '@/logic/utils'
   import { type WeatherDataType } from '@/logic/weatherTypes'
-  import { currentWeatherData } from '@/stores/store'
+  import { currentWeatherData } from '@/stores/store.svelte'
 
   interface Props extends CustomElement {}
   let { ...other } = $props<Props>()
 
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
-  let weather: WeatherDataType = $derived($currentWeatherData)
+  let weather: WeatherDataType = $derived(currentWeatherData.value)
 </script>
 
 {#if weather && weather.timestamp}
