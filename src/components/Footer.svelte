@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AppInstall from './AppInstall.svelte'
+  import AppInstall from '@/components/AppInstall.svelte'
   const links = [
     {
       label: 'Datenquelle',

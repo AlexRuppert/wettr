@@ -1,12 +1,10 @@
 <script lang="ts">
-  import type { DayWeatherDataType } from 'src/logic/weatherTypes'
-
-  import DayChart from './DayChart.svelte'
-  import { weatherData } from '../stores/store'
-  import WeatherIcon from './icons/WeatherIcon.svelte'
+  import DayChart from '@/components/DayChart.svelte'
+  import MoonPhase from '@/components/icons/MoonPhase.svelte'
+  import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
+  import { type DayWeatherDataType } from '@/logic/weatherTypes'
+  import { weatherData } from '@/stores/store'
   import { scale } from 'svelte/transition'
-  import { FORECAST_DAYS } from '../logic/reloader'
-  import MoonPhase from './icons/MoonPhase.svelte'
 
   let weather: DayWeatherDataType[] = $derived($weatherData)
 
@@ -16,7 +14,7 @@
         day: '2-digit',
         weekday: 'short',
       }).formatToParts(w.day)
-      console.log(weather)
+
       return {
         day: formatted.find(f => f.type === 'day').value.replace(/^0/g, ''),
         weekday: formatted
@@ -32,7 +30,7 @@
     <div
       class="flex h-32 flex-col overflow-hidden rounded-default bg-surface-500 pt-1 shadow-md"
     >
-      <div class="flex justify-between pl-2 pr-1" transition:scale>
+      <div class="flex justify-between pl-2 pr-1" in:scale>
         <div class="w-28 text-3xl">
           <span>{formattedDay[i].day}</span>
           <span class="-ml-1 text-lg">{formattedDay[i].weekday}</span>
@@ -41,10 +39,7 @@
           {#each day.dayParts as { icon }, j (i + '' + j)}
             <div class="relative flex h-8 w-8 items-center self-end">
               {#key day.dayParts}
-                <div
-                  class="absolute inset-0"
-                  transition:scale={{ delay: j * 50 }}
-                >
+                <div class="absolute inset-0" in:scale={{ delay: j * 50 }}>
                   <WeatherIcon {icon} />
                 </div>
               {/key}

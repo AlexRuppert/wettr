@@ -1,15 +1,15 @@
-import { stageReload } from './../logic/reloader'
-import { writable, readable, get } from 'svelte/store'
 import {
   getCoordinatesFromUrl,
+  isLocationSet,
   serializeCoordinates,
-} from './../logic/locations'
-import { isLocationSet } from '../logic/locations'
-import type { Coordinates } from './../logic/locations'
-import type { GeoBounds } from '../logic/radar/utils'
+  type Coordinates,
+} from '@/logic/locations'
+import { stageReload } from '@/logic/reloader'
+import { type GeoBounds } from '@/logic/utils'
+import { readable, writable } from 'svelte/store'
 
-import Worker from './../workers/worker.ts?worker'
-import type { WeatherDataType } from 'src/logic/weatherTypes'
+import { type WeatherDataType } from '@/logic/weatherTypes'
+import Worker from '@/workers/worker.ts?worker'
 export const locationCoordinates = writable({ lat: 0, lon: 0 })
 
 const worker = new Worker()

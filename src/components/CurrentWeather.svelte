@@ -1,13 +1,13 @@
 <script lang="ts">
-  import WeatherIcon from './icons/WeatherIcon.svelte'
-  import WindDirection from './icons/WindDirection.svelte'
-  import { currentWeatherData } from '../stores/store'
-  import { humidity } from './icons/icons'
-  import SvgIcon from './icons/SvgIcon.svelte'
-  import UnitXperY from './common/UnitXperY.svelte'
-  import type { WeatherDataType } from '../logic/weatherTypes'
-  import { toLocalDecimal } from '@/logic/utils'
+  import UnitXperY from '@/components/common/UnitXperY.svelte'
+  import SvgIcon from '@/components/icons/SvgIcon.svelte'
+  import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
+  import WindDirection from '@/components/icons/WindDirection.svelte'
+  import { humidity } from '@/components/icons/icons'
   import { type CustomElement } from '@/logic/svelte'
+  import { toLocalDecimal } from '@/logic/utils'
+  import { type WeatherDataType } from '@/logic/weatherTypes'
+  import { currentWeatherData } from '@/stores/store'
 
   interface Props extends CustomElement {}
   let { ...other } = $props<Props>()

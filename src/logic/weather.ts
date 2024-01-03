@@ -1,12 +1,12 @@
-import type {
-  WeatherDataType,
-  RawCurrentWeatherDataType,
-  RawDayWeatherDataType,
-  WeatherIconType,
-} from './weatherTypes'
-import { getSunriseSunset } from './time'
-import { getWeatherIconColors, isBetween } from './utils'
-import { getCachedRequest } from './cache'
+import { getCachedRequest } from '@/logic/cache'
+import { getSunriseSunset } from '@/logic/time'
+import { isBetween } from '@/logic/utils'
+import {
+  type RawCurrentWeatherDataType,
+  type RawDayWeatherDataType,
+  type WeatherDataType,
+  type WeatherIconType,
+} from '@/logic/weatherTypes'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
 
@@ -23,7 +23,7 @@ export async function getCurrentWeather(lat: number, lon: number) {
     tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
   }).toString()
   return processCurrentWeatherData(
-    await (await getCachedRequest(currentWeatherUrl.toString(), 9)).json()
+    await (await getCachedRequest(currentWeatherUrl.toString(), 9)).json(),
   )
 }
 
@@ -49,7 +49,7 @@ export async function getWeather(lat: number, lon: number, days = 3) {
   const result = processWeatherData(
     await (await getCachedRequest(weatherUrl.toString(), 9)).json(),
     lat,
-    lon
+    lon,
   )
   return result
 }
@@ -61,12 +61,12 @@ function renameRaw(keys, raw) {
         .replaceAll(/_([a-z])/g, (_, l) => l.toUpperCase())
         .replaceAll(/_\d+/g, ''),
       raw[key],
-    ])
+    ]),
   )
 }
 
 function processCurrentWeatherData(
-  weatherData: RawCurrentWeatherDataType
+  weatherData: RawCurrentWeatherDataType,
 ): WeatherDataType {
   const renamed = renameRaw(
     [
@@ -87,7 +87,7 @@ function processCurrentWeatherData(
       'temperature',
       'icon',
     ],
-    weatherData.weather
+    weatherData.weather,
   )
   return {
     ...renamed,
@@ -142,14 +142,14 @@ function getDayGraphData(times: WeatherDataType[]) {
           Math.min(
             Math.pow(
               (1 + precipitationProbability / 100) * precipitation * 1.6,
-              2
+              2,
             ),
-            6
+            6,
           ) / 6,
         sunninessPercent: 1 - cloudCover / 100,
         wind: windSpeed,
         windGust: windGustSpeed,
-      })
+      }),
     ),
   }
 }
@@ -157,10 +157,10 @@ function getDayGraphData(times: WeatherDataType[]) {
 function processWeatherData(
   weatherData: RawDayWeatherDataType,
   lat,
-  lon
+  lon,
 ): any[] {
   const daysHash = new Map()
-  console.log(weatherData)
+
   weatherData.weather.forEach(weather => {
     const renamed = renameRaw(Object.keys(weather), weather)
 
@@ -203,7 +203,7 @@ function processWeatherData(
           ['evening', 18, 22],
         ].forEach(
           ([name, start, end]) =>
-            isBetween(v.hours, +start, +end) && sections[name].push(v)
+            isBetween(v.hours, +start, +end) && sections[name].push(v),
         )
       })
       return {
@@ -216,7 +216,7 @@ function processWeatherData(
         ...getDayGraphData(sections.day),
         data: values as WeatherDataType[],
       }
-    }
+    },
   )
 
   return result

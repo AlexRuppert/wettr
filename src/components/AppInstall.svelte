@@ -1,9 +1,9 @@
 <svelte:options immutable />
 
 <script lang="ts">
+  import SvgIcon from '@/components/icons/SvgIcon.svelte'
+  import { addBox, shareIcon } from '@/components/icons/icons'
   import { scale } from 'svelte/transition'
-  import { addBox, shareIcon } from './icons/icons'
-  import SvgIcon from './icons/SvgIcon.svelte'
   let isIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
   let showInstallButton = $state(false)
   let showInstallOverlay = $state(false)

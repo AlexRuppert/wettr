@@ -1,14 +1,14 @@
 <svelte:options immutable />
 
 <script lang="ts">
-  import { darkMode } from '../stores/store'
-  import { clamp } from '../logic/utils'
-  import { getPathData } from '../logic/chart/path'
-  import { tweened } from 'svelte/motion'
+  import { dark, light } from '@/../themes'
+  import { getPathData } from '@/logic/chart/path'
+  import { type CustomElement } from '@/logic/svelte'
+  import { clamp } from '@/logic/utils'
+  import { type DayWeatherDataType } from '@/logic/weatherTypes'
+  import { darkMode } from '@/stores/store'
   import { cubicOut } from 'svelte/easing'
-  import type { DayWeatherDataType } from 'src/logic/weatherTypes'
-  import { light, dark } from '../../themes'
-  import { classProp, type CustomElement } from '@/logic/svelte'
+  import { tweened } from 'svelte/motion'
   interface Props extends CustomElement {
     weather: DayWeatherDataType
   }

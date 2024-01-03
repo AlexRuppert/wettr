@@ -1,6 +1,9 @@
-import type { WeatherIconType } from './weatherTypes'
+import { type WeatherIconType } from '@/logic/weatherTypes'
 
-export function getDarkLightColor(color, darkMode) {
+export function getDarkLightColor(
+  color: { dark: any; light: any },
+  darkMode: any,
+) {
   return darkMode ? color.dark : color.light
 }
 
@@ -74,6 +77,6 @@ export function getLocationBounds({ lon, lat }, radiusKm = 8) {
   }
 }
 
-export function toLocalDecimal(num, precision = 0) {
-  return Number.parseFloat(num).toFixed(precision).toLocaleString()
+export function toLocalDecimal(num: string | number, precision = 0) {
+  return Number.parseFloat(num.toString()).toFixed(precision).toLocaleString()
 }

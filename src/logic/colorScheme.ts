@@ -1,4 +1,4 @@
-import { darkMode } from '../stores/store'
+import { darkMode } from '@/stores/store'
 let colorSchemeQueryList = window.matchMedia('(prefers-color-scheme: dark)')
 const setColorScheme = (e: MediaQueryListEvent) => {
   darkMode.set(e.matches)

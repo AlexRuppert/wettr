@@ -1,6 +1,5 @@
-import { getCurrentWeather, getWeather } from '../logic/weather'
-
-import { getWeatherWarnings } from '../logic/weatherWarnings'
+import { getCurrentWeather, getWeather } from '@/logic/weather'
+import { getWeatherWarnings } from '@/logic/weatherWarnings'
 ;('preloadthis')
 onmessage = async function ({ data: { type, data } }) {
   let result

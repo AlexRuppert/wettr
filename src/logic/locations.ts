@@ -1,4 +1,4 @@
-import locationsUrl from '../assets/locations.json?url'
+import locationsUrl from '@/assets/locations.json?url'
 import { getCachedRequest } from './cache'
 
 export interface Coordinates {
@@ -25,7 +25,7 @@ export const loadLocations = async () => {
 
     let normalizedName2 = UMLAUT_REPLACEMENTS.reduce(
       (acc, val) => acc.replaceAll(val.regex, val.replacement),
-      normalizedName
+      normalizedName,
     )
     let search = [normalizedName, normalizedName2].join(' ')
     return {
@@ -61,7 +61,7 @@ function distance(
   sourceLat: number,
   sourceLon: number,
   targetLan: number,
-  targetLon: number
+  targetLon: number,
 ) {
   return Math.pow(sourceLat - targetLan, 2) + Math.pow(sourceLon - targetLon, 2)
 }
@@ -77,7 +77,7 @@ export async function getGeolocationCoordinates(successCallback) {
 
       successCallback({ closestCity, coordinates: { lat, lon } })
     },
-    () => alert('Ort konte nicht ermittelt werden')
+    () => alert('Ort konte nicht ermittelt werden'),
   )
 }
 
@@ -90,7 +90,7 @@ export async function getClosestCity(coordinates: Coordinates) {
       coordinates.lat,
       coordinates.lon,
       +location.lat,
-      +location.lon
+      +location.lon,
     )
     if (dist < closestDistance) {
       closestDistance = dist

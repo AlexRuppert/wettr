@@ -1,21 +1,21 @@
 <script lang="ts">
+  import IconButton from '@/components/common/IconButton.svelte'
+  import { gps } from '@/components/icons/icons'
+  import ModalBackground from '@/components/ModalBackground.svelte'
+  import { getHistory, pushHistory } from '@/logic/history'
   import {
     filterLocations,
-    getLocationCoordinates,
-    getGeolocationCoordinates,
     getClosestCity,
-    serializeCoordinates,
     getCoordinatesFromUrl,
-  } from '../logic/locations'
-  import type { Coordinates } from '../logic/locations'
-  import { locationCoordinates } from '../stores/store'
-  import { getHistory, pushHistory } from '../logic/history'
-  import ModalBackground from './ModalBackground.svelte'
-  import IconButton from './common/IconButton.svelte'
-  import { fade, fly } from 'svelte/transition'
-  import { gps } from './icons/icons'
+    getGeolocationCoordinates,
+    getLocationCoordinates,
+    serializeCoordinates,
+    type Coordinates,
+  } from '@/logic/locations'
+  import { locationCoordinates } from '@/stores/store'
+  import { fly } from 'svelte/transition'
 
-  import { classProp, type CustomElement } from '@/logic/svelte'
+  import { type CustomElement } from '@/logic/svelte'
 
   interface Props extends CustomElement {}
   let { ...other } = $props<Props>()
@@ -184,7 +184,7 @@
     </div>
     <div
       class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
-      transition:fly={{ duration: TRANSITION_TIME, y: -5 }}
+      in:fly={{ duration: TRANSITION_TIME, y: -5 }}
     >
       {#each suggestions as entry, i}
         <a

@@ -1,7 +1,7 @@
+import { getCachedRequest } from '@/logic/cache'
+import { sort } from '@/logic/utils'
 import hull from 'hull.js'
 import { SimplifyAP } from 'simplify-ts'
-import { getCachedRequest } from './cache'
-import { sort } from './utils'
 const WARNINGS_URL = `https://s3.eu-central-1.amazonaws.com/app-prod-static.warnwetter.de/v16/gemeinde_warnings_v2.json`
 export async function getWeatherWarnings(coordinates) {
   const rawData = await (await getCachedRequest(WARNINGS_URL, 19)).json()

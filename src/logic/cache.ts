@@ -1,5 +1,8 @@
 const TIMESTAMP_HEADER = 'x--cache-timestamp'
-export async function getCachedRequest(url, maxAgeMinutes = 1e6) {
+export async function getCachedRequest(
+  url: URL | RequestInfo,
+  maxAgeMinutes = 1e6,
+) {
   let result = await caches.match(url)
   if (
     result &&
