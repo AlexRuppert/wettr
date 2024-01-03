@@ -11,6 +11,7 @@
     getLocationCoordinates,
     serializeCoordinates,
     type Coordinates,
+    isLocationSet,
   } from '@/logic/locations'
   import { locationCoordinates } from '@/stores/store'
   import { fly } from 'svelte/transition'
@@ -23,7 +24,7 @@
   const TRANSITION_TIME = 250
   const FALLBACK_SUGGESTION = {
     location: '',
-    coordinates: { lon: 0, lat: 0 },
+    coordinates: { lon: 0, lat: -500 },
   }
   let inputElement = $state(null)
   let place = $state('')
@@ -73,7 +74,8 @@
     }
   }
   function closeSuggestions() {
-    if (!place && $locationCoordinates) {
+    console.log(place, $locationCoordinates)
+    if (!place && isLocationSet($locationCoordinates)) {
       getClosestCity($locationCoordinates).then(city => (place = city))
     }
     openedSuggestions = false
@@ -127,74 +129,84 @@
     let coordinates = getCoordinatesFromUrl()
     let name = ''
 
-    if (params.location != 'undefined') {
+    if (params?.location) {
       name = params.location
     }
-
-    if (!name && coordinates.lat > -500) {
+    console.log(name, coordinates)
+    if (!name && isLocationSet(coordinates)) {
       name = await getClosestCity(coordinates)
-    } else if (name && coordinates.lat <= -500) {
+    } else if (name && !isLocationSet(coordinates)) {
       coordinates = await getLocationCoordinates(name)
-    } else {
+    } else if (!name && !isLocationSet(coordinates)) {
       const fallback = getHistory()?.[0]
-      if (fallback.location && fallback.coordinates) {
+
+      if (fallback?.location && fallback?.coordinates) {
         name = fallback.location
         coordinates = fallback.coordinates
       } else {
-        name = FALLBACK_SUGGESTION.location
         coordinates = FALLBACK_SUGGESTION.coordinates
       }
     }
-    selectSuggestion({ name, ...coordinates })
+    console.log(name, coordinates)
+    if (isLocationSet(coordinates)) {
+      selectSuggestion({ name, ...coordinates })
+    }
   }
   init()
+  let noLocation = $derived(!isLocationSet($locationCoordinates))
 </script>
 
 <ModalBackground show={openedSuggestions} onclose={closeSuggestions} />
 
-<div
-  class="relative rounded-default bg-surface-500 leading-10 shadow-md"
-  class:z-50={openedSuggestions}
-  class:!bg-surface-400={openedSuggestions}
->
-  <label>
-    <span class="hidden">Ort</span>
-    <input
-      id="location"
-      type="text"
-      class="w-full bg-transparent text-center text-xl outline-none"
-      placeholder="Ort"
-      autocomplete="off"
-      bind:this={inputElement}
-      bind:value={place}
-      onkeydown={handleInputKeys}
-      onfocus={openSuggestions}
-      onclick={openSuggestions}
-    />
-  </label>
-
-  {#if openedSuggestions}
-    <div class="absolute left-0 top-0">
-      <IconButton
-        label="Get Current Location"
-        icon={gps}
-        outline
-        onclick={getGeoLocation}
-      />
-    </div>
-    <div
-      class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
-      in:fly={{ duration: TRANSITION_TIME, y: -5 }}
+<div class="flex items-center" class:h-dvh={noLocation}>
+  <div
+    class="relative h-10 w-full rounded-default bg-surface-500 shadow-md"
+    class:z-50={openedSuggestions}
+    class:!bg-surface-400={openedSuggestions}
+  >
+    <label
+      class="justify-cente flex size-full items-center overflow-hidden rounded-default ring-inset ring-primary"
+      class:ring-2={noLocation}
+      class:dark:bg-surface-100={noLocation}
     >
-      {#each suggestions as entry, i}
-        <a
-          href={'#'}
-          class="block cursor-pointer px-3 py-2 text-lg no-underline"
-          class:selected={i === selectedSuggestion}
-          onclick={() => selectSuggestion(entry)}
-          onmouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
-        >
-      {/each}
-    </div>
-  {/if}
+      <span class="hidden">Ort</span>
+      <input
+        id="location"
+        type="text"
+        class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-none"
+        placeholder="Ort"
+        autocomplete="off"
+        bind:this={inputElement}
+        bind:value={place}
+        onkeydown={handleInputKeys}
+        onfocus={openSuggestions}
+        onclick={openSuggestions}
+      />
+    </label>
+
+    {#if openedSuggestions}
+      <div class="absolute left-0 top-0">
+        <IconButton
+          label="Get Current Location"
+          icon={gps}
+          outline
+          onclick={getGeoLocation}
+        />
+      </div>
+      <div
+        class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
+        in:fly={{ duration: TRANSITION_TIME, y: -5 }}
+      >
+        {#each suggestions as entry, i}
+          <a
+            href={'#'}
+            class="block cursor-pointer px-3 py-2 text-lg no-underline"
+            class:selected={i === selectedSuggestion}
+            onclick={() => selectSuggestion(entry)}
+            onmouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
+          >
+        {/each}
+      </div>
+    {/if}
+  </div>
 </div>
