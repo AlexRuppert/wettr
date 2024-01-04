@@ -6,7 +6,7 @@
   import { humidity } from '@/components/icons/icons'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { toLocalDecimal } from '@/logic/utils'
-  import { type WeatherDataType } from '@/logic/weatherTypes'
+  import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import { currentWeatherData } from '@/stores/store.svelte'
 
   interface Props extends CustomElement {}
@@ -14,7 +14,7 @@
 
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
-  let weather: WeatherDataType = $derived(currentWeatherData.value)
+  let weather: CurrentWeatherDataType = $derived(currentWeatherData.value)
 </script>
 
 {#if weather && weather.timestamp}
@@ -25,29 +25,29 @@
       <div class="">
         <WindDirection
           className="absolute left-12 top-12 size-8 "
-          direction={weather.windDirection}
-          strength={weather.windSpeed}
+          direction={weather.wind_direction_10}
+          strength={weather.wind_speed_10}
         />
       </div>
 
       <div class="center absolute bottom-2 z-10 w-full grow space-x-2">
         <div
           class="center space-x-0.5"
-          class:!hidden={weather.precipitation < MIN_PRECIPITATION}
+          class:!hidden={weather.precipitation_60 < MIN_PRECIPITATION}
         >
           {toLocalDecimal(
-            weather.precipitation,
-            weather.precipitation % 1 === weather.precipitation ? 0 : 1,
+            weather.precipitation_60,
+            weather.precipitation_60 % 1 === weather.precipitation_60 ? 0 : 1,
           )}
           <UnitXperY top="mm" bottom="h" />
         </div>
 
         <div class="center space-x-0.5">
           <div
-            class:current-warning-text={weather.windSpeed >
+            class:current-warning-text={weather.wind_speed_10 >
               SHOW_WINDSPEED_WARNING_AFTER}
           >
-            {toLocalDecimal(weather.windSpeed)}
+            {toLocalDecimal(weather.wind_speed_10)}
           </div>
           <UnitXperY top="km" bottom="h" />
         </div>
@@ -67,7 +67,7 @@
 
       <div class="center absolute bottom-2 z-10 w-full space-x-0.5">
         <SvgIcon className="mt-[0.2em] block size-5" d={humidity} outline />
-        <div>{weather.relativeHumidity}</div>
+        <div>{weather.relative_humidity}</div>
         <div class="text-[0.8em]">%</div>
       </div>
     </div>

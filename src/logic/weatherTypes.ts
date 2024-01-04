@@ -35,7 +35,7 @@ type Source = {
   distance: number
 }
 
-type common = {
+export interface CurrentWeatherDataType {
   source_id: number
   timestamp: string
   cloud_cover: number
@@ -46,8 +46,6 @@ type common = {
   visibility: number
   temperature: number
   icon: WeatherIconType
-}
-export interface CurrentWeatherDataType extends common {
   precipitation_10: number
   precipitation_30: number
   precipitation_60: number
@@ -66,46 +64,42 @@ export interface CurrentWeatherDataType extends common {
   sunshine_30: number
   sunshine_60: number
   fallback_source_ids: {}
-  icon: WeatherIconType
 }
 export interface RawCurrentWeatherDataType {
   weather: CurrentWeatherDataType
   sources: Source[]
 }
+
 export interface RawDayWeatherDataType {
-  weather: (common & {
-    precipitation: number
-    precipitation_probability: number
-    wind_direction: number
-    wind_speed: number
-    wind_gust_direction: number
-    wind_gust_speed: number
-    sunshine: number
-  })[]
+  weather: DayWeatherDataType[]
   sources: Source[]
 }
 
-export interface WeatherDataType {
+export interface DayWeatherDataType {
+  source_id: number
   timestamp: string
-  cloudCover: number
-  condition: string
-  dewPoint: number
-  precipitation: number
-  precipitationProbability: number
-  pressureMsl: number
-  relativeHumidity: number
+  cloud_cover: number
+  condition: Condition
+  dew_point: number
+  pressure_msl: number
+  relative_humidity: number
   visibility: number
-  windDirection: number
-  windSpeed: number
-  windGustDirection: number
-  windGustSpeed: number
-  sunshine: number
   temperature: number
   icon: WeatherIconType
+  precipitation: number
+  precipitation_probability: number
+  wind_direction: number
+  wind_speed: number
+  wind_gust_direction: number
+  wind_gust_speed: number
+  sunshine: number
+}
+
+export interface WeatherDataType extends DayWeatherDataType {
   hours: number
 }
 
-export interface DayWeatherDataType {
+export interface DayWeatherData {
   day: Date
   dayParts: { icon: WeatherIconType }[]
   max: { temperature: number }

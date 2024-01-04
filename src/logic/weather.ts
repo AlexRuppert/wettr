@@ -2,6 +2,7 @@ import { getCachedRequest } from '@/logic/cache'
 import { getSunriseSunset } from '@/logic/time'
 import { isBetween, trimCoordinates } from '@/logic/utils'
 import {
+  CurrentWeatherDataType,
   type RawCurrentWeatherDataType,
   type RawDayWeatherDataType,
   type WeatherDataType,
@@ -16,79 +17,37 @@ let weatherUrl = new URL(ENDPOINT + 'weather')
 export async function getCurrentWeather(lat: number, lon: number) {
   currentWeatherUrl.search = new URLSearchParams({
     ...trimCoordinates({ lon, lat }),
-    tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    tz: 'Europe/Berlin',
   }).toString()
   return processCurrentWeatherData(
     await (await getCachedRequest(currentWeatherUrl.toString(), 9)).json(),
   )
 }
 
-function addTimePortion(date = new Date(), beforeMidnight = false) {
-  const dateString = /[+-]\d{4}/.exec(date.toString())[0]
-  const timeZoneOffset = dateString.slice(0, 3) + ':' + dateString.slice(3)
-
-  return `T${beforeMidnight ? '23:59' : '00:00'}:00${timeZoneOffset}`
-}
-function dateToDateTime(date = new Date(), beforeMidnight = false) {
-  return date.toISOString().split('T')[0] + addTimePortion(date, beforeMidnight)
-}
 export async function getWeather(lat: number, lon: number, days = 3) {
   const now = new Date()
   const future = new Date(now.getTime() + MS_IN_HOUR * 24 * days - 10)
 
   weatherUrl.search = new URLSearchParams({
     ...trimCoordinates({ lon, lat }),
-    days: days.toString(),
-    date: dateToDateTime(now),
-    last_date: dateToDateTime(future, true),
+    date: now.toISOString().split('T')[0],
+    last_date: future.toISOString().split('T')[0],
+    tz: 'Europe/Berlin',
   }).toString()
-  const result = processWeatherData(
+  return processWeatherData(
     await (await getCachedRequest(weatherUrl.toString(), 9)).json(),
     lat,
     lon,
-  )
-  return result
-}
-
-function renameRaw(keys, raw) {
-  return Object.fromEntries(
-    keys.map(key => [
-      key
-        .replaceAll(/_([a-z])/g, (_, l) => l.toUpperCase())
-        .replaceAll(/_\d+/g, ''),
-      raw[key],
-    ]),
   )
 }
 
 function processCurrentWeatherData(
   weatherData: RawCurrentWeatherDataType,
-): WeatherDataType {
-  const renamed = renameRaw(
-    [
-      'timestamp',
-      'cloud_cover',
-      'condition',
-      'dew_point',
-      'precipitation_60',
-      'precipitation_probability',
-      'pressure_msl',
-      'relative_humidity',
-      'visibility',
-      'wind_direction_10',
-      'wind_speed_10',
-      'wind_gust_direction_10',
-      'wind_gust_speed_10',
-      'sunshine_30',
-      'temperature',
-      'icon',
-    ],
-    weatherData.weather,
-  )
+): CurrentWeatherDataType {
   return {
-    ...renamed,
-    temperature: Math.round(renamed.temperature),
-  } as WeatherDataType
+    ...weatherData.weather,
+    temperature: Math.round(weatherData.weather.temperature),
+  } as CurrentWeatherDataType
 }
 
 function getMostRelevantIcon(times) {
@@ -123,10 +82,10 @@ function getDayGraphData(times: WeatherDataType[]) {
         timestamp,
         temperature,
         precipitation,
-        precipitationProbability,
-        cloudCover,
-        windSpeed,
-        windGustSpeed,
+        precipitation_probability,
+        cloud_cover,
+        wind_speed,
+        wind_gust_speed,
       }) => ({
         timestamp: new Date(timestamp),
         temperaturePercent:
@@ -137,14 +96,14 @@ function getDayGraphData(times: WeatherDataType[]) {
         precipitationPercent:
           Math.min(
             Math.pow(
-              (1 + precipitationProbability / 100) * precipitation * 1.6,
+              (1 + precipitation_probability / 100) * precipitation * 1.6,
               2,
             ),
             6,
           ) / 6,
-        sunninessPercent: 1 - cloudCover / 100,
-        wind: windSpeed,
-        windGust: windGustSpeed,
+        sunninessPercent: 1 - cloud_cover / 100,
+        wind: wind_speed,
+        windGust: wind_gust_speed,
       }),
     ),
   }
@@ -158,12 +117,10 @@ function processWeatherData(
   const daysHash = new Map()
 
   weatherData.weather.forEach(weather => {
-    const renamed = renameRaw(Object.keys(weather), weather)
-
     const result = {
-      ...renamed,
-      temperature: Math.round(renamed.temperature),
-      hours: new Date(renamed.timestamp).getHours(),
+      ...weather,
+      temperature: Math.round(weather.temperature),
+      hours: new Date(weather.timestamp).getHours(),
     } as WeatherDataType
     const [dayString, timeString] = result.timestamp.split('T')
     const tzOffset = +result.timestamp.split('+')[1].replace(':', '') / 100 //extremely simplified

@@ -5,12 +5,12 @@
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { clamp } from '@/logic/utils'
-  import { type DayWeatherDataType } from '@/logic/weatherTypes'
+  import { type DayWeatherData } from '@/logic/weatherTypes'
   import { darkMode } from '@/stores/store.svelte'
   import { cubicOut } from 'svelte/easing'
   import { tweened } from 'svelte/motion'
   interface Props extends CustomElement {
-    weather: DayWeatherDataType
+    weather: DayWeatherData
   }
 
   let { weather, className = '', ...other } = $props<Props>()
@@ -87,7 +87,7 @@
       sunninessFill: hslOpacity(theme.sun, 0.1),
     }
   }
-  function updateData(weather: DayWeatherDataType) {
+  function updateData(weather: DayWeatherData) {
     const { sunrise, sunset } = weather.dayLight
 
     dayLengthsX = [sunrise, sunset].map(t =>
