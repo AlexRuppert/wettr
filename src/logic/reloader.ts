@@ -44,7 +44,7 @@ export async function reload() {
     })
     worker.postMessage({
       type: WEATHER_DATA,
-      data: { ...coordinates, days: FORECAST_DAYS },
+      data: { ...coordinates, days: FORECAST_DAYS + 1 },
     })
     worker.postMessage({
       type: WEATHER_WARNING_DATA,

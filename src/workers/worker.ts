@@ -9,10 +9,10 @@ onmessage = async function ({ data: { type, data } }) {
   let result
   switch (type) {
     case CURRENT_WEATHER_DATA:
-      result = getCurrentWeather(data.lat, data.lon)
+      result = getCurrentWeather(data)
       break
     case WEATHER_DATA:
-      result = getWeather(data.lat, data.lon, data.days)
+      result = getWeather(data, data.days)
       break
     case WEATHER_WARNING_DATA:
       result = getWeatherWarnings(data)

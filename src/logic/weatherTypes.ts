@@ -101,7 +101,7 @@ export interface WeatherDataType extends DayWeatherDataType {
 
 export interface DayWeatherData {
   day: Date
-  dayParts: { icon: WeatherIconType }[]
+  daySummary: { icon: WeatherIconType; iconClass: string }
   max: { temperature: number }
   min: { temperature: number }
   dayGraph: {

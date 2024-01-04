@@ -7,7 +7,7 @@ export function getDarkLightColor(
   return darkMode ? color.dark : color.light
 }
 
-export const getWeatherIconClass = (icon: WeatherIconType) => {
+export function getWeatherIconClass(icon: WeatherIconType) {
   switch (icon) {
     case 'rain':
     case 'sleet':
@@ -37,16 +37,24 @@ export function sortBy<T>(...sortFns: ((a: T, b: T) => number)[]) {
   }
 }
 
-export const isBetween = (val: number, left: number, right: number) =>
-  val >= left && val <= right
-
-export const round = (num: number, decimals: number = 0) => {
+export function isBetween(val: number, left: number, right: number) {
+  return val >= left && val <= right
+}
+export function round(num: number, decimals: number = 0) {
   const factor = 10 ** decimals
   return Math.round(num * factor) / factor
 }
 
-export const clamp = (num: number, min: number, max: number) => {
+export function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
+}
+
+export function chunk<T>(array: T[], size: number) {
+  const result: T[][] = []
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size))
+  }
+  return result
 }
 
 export function isInBounds({ lon, lat }, viewBounds: GeoBounds) {

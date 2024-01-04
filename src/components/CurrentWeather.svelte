@@ -21,6 +21,24 @@
   <div
     class="flex select-none space-x-1 tabular-nums *:relative *:size-32 *:rounded-default *:bg-surface-500 *:shadow-md"
   >
+    <div class="flex justify-center p-2 pt-5">
+      <div class="flex text-7xl font-light">
+        <span
+          class="max-w-4 overflow-hidden"
+          class:hidden={weather.temperature >= 0}>-</span
+        >{Math.abs(weather.temperature)}
+        <span class="mt-1 text-base">°</span>
+      </div>
+
+      <div class="center absolute bottom-2 z-10 w-full space-x-0.5">
+        <SvgIcon className="mt-[0.2em] block size-5" d={humidity} outline />
+        <div>{weather.relative_humidity}</div>
+        <div class="text-[0.8em]">%</div>
+      </div>
+    </div>
+    <div class="text-text-hard">
+      <WeatherIcon className="p-3 pt-4" icon={weather.icon} />
+    </div>
     <div>
       <div class="">
         <WindDirection
@@ -47,28 +65,10 @@
             class:current-warning-text={weather.wind_speed_10 >
               SHOW_WINDSPEED_WARNING_AFTER}
           >
-            {toLocalDecimal(weather.wind_speed_10)}
+            {toLocalDecimal(weather.wind_speed_10 ?? 0)}
           </div>
           <UnitXperY top="km" bottom="h" />
         </div>
-      </div>
-    </div>
-    <div class="text-text-hard">
-      <WeatherIcon className="p-3 pt-4" icon={weather.icon} />
-    </div>
-    <div class="flex justify-center p-2 pt-5">
-      <div class="flex text-7xl font-light">
-        <span
-          class="max-w-4 overflow-hidden"
-          class:hidden={weather.temperature >= 0}>-</span
-        >{Math.abs(weather.temperature)}
-        <span class="mt-1 text-base">°</span>
-      </div>
-
-      <div class="center absolute bottom-2 z-10 w-full space-x-0.5">
-        <SvgIcon className="mt-[0.2em] block size-5" d={humidity} outline />
-        <div>{weather.relative_humidity}</div>
-        <div class="text-[0.8em]">%</div>
       </div>
     </div>
   </div>
