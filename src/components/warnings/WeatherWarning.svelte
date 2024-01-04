@@ -10,50 +10,34 @@
 </script>
 
 <script lang="ts">
-  import WarningItem from '@/components/warnings/WarningItem.svelte'
   import WarningDescription from '@/components/warnings/WarningDescription.svelte'
+  import WarningItem from '@/components/warnings/WarningItem.svelte'
 
-  import { fade } from 'svelte/transition'
+  import { type Coordinates } from '@/logic/locations'
   import {
     darkMode,
-    weatherWarningData,
     locationCoordinates,
+    weatherWarningData,
   } from '@/stores/store.svelte'
-
-  import { nested } from 'point-in-polygon'
-  import { isInBounds } from '@/logic/utils'
+  import { fade } from 'svelte/transition'
 
   let collapsed = $state(true)
   const hintText = 'ACHTUNG! Hinweis auf mögliche Gefahren: '
 
   let { warning, warnings, restWarnings } = $derived(
-    getWarnings(locationCoordinates.value, weatherWarningData.value),
+    getWarnings(locationCoordinates.value, weatherWarningData.value ?? []),
   )
 
-  function getWarnings(
-    location: { lat: number; lon: number },
-    weatherWarnings: any[],
-  ) {
-    let point = [location.lon, location.lat]
-
+  function getWarnings(location: Coordinates, weatherWarnings: any[]) {
     const now = new Date()
-    let warnings = weatherWarnings
-      .map(warning => ({
-        time: formatTimes(now, warning.time),
-        level: warning.level,
-        icon: warning.type,
-        title: warning.event,
-        description: warning.description,
-        instruction: warning.instruction.replace(hintText, ''),
-        regions: warning.regions,
-      }))
-      /**/ .filter(warning =>
-        warning.regions.some(region => {
-          return (
-            isInBounds(location, region.bounds) && nested(point, region.polygon)
-          )
-        }),
-      ) /**/
+    let warnings = weatherWarnings.map(warning => ({
+      time: formatTimes(now, warning.time),
+      level: warning.level,
+      icon: warning.type,
+      title: warning.event,
+      description: warning.description,
+      instruction: warning.instruction.replace(hintText, ''),
+    }))
 
     return {
       warning: warnings?.[0] ?? DEFAULT_WARNING,
@@ -115,11 +99,11 @@
     />
 
     <div
-      class="height-transition relative max-h-64 origin-top transform overflow-hidden rounded-b-md transition-all"
+      class="height-transition relative max-h-64 origin-top transform select-text overflow-hidden hyphens-auto rounded-b-md transition-all"
       class:!max-h-0={collapsed}
       class:pb-2={!collapsed}
     >
-      <div class="h-64">
+      <div class="h-auto max-h-64 overflow-y-auto">
         <div
           class="linear-fade absolute bottom-0 h-7 w-full"
           class:dark={darkMode.value}

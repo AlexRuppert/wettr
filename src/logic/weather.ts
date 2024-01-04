@@ -1,6 +1,6 @@
 import { getCachedRequest } from '@/logic/cache'
 import { getSunriseSunset } from '@/logic/time'
-import { isBetween } from '@/logic/utils'
+import { isBetween, trimCoordinates } from '@/logic/utils'
 import {
   type RawCurrentWeatherDataType,
   type RawDayWeatherDataType,
@@ -12,10 +12,6 @@ const MS_IN_HOUR = 1000 * 60 * 60
 
 let currentWeatherUrl = new URL(ENDPOINT + 'current_weather')
 let weatherUrl = new URL(ENDPOINT + 'weather')
-
-function trimCoordinates({ lon, lat }) {
-  return { lon: lon.toFixed(3), lat: lat.toFixed(3) }
-}
 
 export async function getCurrentWeather(lat: number, lon: number) {
   currentWeatherUrl.search = new URLSearchParams({

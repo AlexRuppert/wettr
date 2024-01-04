@@ -13,17 +13,20 @@ const CHECK_INTERVAL_MS = 10 * 60 * 1000
 let nextCheckTimeout
 let nextCheckTime = 0
 
-export const worker = new Worker()
+const worker = new Worker()
 
+const CURRENT_WEATHER_DATA = 'currentWeatherData'
+const WEATHER_DATA = 'weatherData'
+const WEATHER_WARNING_DATA = 'weatherWarningData'
 worker.onmessage = function ({ data: { type, data } }) {
   switch (type) {
-    case 'currentWeatherData':
+    case CURRENT_WEATHER_DATA:
       currentWeatherData.value = data
       break
-    case 'weatherData':
+    case WEATHER_DATA:
       weatherData.value = data
       break
-    case 'weatherWarningData':
+    case WEATHER_WARNING_DATA:
       weatherWarningData.value = data
       break
     default:
@@ -36,16 +39,15 @@ export async function reload() {
     const coordinates = get(locationCoordinates)
 
     worker.postMessage({
-      type: 'currentWeatherData',
+      type: CURRENT_WEATHER_DATA,
       data: coordinates,
     })
     worker.postMessage({
-      type: 'weatherData',
+      type: WEATHER_DATA,
       data: { ...coordinates, days: FORECAST_DAYS },
     })
-
     worker.postMessage({
-      type: 'weatherWarningData',
+      type: WEATHER_WARNING_DATA,
       data: coordinates,
     })
   } catch (err) {

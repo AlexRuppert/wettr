@@ -25,10 +25,16 @@ export const getWeatherIconClass = (icon: WeatherIconType) => {
   }
 }
 
-export function sort<T>(array: T[], fn?: (a: T, b: T) => number) {
-  const copy = array.slice()
-  copy.sort(fn)
-  return copy
+export function sortBy<T>(...sortFns: ((a: T, b: T) => number)[]) {
+  return (a: T, b: T) => {
+    for (const fn of sortFns) {
+      const result = fn(a, b)
+      if (result !== 0) {
+        return result
+      }
+    }
+    return 0
+  }
 }
 
 export const isBetween = (val: number, left: number, right: number) =>
@@ -79,4 +85,8 @@ export function getLocationBounds({ lon, lat }, radiusKm = 8) {
 
 export function toLocalDecimal(num: string | number, precision = 0) {
   return Number.parseFloat(num.toString()).toFixed(precision).toLocaleString()
+}
+
+export function trimCoordinates({ lon, lat }) {
+  return { lon: lon.toFixed(3), lat: lat.toFixed(3) }
 }

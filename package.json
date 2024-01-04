@@ -31,11 +31,5 @@
     "vite": "^5.0.10",
     "vite-plugin-pwa": "^0.17.4",
     "vite-plugin-simple-html": "^0.1.2"
-  },
-  "dependencies": {
-    "@mdi/js": "^7.4.47",
-    "hull.js": "^1.0.4",
-    "point-in-polygon": "^1.1.0",
-    "simplify-ts": "^1.0.2"
   }
 }
