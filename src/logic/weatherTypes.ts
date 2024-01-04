@@ -98,21 +98,28 @@ export interface DayWeatherDataType {
 export interface WeatherDataType extends DayWeatherDataType {
   hours: number
 }
+export interface DayGraph {
+  timestamp: Date
+  sunninessFraction: number
+  precipitationFraction: number
+  temperatureFraction: number
+  temperature: number
+  wind: number
+  windGust: number
+}
 
+export interface MinMaxSummary {
+  temperature: number
+}
 export interface DayWeatherData {
   day: Date
-  daySummary: { icon: WeatherIconType; iconClass: string }
-  max: { temperature: number }
-  min: { temperature: number }
-  dayGraph: {
-    timestamp: Date
-    sunninessPercent: number
-    precipitationPercent: number
-    temperaturePercent: number
-    temperature: number
-    wind: number
-    windGust: number
-  }[]
+  daySummary: {
+    icon: WeatherIconType
+    iconClass: string
+  }
+  max: MinMaxSummary
+  min: MinMaxSummary
+  dayGraph: DayGraph[]
   dayLight: { sunrise: Date; sunset: Date }
   data: WeatherDataType[]
 }

@@ -110,20 +110,20 @@
       ({
         timestamp,
         temperature,
-        sunninessPercent,
-        temperaturePercent,
-        precipitationPercent,
+        sunninessFraction,
+        temperatureFraction,
+        precipitationFraction,
         windGust,
       }) => {
         const hourFraction = dateToHoursFraction(weather.day, timestamp)
         const x = getX(hourFraction)
-        const flipY = temperaturePercent < 0.2
+        const flipY = temperatureFraction < 0.2
         const hour = timestamp.getHours()
 
         sunninessPoints.push({
           x,
           y: getGraphY(
-            clamp((Math.tanh(4 * sunninessPercent - 2) + 0.9) / 1.8, 0, 1),
+            clamp((Math.tanh(4 * sunninessFraction - 2) + 0.9) / 1.8, 0, 1),
           ),
         })
         if (
@@ -133,15 +133,15 @@
         )
           temperaturePoints.push({
             x,
-            y: getGraphY(temperaturePercent),
+            y: getGraphY(temperatureFraction),
             temperature,
             flipY,
           })
-        precipitationPoints.push({ x, y: getGraphY(precipitationPercent) })
+        precipitationPoints.push({ x, y: getGraphY(precipitationFraction) })
 
         if (windGust > 30 && hour % 2 === 0) {
           windGustPoints.push({
-            x,
+            x: x - 2,
             y: 0,
           })
         }
