@@ -1,14 +1,19 @@
 <script lang="ts">
+  import Popup from '@/components/common/Popup.svelte'
   import UnitXperY from '@/components/common/UnitXperY.svelte'
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import WindDirection from '@/components/icons/WindDirection.svelte'
   import { humidity } from '@/components/icons/icons'
+  import { getLocationData, lookupStateUrlPart } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { toLocalDecimal } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
-  import { currentWeatherData } from '@/stores/store.svelte'
-  import Popup from '@/components/common/Popup.svelte'
+  import {
+    currentWeatherData,
+    locationCoordinates,
+    locationState,
+  } from '@/stores/store.svelte'
 
   interface Props extends CustomElement {}
   let { ...other } = $props<Props>()
@@ -17,11 +22,21 @@
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
   let weather: CurrentWeatherDataType = $derived(currentWeatherData.value)
+  //todo: hacky via warning-meta-data, better use proper location lookup apis
+  $effect(() => {
+    ;(async () => {
+      locationState.value = await getLocationData(locationCoordinates.value)
+    })()
+  })
+
+  let stateAbbreviation = $derived(locationState.value)
 </script>
 
 <Popup bind:opened={radarFilmPopupOpened}
   ><img
-    src="https://www.dwd.de/DWD/wetter/radar/radfilm_brd_akt.gif"
+    src="https://www.dwd.de/DWD/wetter/radar/radfilm_{lookupStateUrlPart(
+      stateAbbreviation,
+    )}_akt.gif"
     alt="DWD Radarfilm"
   /></Popup
 >

@@ -1,5 +1,6 @@
 import locationsUrl from '@/assets/locations.json?url'
-import { getCachedRequest } from './cache'
+import { getCachedRequest } from '@/logic/cache'
+import { trimCoordinates } from '@/logic/utils'
 
 export interface Coordinates {
   lat: number
@@ -135,4 +136,53 @@ export function getCoordinatesFromUrl() {
     }
   } catch (ex) {}
   return coordinates
+}
+
+export function lookupStateUrlPart(state: string) {
+  switch (state) {
+    case 'BW':
+      return 'baw'
+    case 'BY':
+      return 'bay'
+    case 'BE':
+    case 'BB':
+      return 'bbb'
+    case 'HB':
+      return 'nib'
+    case 'HH':
+      return 'shh'
+    case 'HE':
+      return 'hes'
+    case 'MV':
+      return 'mvp'
+    case 'NI':
+      return 'nib'
+    case 'NW':
+      return 'nrw'
+    case 'RP':
+      return 'rps'
+    case 'SL':
+      return 'rps'
+    case 'SN':
+      return 'sac'
+    case 'ST':
+      return 'saa'
+    case 'SH':
+      return 'shh'
+    case 'TH':
+      return 'thu'
+    default:
+      return 'brd'
+  }
+}
+
+export async function getLocationData(coordinates: Coordinates) {
+  const ENDPOINT = `https://api.brightsky.dev/`
+  let weatherWarningsUrl = new URL(ENDPOINT + 'alerts')
+  weatherWarningsUrl.search = new URLSearchParams({
+    ...trimCoordinates(coordinates),
+  }).toString()
+
+  const rawData = await (await getCachedRequest(weatherWarningsUrl, 19)).json()
+  return rawData.location.state_short
 }

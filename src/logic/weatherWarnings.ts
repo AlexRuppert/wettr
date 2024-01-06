@@ -1,6 +1,6 @@
 import { getCachedRequest } from '@/logic/cache'
 import { sortBy, trimCoordinates } from '@/logic/utils'
-import { Coordinates } from './locations'
+import { Coordinates } from '@/logic/locations'
 const ENDPOINT = `https://api.brightsky.dev/`
 let weatherWarningsUrl = new URL(ENDPOINT + 'alerts')
 
@@ -31,6 +31,7 @@ function urgencyToRank(urgency: string) {
 }
 function processWarningData(warningData) {
   const now = Date.now()
+
   let result: any[] = warningData.alerts
     .map(a => {
       return {
