@@ -4,11 +4,13 @@
   import { dark, light } from '@/../themes'
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { clamp } from '@/logic/utils'
+  import { chunk, clamp, getWeatherIconClass } from '@/logic/utils'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { darkMode } from '@/stores/store.svelte'
   import { cubicOut } from 'svelte/easing'
   import { tweened } from 'svelte/motion'
+  import WeatherIcon from './icons/WeatherIcon.svelte'
+  import { getMostRelevantIcon } from '@/logic/weather'
   interface Props extends CustomElement {
     weather: DayWeatherData
   }
@@ -25,14 +27,18 @@
     hour: number
   }
   const [minHour, maxHour] = [0, 24]
-  const hours = [...new Array(13)].map((_, i) => i * 2).slice(1)
+  const hours = [...new Array(12)].map((_, i) => i * 2)
   const hoursTotal = maxHour
-  const PADDING_X = 7.5
+  const PADDING_X = 15
   const PADDING_Y = 5
+
+  const HEIGHT_TIMELINE = 24
+  const HEIGHT_SUMMARY_BLOCK = 24
 
   let hourWidth: number = $state(0)
   let width: number = $state(0)
   let height: number = $state(0)
+  let totalHeight: number = $state(0)
   let svg: SVGSVGElement = $state(null)
 
   let pathFillCloseSuffix = $state('')
@@ -45,6 +51,7 @@
   let sunninessPath = $state('')
   let precipitationPath = $state('')
   let temperaturePath = $state('')
+  let summaryBlocks = $state([])
 
   let windGustPoints = $state([])
   let dayString = $derived(weather.day.toISOString())
@@ -78,9 +85,9 @@
       pointBackgroundColor: hslOpacity(theme.surface[500], 1),
       currentTime: theme.warning,
       tick: hslOpacity(theme.text.soft, 0.9),
-      night: hslOpacity(theme.surface[100], 0.1),
+      night: hslOpacity(theme.surface[100], 0.5),
       temperature: theme.text.hard,
-      temperatureGraph: hslOpacity(theme.text.soft, 0.5),
+      temperatureGraph: hslOpacity(theme.text.soft, 0.8),
       precipitation: theme.rain,
       precipitationFill: hslOpacity(theme.rain, 0.2),
       sunniness: theme.sun,
@@ -105,6 +112,7 @@
     const temperaturePoints = []
     const precipitationPoints = []
     windGustPoints = []
+    let summaryIcons = []
 
     weather.dayGraph.forEach(
       ({
@@ -114,6 +122,8 @@
         temperatureFraction,
         precipitationFraction,
         windGust,
+        icon,
+        iconClass,
       }) => {
         const hourFraction = dateToHoursFraction(weather.day, timestamp)
         const x = getX(hourFraction)
@@ -145,6 +155,16 @@
             y: 0,
           })
         }
+
+        summaryIcons.push({
+          icon,
+          iconClass,
+          x,
+          hours: {
+            start: hour,
+            end: hour + 1,
+          },
+        })
       },
     )
 
@@ -158,13 +178,30 @@
     ].map((points, i) =>
       getPathData(extendPoints(points, width), height, PADDING_Y / 2),
     )
+
+    const mergedSummaryBlocks = chunk(summaryIcons, 2).map(items => {
+      const icon = getMostRelevantIcon(items.map(it => it.icon))
+      const iconClass = getWeatherIconClass(icon)
+      const x = items.at(0).x + (items.length - 1) * hourWidth
+      return {
+        icon,
+        iconClass,
+        x,
+        hours: {
+          start: items.at(0).hours.start,
+          end: items.at(-1).hours.end,
+        },
+      }
+    })
+    summaryBlocks = mergedSummaryBlocks
   }
 
   function updateDimensions(rect: DOMRect) {
     width = rect.width
-    height = rect.height - 13
+    height = rect.height - HEIGHT_TIMELINE - HEIGHT_SUMMARY_BLOCK
+    totalHeight = rect.height
     hourWidth = width / hoursTotal
-    pathFillCloseSuffix = `V${height + 1}H${getX(-1)}z`
+    pathFillCloseSuffix = `V${height + 1}H${getX(-PADDING_X)}z`
   }
   function dateToHoursFraction(day: Date, date: Date) {
     if (date.getTime() > day.getTime() && day.getDate() !== date.getDate()) {
@@ -184,7 +221,7 @@
   }
 
   function getGraphY(value: number) {
-    return value < 0.01 ? height : getY(value)
+    return value < 0.01 ? height + 2 : getY(value)
   }
 
   function isCurrentValueDifferent(index: number, points: { y: number }[]) {
@@ -212,7 +249,7 @@
   stroke-linejoin="round"
   fill="none"
   bind:this={svg}
-  font-size="12"
+  font-size="1rem"
   font-weight="400"
   text-anchor="middle"
 >
@@ -227,25 +264,70 @@
     </defs>
 
     <path
-      fill={colors.night}
-      d="M{getX(-1)} {height -
-        1}v{20}H{dayLengthsX[0]}v-{20}zM{dayLengthsX[1]} {height -
-        1}v{20}H{getX(maxHour + 1)}v-{20}z"
+      stroke={colors.sunniness}
+      stroke-width="2"
+      stroke-linecap="round"
+      d="M{dayLengthsX[0]} {totalHeight -
+        PADDING_Y +
+        2}l-80 {height}M{dayLengthsX[1]} {totalHeight -
+        PADDING_Y +
+        2}l80 {height}"
     />
 
     {#each hours as hour, i}
-      <text fill={colors.tick} x={getX(hour)} y="97%">
+      <text
+        fill={colors.tick}
+        x={getX(hour)}
+        y={totalHeight - PADDING_Y}
+        class="font-light"
+      >
         {hour >= maxHour ? 0 : hour}</text
       >
     {/each}
+
+    <foreignObject
+      x="0"
+      y={height - 1}
+      width="100%"
+      height={HEIGHT_SUMMARY_BLOCK + HEIGHT_TIMELINE + 1}
+    >
+      <div class="top-box h-full pt-1">
+        {#each summaryBlocks as block, i}
+          {@const isDay =
+            block.x > dayLengthsX[0] && block.x - hourWidth < dayLengthsX[1]}
+          <div
+            class="absolute flex h-full items-start justify-start"
+            style:left="{getX(block.hours.start) - hourWidth / 2}px"
+            style:width={(block.hours.end - block.hours.start) * hourWidth -
+              0.5 +
+              'px'}
+          >
+            <WeatherIcon
+              icon={isDay ? block.icon : block.icon.replace('day', 'night')}
+              stroke-width="1.5"
+              style="width:{hourWidth * 1.6}px; margin-left:-{hourWidth /
+                (2 * 1.6) -
+                1}px"
+            ></WeatherIcon>
+          </div>
+        {/each}
+      </div>
+    </foreignObject>
     {#each windGustPoints as windGust}
       <use
         href="#wind-indicator"
         x={windGust.x + 7}
-        y={height - 1}
-        stroke={colors.tick}
+        y={totalHeight - PADDING_Y - HEIGHT_TIMELINE}
+        stroke={colors.temperature}
       />
     {/each}
+    <path
+      class=" mix-blend-darken dark:mix-blend-color-dodge"
+      opacity="50%"
+      d="M{nowLineX} 0v{totalHeight}"
+      stroke={colors.currentTime}
+      stroke-width="2"
+    />
 
     <g
       clip-path="url(#cut-off)"
@@ -256,7 +338,15 @@
         clip-path="url(#precipitation-clip-{dayString})"
         fill={colors.sunninessFill}
         stroke={colors.sunniness}
+        stroke-dasharray="1 3"
+        stroke-width="3"
+        stroke-linecap="butt"
+        stroke-linejoin="round"
         d={sunninessPath + pathFillCloseSuffix}
+        transform-origin="50% 50%"
+        transform="translate(0, -{HEIGHT_TIMELINE +
+          HEIGHT_SUMMARY_BLOCK +
+          1}) scale(1, -1)"
       />
       <path
         stroke-dasharray="4,5"
@@ -266,14 +356,6 @@
       />
       <path stroke={colors.temperatureGraph} d={temperaturePath} />
 
-      <path
-        d="M{nowLineX + 0.5} 0v8M{nowLineX + 0.5} {height}v-6"
-        stroke={'#11111190'}
-      />
-      <path
-        d="M{nowLineX} 0v7M{nowLineX} {height}v-7"
-        stroke={colors.currentTime}
-      />
       {#each temperatureLabelPoints as point, i}
         <use
           href={'#celsius-circle'}
@@ -293,9 +375,22 @@
           <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
             >{point.temperature}
           </text>
-          <text fill={colors.temperature}>{point.temperature}</text>
+          <text
+            fill={point.temperature < 0
+              ? colors.precipitation
+              : colors.temperature}>{point.temperature}</text
+          >
         </g>
       {/each}
     </g>
   {/if}
 </svg>
+
+<style>
+  .top-box {
+    box-shadow: inset 0 5px 2px -5px rgba(0, 0, 0, 0.1);
+  }
+  :global(.dark) .top-box {
+    box-shadow: inset 0 5px 2px -5px rgba(255, 255, 255, 0.4);
+  }
+</style>

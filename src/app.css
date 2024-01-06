@@ -21,6 +21,12 @@ html.dark {
 body {
   margin: 0;
 }
+.rain {
+  @apply bg-rain/10;
+}
+.sun {
+  @apply bg-sun/10;
+}
 
 .clickable {
   @apply cursor-pointer hover:bg-primary/20 active:bg-primary/50;
@@ -30,7 +36,7 @@ input {
   -webkit-tap-highlight-color: transparent;
 }
 .selected {
-  @apply text-text-primary bg-primary;
+  @apply bg-primary text-text-primary;
 }
 button {
   touch-action: manipulation;

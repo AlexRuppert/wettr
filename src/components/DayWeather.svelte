@@ -25,95 +25,51 @@
   )
 </script>
 
-<!--
-<div class="grid select-none gap-1 font-light tabular-nums">
-  {#each weather as day, i (day)}
-    <div
-      class="flex h-32 flex-col overflow-hidden rounded-default bg-surface-500 pt-1 shadow-md"
-    >
-      <div class="flex justify-between pl-2 pr-1" in:scale>
-        <div class="w-28 text-3xl">
-          <span>{formattedDay[i].day}</span>
-          <span class="-ml-1 text-lg">{formattedDay[i].weekday}</span>
-        </div>
-        <div class="flex w-32 justify-between">
-          {#each day.dayParts as { icon }, j (i + '' + j)}
-            <div class="relative flex h-8 w-8 items-center self-end">
-              {#key day.dayParts}
-                <div class="absolute inset-0" in:scale={{ delay: j * 50 }}>
-                  <WeatherIcon {icon} />
-                </div>
-              {/key}
-            </div>
-          {/each}
-        </div>
-        <div class="w-28 text-right text-3xl">
-          <span class="text-lg"
-            ><span>{day.min.temperature}</span><span
-              class="inline-block align-text-top text-sm">°</span
-            ></span
-          >
-          <span class:cold={day.max.temperature < 0}
-            ><span>{day.max.temperature}</span><span class="align-top text-sm"
-              >°</span
-            ></span
-          >
-        </div>
-      </div>
-      <div class="relative overflow-hidden">
-        <DayChart weather={day} />
-        <div class="absolute bottom-0.5 left-1 z-10 size-2">
-          <MoonPhase timestamp={day.day} />
-        </div>
-      </div>
-    </div>
-  {/each}
-</div>
--->
-
 <div class="grid select-none gap-1 font-light tabular-nums">
   {#each weather as day, i (day)}
     <div
       class="flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
     >
       <div
-        class="right-box relative flex w-20 flex-col items-center justify-between bg-surface-400"
+        class="right-box relative flex w-14 flex-col items-center justify-between bg-surface-400"
         class:rain={day.daySummary.iconClass == 'rain'}
         class:sun={day.daySummary.iconClass == 'sun'}
       >
-        <div class="flex w-full space-x-1 text-3xl *:flex *:w-1/2">
-          <div class="justify-end">{formattedDay[i].day}</div>
-          <div class="push-down items-end text-lg">
-            {formattedDay[i].weekday}
-          </div>
-        </div>
         <div class="flex justify-center">
-          <div class="relative flex size-12 items-center self-end pt-1">
+          <div
+            class="relative flex size-8 items-center self-end pt-3"
+            style="stroke-width:1.5"
+          >
             <WeatherIcon icon={day.daySummary.icon} />
           </div>
         </div>
-        <div class="flex w-full space-x-1 text-3xl *:flex *:w-1/2">
-          <div class="justify-end">
-            <div class="celsius" class:text-rain={day.max.temperature < 0}>
-              {day.max.temperature}
+        <div class="flex w-full flex-col items-center text-3xl *:flex">
+          <div class="-mb-1">
+            <div class="celsius" class:negative={day.max.temperature < 0}>
+              {Math.abs(day.max.temperature)}
             </div>
           </div>
 
-          <div class="items-end text-lg">
-            <div
-              class="celsius push-down"
-              class:text-rain={day.min.temperature < 0}
-            >
-              {day.min.temperature}
+          <div class="mt-1 items-end text-lg">
+            <div class="celsius" class:negative={day.min.temperature < 0}>
+              {Math.abs(day.min.temperature)}
             </div>
           </div>
         </div>
-        <div class="absolute right-1 top-2 z-10 size-2">
-          <MoonPhase timestamp={day.day} />
+        <div
+          class="flex w-full space-x-0.5 text-base font-light *:flex *:w-1/2"
+        >
+          <div class="justify-end font-medium">{formattedDay[i].day}</div>
+          <div class="items-end">
+            {formattedDay[i].weekday}
+          </div>
         </div>
       </div>
       <div class="relative grow overflow-hidden">
         <DayChart weather={day} />
+        <div class="absolute bottom-[5px] right-1 z-10 size-2">
+          <MoonPhase timestamp={day.day} />
+        </div>
       </div>
     </div>
   {/each}
@@ -127,24 +83,26 @@
     box-shadow: inset -7px 0 9px -7px rgba(0, 0, 0, 0.4);
   }
 
-  .rain {
-    @apply bg-rain/10;
-  }
-  .sun {
-    @apply bg-sun/10;
-  }
-
   .celsius {
     @apply relative;
   }
   .celsius::after {
     content: '°';
-
     top: -0.1rem;
     right: -0.25rem;
     @apply absolute text-sm;
   }
   .push-down {
     margin-bottom: -0.1em;
+  }
+
+  .celsius.negative {
+    @apply text-rain;
+  }
+  .celsius.negative::before {
+    content: '-';
+    top: 0;
+    left: -0.4em;
+    @apply absolute;
   }
 </style>

@@ -45,24 +45,15 @@ export async function getWeather(coordinates: Coordinates, days = 3) {
   )
 }
 
-function processCurrentWeatherData(
-  weatherData: RawCurrentWeatherDataType,
-): CurrentWeatherDataType {
-  return {
-    ...weatherData.weather,
-    temperature: Math.round(weatherData.weather.temperature),
-  } as CurrentWeatherDataType
-}
-
-function getMostRelevantIcon(times: WeatherDataType[]) {
+export function getMostRelevantIcon(icons: WeatherIconType[]) {
   const iconValue = (icon: WeatherIconType) =>
     /thunderstorm|hail/.test(icon) ? 12 : /sleet|snow/.test(icon) ? 5 : 1
 
   const iconCount = new Map()
   let maxIcon = 'clear-day'
   let maxOccurrence = 0
-  times.forEach(time => {
-    const icon = time.icon.replace('night', 'day') as WeatherIconType
+  icons.forEach(icon => {
+    icon = icon.replace('night', 'day') as WeatherIconType
     const value = (iconCount.get(icon) ?? 0) + iconValue(icon)
     iconCount.set(icon, value)
     if (value > maxOccurrence) {
@@ -71,6 +62,15 @@ function getMostRelevantIcon(times: WeatherDataType[]) {
     }
   })
   return maxIcon as WeatherIconType
+}
+
+function processCurrentWeatherData(
+  weatherData: RawCurrentWeatherDataType,
+): CurrentWeatherDataType {
+  return {
+    ...weatherData.weather,
+    temperature: Math.round(weatherData.weather.temperature),
+  } as CurrentWeatherDataType
 }
 
 function getDayGraphData(times: WeatherDataType[]): {
@@ -94,6 +94,7 @@ function getDayGraphData(times: WeatherDataType[]): {
         cloud_cover,
         wind_speed,
         wind_gust_speed,
+        icon,
       }) => {
         const date = new Date(timestamp)
         let temperatureFraction =
@@ -118,6 +119,8 @@ function getDayGraphData(times: WeatherDataType[]): {
           sunninessFraction,
           wind: wind_speed,
           windGust: wind_gust_speed,
+          icon,
+          iconClass: getWeatherIconClass(icon),
         }
       },
     ),
@@ -128,8 +131,6 @@ function processWeatherData(
   weatherData: RawDayWeatherDataType,
   coordinates: Coordinates,
 ): DayWeatherData[] {
-  console.log(weatherData.weather)
-
   const days = chunk(
     weatherData.weather.map(weather => {
       return {
@@ -146,7 +147,7 @@ function processWeatherData(
     const dayLight = getSunriseSunset(day, coordinates)
 
     const relevantHours = hourData.filter(h => isBetween(h.hours, 7, 21))
-    const icon = getMostRelevantIcon(relevantHours)
+    const icon = getMostRelevantIcon(relevantHours.map(r => r.icon))
     const iconClass = getWeatherIconClass(icon)
 
     let { min, max, dayGraph } = getDayGraphData(hourData)
@@ -165,7 +166,6 @@ function processWeatherData(
       data: hourData as WeatherDataType[],
     }
   })
-  console.log(result)
   return result
 }
 function smoothPastGraph(dayGraph: DayGraph[]): DayGraph[] {

@@ -106,6 +106,8 @@ export interface DayGraph {
   temperature: number
   wind: number
   windGust: number
+  icon: WeatherIconType
+  iconClass: string
 }
 
 export interface MinMaxSummary {
