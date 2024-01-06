@@ -291,7 +291,7 @@
       width="100%"
       height={HEIGHT_SUMMARY_BLOCK + HEIGHT_TIMELINE + 1}
     >
-      <div class="top-box relative h-full pt-1">
+      <div class=" relative h-full pt-1">
         {#each summaryBlocks as block, i}
           {@const isDay =
             block.x > dayLengthsX[0] && block.x - hourWidth < dayLengthsX[1]}
@@ -313,6 +313,22 @@
         {/each}
       </div>
     </foreignObject>
+
+    <path
+      stroke={colors.tick}
+      stroke-width="3"
+      stroke-linecap="butt"
+      stroke-dasharray="1 {hourWidth * 2 - 2}"
+      d="M{PADDING_X - 1} {height + 0.5}h{width}"
+    />
+    <path
+      stroke={colors.tick}
+      stroke-width="1"
+      opacity="70%"
+      stroke-linecap="butt"
+      stroke-dasharray="1 {hourWidth * 2 - 2}"
+      d="M{PADDING_X + hourWidth - 1} {height - 0.5}h{width - hourWidth}"
+    />
     {#each windGustPoints as windGust}
       <use
         href="#wind-indicator"
