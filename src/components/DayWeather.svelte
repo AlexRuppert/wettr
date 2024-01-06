@@ -37,10 +37,13 @@
       >
         <div class="flex justify-center">
           <div
-            class="relative flex size-8 items-center self-end pt-3"
+            class="relative flex size-8 items-center self-end"
             style="stroke-width:1.5"
           >
-            <WeatherIcon icon={day.daySummary.icon} />
+            <WeatherIcon
+              icon={day.daySummary.icon}
+              className=" absolute inset-0 top-1 left-0.5"
+            />
           </div>
         </div>
         <div class="flex w-full flex-col items-center text-3xl *:flex">

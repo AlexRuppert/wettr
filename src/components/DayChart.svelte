@@ -81,7 +81,7 @@
       return hsl.replace(')', '/ ' + opacity + ')')
     }
     return {
-      dataLabelBackgroundColor: hslOpacity(theme.surface[500], 0.5),
+      dataLabelBackgroundColor: hslOpacity(theme.surface[500], 0.9),
       pointBackgroundColor: hslOpacity(theme.surface[500], 1),
       currentTime: theme.warning,
       tick: hslOpacity(theme.text.soft, 0.9),
@@ -287,11 +287,11 @@
 
     <foreignObject
       x="0"
-      y={height - 1}
+      y="{height - 1}px"
       width="100%"
       height={HEIGHT_SUMMARY_BLOCK + HEIGHT_TIMELINE + 1}
     >
-      <div class="top-box h-full pt-1">
+      <div class="top-box relative h-full pt-1">
         {#each summaryBlocks as block, i}
           {@const isDay =
             block.x > dayLengthsX[0] && block.x - hourWidth < dayLengthsX[1]}
