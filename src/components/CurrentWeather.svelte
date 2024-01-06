@@ -8,15 +8,23 @@
   import { toLocalDecimal } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import { currentWeatherData } from '@/stores/store.svelte'
+  import Popup from '@/components/common/Popup.svelte'
 
   interface Props extends CustomElement {}
   let { ...other } = $props<Props>()
 
+  let radarFilmPopupOpened = $state(false)
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
   let weather: CurrentWeatherDataType = $derived(currentWeatherData.value)
 </script>
 
+<Popup bind:opened={radarFilmPopupOpened}
+  ><img
+    src="https://www.dwd.de/DWD/wetter/radar/radfilm_brd_akt.gif"
+    alt="DWD Radarfilm"
+  /></Popup
+>
 {#if weather && weather.timestamp}
   <div
     class="flex select-none space-x-1 tabular-nums *:relative *:size-32 *:rounded-default *:bg-surface-500 *:shadow-md"
@@ -39,7 +47,12 @@
     <div class="text-text-hard">
       <WeatherIcon className="p-3 pt-4" icon={weather.icon} />
     </div>
-    <div>
+    <div
+      onclick={() => (radarFilmPopupOpened = true)}
+      role="button"
+      tabindex="-1"
+      class="clickable"
+    >
       <div class="">
         <WindDirection
           className="absolute left-12 top-12 size-8 "

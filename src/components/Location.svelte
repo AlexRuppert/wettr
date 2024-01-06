@@ -1,7 +1,7 @@
 <script lang="ts">
   import IconButton from '@/components/common/IconButton.svelte'
   import { gps } from '@/components/icons/icons'
-  import ModalBackground from '@/components/ModalBackground.svelte'
+  import ModalBackground from '@/components/common/ModalBackground.svelte'
   import { getHistory, pushHistory } from '@/logic/history'
   import {
     filterLocations,
