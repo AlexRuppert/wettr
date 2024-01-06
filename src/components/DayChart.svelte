@@ -355,7 +355,7 @@
         fill={colors.sunninessFill}
         stroke={colors.sunniness}
         stroke-dasharray="1 3"
-        stroke-width="3"
+        stroke-width="2"
         stroke-linecap="butt"
         stroke-linejoin="round"
         d={sunninessPath + pathFillCloseSuffix}

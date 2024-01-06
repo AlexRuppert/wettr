@@ -101,7 +101,6 @@
     <div
       class="height-transition relative max-h-64 origin-top transform select-text overflow-hidden hyphens-auto rounded-b-md transition-all"
       class:!max-h-0={collapsed}
-      class:pb-2={!collapsed}
     >
       <div class="h-auto max-h-64 overflow-y-auto">
         <div
