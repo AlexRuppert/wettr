@@ -1,3 +1,3 @@
-const ghpages = require('gh-pages')
+import { publish } from 'gh-pages'
 
-ghpages.publish('dist', function (err) {})
+publish('dist', function (err) { })
