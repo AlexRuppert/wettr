@@ -184,5 +184,5 @@ export async function getLocationData(coordinates: Coordinates) {
   }).toString()
 
   const rawData = await (await getCachedRequest(weatherWarningsUrl, 19)).json()
-  return rawData.location.state_short
+  return rawData?.location?.state_short ?? ''
 }

@@ -32,7 +32,7 @@ function urgencyToRank(urgency: string) {
 function processWarningData(warningData) {
   const now = Date.now()
 
-  let result: any[] = warningData.alerts
+  let result: any[] = (warningData?.alerts ?? [])
     .map(a => {
       return {
         event: formatEvent(a.event_de) ?? '',
