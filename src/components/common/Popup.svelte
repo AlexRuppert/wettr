@@ -9,7 +9,13 @@
     children: any
   }
 
-  let { opened, onclose, className = '', children, ...other } = $props<Props>()
+  let {
+    opened = $bindable(false),
+    onclose,
+    className = '',
+    children,
+    ...other
+  }: Props = $props()
 
   function handleClose() {
     opened = false

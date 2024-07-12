@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   const paths = $state({
     sun: 'M15 10.5a4.5 4.5 0 10.001 0',

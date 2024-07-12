@@ -20,7 +20,7 @@
   import { stageReload } from '@/logic/reloader'
 
   interface Props extends CustomElement {}
-  let { ...other } = $props<Props>()
+  let { ...other }: Props = $props()
 
   const TRANSITION_TIME = 250
   const FALLBACK_SUGGESTION = {

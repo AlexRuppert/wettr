@@ -6,8 +6,8 @@
     instruction: string
     hintText: string
   }
-  let { description, instruction, hintText, className, ...other } =
-    $props<Props>()
+  let { description, instruction, hintText, className, ...other }: Props =
+    $props()
 </script>
 
 <div

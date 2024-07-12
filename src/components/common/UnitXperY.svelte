@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { classProp, type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
@@ -7,7 +5,7 @@
     bottom: string
   }
 
-  let { top, bottom, className = '', ...other } = $props<Props>()
+  let { top, bottom, className = '', ...other }: Props = $props()
 </script>
 
 <div

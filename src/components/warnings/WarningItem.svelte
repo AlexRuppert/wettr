@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { chevronDown, alertWarning } from '@/components/icons/icons'
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
@@ -21,7 +19,7 @@
     subItem = false,
     className,
     ...other
-  } = $props<Props>()
+  }: Props = $props()
 </script>
 
 <div

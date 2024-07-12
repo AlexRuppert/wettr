@@ -1,4 +1,4 @@
-import { createRoot } from 'svelte'
+import { mount } from 'svelte'
 import App from './App.svelte'
 //@ts-ignore
 import { registerSW } from 'virtual:pwa-register'
@@ -9,6 +9,6 @@ const updateSW = registerSW({
   },
 })
 //@ts-ignore
-const app = createRoot(App, { target: document.getElementById('app') })
+const app = mount(App, { target: document.getElementById('app') })
 
 export default app

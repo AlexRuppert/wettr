@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script context="module">
   const DEFAULT_WARNING = {
     title: '',
@@ -106,7 +104,7 @@
         <div
           class="linear-fade absolute bottom-0 h-7 w-full"
           class:dark={darkMode.value}
-        />
+        ></div>
         <div class="custom-scrollbar box-border h-full overflow-y-auto text-sm">
           <WarningDescription
             description={warning.description}

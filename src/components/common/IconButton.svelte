@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import Button from '@/components/common/Button.svelte'
@@ -17,7 +15,7 @@
     strokeWidth = 1,
     className = '',
     ...other
-  } = $props<Props>()
+  }: Props = $props()
 </script>
 
 <Button {className} {label} {...other}>

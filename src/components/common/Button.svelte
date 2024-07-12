@@ -1,12 +1,10 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { classProp, type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
     label?: string
   }
 
-  let { label = 'Button', className = '', ...other } = $props<Props>()
+  let { label = 'Button', className = '', children, ...other }: Props = $props()
 </script>
 
 <button
@@ -17,5 +15,5 @@
   aria-label={label}
   {...other}
 >
-  <slot />
+  {@render children()}
 </button>

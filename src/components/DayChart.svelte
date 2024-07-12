@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { dark, light } from '@/../themes'
   import { getPathData } from '@/logic/chart/path'
@@ -15,7 +13,7 @@
     weather: DayWeatherData
   }
 
-  let { weather, className = '', ...other } = $props<Props>()
+  let { weather, className = '', ...other }: Props = $props()
 
   type GraphPoint = {
     x: number

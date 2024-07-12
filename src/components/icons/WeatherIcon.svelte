@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import type { WeatherIconType } from '@/logic/weatherTypes'
   import { getWeatherIconClass } from '@/logic/utils'
@@ -8,7 +6,7 @@
   interface Props extends CustomElement {
     icon: WeatherIconType
   }
-  let { icon, className = '', ...other } = $props<Props>()
+  let { icon, className = '', ...other }: Props = $props()
 
   const iconLookup: { [key in WeatherIconType]: string } = {
     'clear-day': 'sun,sun-rays',

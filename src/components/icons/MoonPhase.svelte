@@ -1,10 +1,8 @@
-<svelte:options immutable />
-
 <script lang="ts">
   interface Props {
     timestamp?: Date
   }
-  let { timestamp = new Date() } = $props<Props>()
+  let { timestamp = new Date() }: Props = $props()
 
   let phase = $derived(getMoonRatio(timestamp) - 0.5)
   let [l, r] = $derived(

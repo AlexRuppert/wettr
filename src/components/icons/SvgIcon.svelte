@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { classProp, type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
@@ -16,7 +14,7 @@
     strokeWidth = 1,
     className,
     ...other
-  } = $props<Props>()
+  }: Props = $props()
 
   let { svgStroke, svgFill } = $derived(getStrokeFill(fill))
 

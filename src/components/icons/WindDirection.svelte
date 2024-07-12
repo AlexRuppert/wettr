@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { classProp, type CustomElement } from '@/logic/svelte.svelte'
   import { clamp } from '@/logic/utils'
@@ -10,7 +8,7 @@
     direction: number
     strength: number
   }
-  let { direction, strength, className = '', ...other } = $props<Props>()
+  let { direction, strength, className = '', ...other }: Props = $props()
 
   let scale = $derived(0.8 + clamp(strength / 20, 0, 1.7))
 </script>

@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import { addBox, shareIcon } from '@/components/icons/icons'
@@ -56,6 +54,7 @@
     class="fixed bottom-1 left-0 right-0 flex justify-center"
     transition:scale
   >
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
       class="helper relative rounded bg-neutral-100 p-2 text-neutral-900 shadow-md"
       role="button"

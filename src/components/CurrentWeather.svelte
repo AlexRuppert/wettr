@@ -16,7 +16,7 @@
   } from '@/stores/store.svelte'
 
   interface Props extends CustomElement {}
-  let { ...other } = $props<Props>()
+  let { ...other }: Props = $props()
 
   let radarFilmPopupOpened = $state(false)
   const MIN_PRECIPITATION = 0.3
@@ -62,6 +62,7 @@
     <div class="text-text-hard">
       <WeatherIcon className="p-3 pt-4" icon={weather.icon} />
     </div>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
       onclick={() => (radarFilmPopupOpened = true)}
       role="button"
