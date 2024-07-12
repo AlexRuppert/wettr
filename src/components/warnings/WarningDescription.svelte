@@ -8,6 +8,11 @@
   }
   let { description, instruction, hintText, className, ...other }: Props =
     $props()
+
+  const LINK_REGEX = /https?:\/\/\S+/g
+
+  let texts = $derived(instruction?.split(LINK_REGEX) ?? [])
+  let links = $derived(instruction?.match(LINK_REGEX) ?? [])
 </script>
 
 <div
@@ -17,8 +22,16 @@
   <div>
     {description}
   </div>
-  <p>
-    <strong>{!!instruction ? hintText : ''}</strong><br />
-    {instruction}
+  <p class="my-1">
+    <strong>{!!texts ? hintText : ''}</strong><br />
+    {#each texts as text, i}
+      {text}
+      {#if links[i]}
+        <a class="underline" href={links[i]} target="_blank">{links[i]}</a>
+      {/if}
+    {/each}
   </p>
 </div>
+
+<style>
+</style>
