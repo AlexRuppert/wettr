@@ -194,7 +194,7 @@
         type="text"
         class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-none"
         placeholder="Ort"
-        autocomplete="off"
+        autocomplete="new-password"
         bind:this={inputElement}
         bind:value={place}
         onkeydown={handleInputKeys}
