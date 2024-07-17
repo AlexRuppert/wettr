@@ -11,8 +11,15 @@
 
   function close(e: Event) {
     e.stopPropagation()
+    document.body.style.overflow = 'inherit'
     onclose()
   }
+
+  $effect(() => {
+    if (show) {
+      document.body.style.overflow = 'hidden'
+    }
+  })
 </script>
 
 {#if show}
