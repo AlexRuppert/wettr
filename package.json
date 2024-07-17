@@ -31,5 +31,8 @@
     "vite": "^5.3.3",
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-simple-html": "^0.1.2"
+  },
+  "dependencies": {
+    "qr-code-generator-lib": "^1.0.1"
   }
 }
