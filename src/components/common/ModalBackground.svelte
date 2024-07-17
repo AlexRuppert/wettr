@@ -7,17 +7,25 @@
     onclose: () => void
   }
 
-  let { show = false, onclose, className = '', ...other }: Props = $props()
+  let {
+    show = $bindable(false),
+    onclose,
+    className = '',
+    ...other
+  }: Props = $props()
 
-  function close(e: Event) {
-    e.stopPropagation()
-    document.body.style.overflow = 'inherit'
-    onclose()
+  function close(e?: Event) {
+    e?.stopPropagation()
+    show = false
   }
 
-  $effect(() => {
+  $effect.pre(() => {
+    console.log(show)
     if (show) {
       document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+      onclose?.()
     }
   })
 </script>

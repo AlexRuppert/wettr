@@ -13,3 +13,4 @@ export const shareIcon =
   'M12 9h-1a2 2 0 00-2 2v8a2 2 0 00 2 2h8a2 2 0 00 2-2v-8a2 2 0 00-2-2h-1M15 15v-13l3 3m-3-3l-3 3'
 export const addBox =
   'M15 9h-4a2 2 0 00-2 2v8a2 2 0 00 2 2h8a2 2 0 00 2-2v-8a2 2 0 00-2-2zm0 3v6m-3-3h6'
+export const closeIcon = 'M10 10l10 10m-10 0l10-10'
