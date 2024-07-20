@@ -1,0 +1,21 @@
+.ol-attribution {
+  position: absolute;
+  text-align: right;
+  bottom: 0.5em;
+  right: 0.5em;
+  max-width: calc(100% - 1.3em);
+  display: flex;
+  flex-flow: row-reverse;
+  align-items: center;
+  color: #000;
+  user-select: none;
+}
+
+.ol-zoom,
+.ol-rotate {
+  display: none;
+}
+
+.ol-attribution ul {
+  display: flex;
+}

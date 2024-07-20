@@ -2,6 +2,7 @@ import {
   currentWeatherData,
   locationCoordinates,
   weatherData,
+  weatherPrecipitation,
   weatherWarningData,
 } from '@/stores/store.svelte'
 import Worker from '@/workers/worker.ts?worker'
@@ -18,6 +19,7 @@ const worker = new Worker()
 const CURRENT_WEATHER_DATA = 'currentWeatherData'
 const WEATHER_DATA = 'weatherData'
 const WEATHER_WARNING_DATA = 'weatherWarningData'
+const WEATHER_PRECIPITATION = 'weatherPrecipitation'
 worker.onmessage = function ({ data: { type, data } }) {
   switch (type) {
     case CURRENT_WEATHER_DATA:
@@ -29,11 +31,24 @@ worker.onmessage = function ({ data: { type, data } }) {
     case WEATHER_WARNING_DATA:
       weatherWarningData.value = data
       break
+    case WEATHER_PRECIPITATION:
+      weatherPrecipitation.value = data
+      break
     default:
       break
   }
 }
-
+export async function reloadPercipitation() {
+  try {
+    const coordinates = get(locationCoordinates)
+    worker.postMessage({
+      type: WEATHER_PRECIPITATION,
+      data: coordinates,
+    })
+  } catch (err) {
+    console.error(err)
+  }
+}
 export async function reload() {
   try {
     const coordinates = get(locationCoordinates)

@@ -33,6 +33,9 @@
     "vite-plugin-simple-html": "^0.1.2"
   },
   "dependencies": {
+    "ol": "^9.2.4",
+    "pako": "^2.1.0",
+    "proj4": "^2.11.0",
     "qr-code-generator-lib": "^1.0.1"
   }
 }

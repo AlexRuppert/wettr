@@ -4,7 +4,8 @@ export const humidity =
   'M5 9c5 5 15-5 20 0M5 13c1 .7 1.8 1.8 5.2 1.32M5 17c1 .85 1.8 1.5 3.9 1.43M25 13c-1-.7-1.8-1.8-5.2-1.32M25 17c-1-.85-1.8-1.5-3.9-1.43M15.5 12c-13 14 13 14 0 0'
 export const gps =
   'M15 7a8 8 0 100.01 0M15 7v-2M15 23v2M7 15h-2M23 15h2M12 13h-2v4h2v-2M14 17v-4h2v2h-2M20 13h-2v2h2v2h-2'
-export const skipNext = 'M10 7l10 8l-10 8z'
+export const pause = 'M8 7h5v16h-5v-16M16 7h5v16h-5v-16'
+export const play = 'M10 7l10 8l-10 8z'
 export const skipPrevious = 'M20 7l-10 8l10 8z'
 export const chevronDown = 'M9 12l6 6l6-6'
 export const alertWarning =

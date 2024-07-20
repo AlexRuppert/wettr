@@ -14,11 +14,13 @@
     locationCoordinates,
     locationState,
   } from '@/stores/store.svelte'
+  import Radar from './Radar.svelte'
+  import { createColorMap } from '@/logic/colorMap'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
 
-  let radarFilmPopupOpened = $state(false)
+  let radarFilmPopupOpened = $state(true)
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
   let weather: CurrentWeatherDataType = $derived(currentWeatherData.value)
@@ -33,13 +35,9 @@
 </script>
 
 <Popup bind:opened={radarFilmPopupOpened}
-  ><img
-    src="https://www.dwd.de/DWD/wetter/radar/radfilm_{lookupStateUrlPart(
-      stateAbbreviation,
-    )}_akt.gif"
-    alt="DWD Radarfilm"
-  /></Popup
+  ><Radar coordinates={locationCoordinates.value} /></Popup
 >
+
 {#if weather && weather.timestamp}
   <div
     class="flex select-none space-x-1 tabular-nums *:relative *:size-32 *:rounded-default *:bg-surface-500 *:shadow-md"

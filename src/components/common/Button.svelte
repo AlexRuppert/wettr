@@ -9,7 +9,7 @@
 
 <button
   class={classProp(
-    'clickable flex size-10 appearance-none items-center rounded-default border-none bg-transparent p-1',
+    'clickable flex size-10 appearance-none items-center justify-center rounded-default border-none bg-transparent p-1',
     className,
   )}
   aria-label={label}

@@ -20,7 +20,6 @@
   }
 
   $effect.pre(() => {
-    console.log(show)
     if (show) {
       document.body.style.overflow = 'hidden'
     } else {
