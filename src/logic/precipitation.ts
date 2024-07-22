@@ -4,11 +4,11 @@ import { trimCoordinates } from './utils'
 import { inflate } from 'pako'
 const ENDPOINT = 'https://api.brightsky.dev/'
 let precipitationUrl = new URL(ENDPOINT + 'radar')
-
+const PERTICIPATION_DATA_DISTANCE = '27000'
 export async function getWeatherPrecipitation(coordinates: Coordinates) {
   precipitationUrl.search = new URLSearchParams({
     ...trimCoordinates(coordinates),
-    distance: '19000',
+    distance: PERTICIPATION_DATA_DISTANCE,
     tz: 'Europe/Berlin',
   }).toString()
 
