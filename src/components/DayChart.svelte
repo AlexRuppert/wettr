@@ -83,7 +83,7 @@
       pointBackgroundColor: hslOpacity(theme.surface[500], 1),
       currentTime: theme.warning,
       tick: hslOpacity(theme.text.soft, 0.9),
-      night: hslOpacity(theme.surface[100], 0.5),
+      night: hslOpacity(theme.surface[100], 1),
       temperature: theme.text.hard,
       temperatureGraph: hslOpacity(theme.text.soft, 0.8),
       precipitation: theme.rain,
@@ -134,16 +134,16 @@
             clamp((Math.tanh(4 * sunninessFraction - 2) + 0.9) / 1.8, 0, 1),
           ),
         })
-        if (
+        const isExtremeTemperature =
           temperature >= weather.max.temperature ||
-          temperature <= weather.min.temperature ||
-          hour % 2 === 0
-        )
+          temperature <= weather.min.temperature
+        if (isExtremeTemperature || hour % 2 === 0)
           temperaturePoints.push({
             x,
             y: getGraphY(temperatureFraction),
             temperature,
             flipY,
+            isExtremeTemperature,
           })
         precipitationPoints.push({ x, y: getGraphY(precipitationFraction) })
 
@@ -166,8 +166,49 @@
       },
     )
 
-    temperatureLabelPoints = temperaturePoints.filter((point, i, points) =>
-      isCurrentValueDifferent(i, points),
+    temperatureLabelPoints = []
+    let lastPushedTemperatureIndex = 0
+    temperaturePoints.forEach(
+      (
+        current: {
+          y: number
+          temperature: number
+          isExtremeTemperature: boolean
+          hour: number
+          x: number
+          flipY: boolean
+        },
+        index: number,
+        points: {
+          y: number
+          temperature: number
+          isExtremeTemperature: boolean
+        }[],
+      ) => {
+        const previous = points[index - 1] ?? current
+        const next = points[index + 1] ?? null
+        const lastPushedPoint = points[lastPushedTemperatureIndex] ?? previous
+        const range = Math.abs(
+          weather.max.temperature - weather.min.temperature,
+        )
+        if (
+          index == 0 ||
+          (current.isExtremeTemperature &&
+            !lastPushedPoint.isExtremeTemperature)
+        ) {
+          temperatureLabelPoints.push(current)
+          lastPushedTemperatureIndex = index
+        } else if (
+          (Math.abs(current.temperature - lastPushedPoint.temperature) >=
+            Math.max(range / 4, 2) ||
+            (Math.abs(current.temperature - lastPushedPoint.temperature) > 1 &&
+              index - lastPushedTemperatureIndex > 4)) &&
+          !next?.isExtremeTemperature
+        ) {
+          temperatureLabelPoints.push(current)
+          lastPushedTemperatureIndex = index
+        }
+      },
     )
     ;[sunninessPath, temperaturePath, precipitationPath] = [
       sunninessPoints,
@@ -222,12 +263,6 @@
     return value < 0.01 ? height + 2 : getY(value)
   }
 
-  function isCurrentValueDifferent(index: number, points: { y: number }[]) {
-    const value = points[index].y
-    const valuePrevious = points[index - 1]?.y ?? undefined
-    return value !== valuePrevious
-  }
-
   function extendPoints(points: GraphPoint[], width: number) {
     return [
       { x: 0, y: points[0].y },
@@ -261,7 +296,7 @@
       </clipPath>
     </defs>
 
-    <path
+    <!--path
       stroke={colors.sunniness}
       stroke-width="2"
       stroke-linecap="round"
@@ -270,6 +305,16 @@
         2}l-80 {height}M{dayLengthsX[1]} {totalHeight -
         PADDING_Y +
         2}l80 {height}"
+    /-->
+    <path
+      stroke={colors.night}
+      stroke-width="3"
+      stroke-linecap="round"
+      d="M{0} {totalHeight - PADDING_Y + 4}L{dayLengthsX[0]} {totalHeight -
+        PADDING_Y +
+        4}M{dayLengthsX[1]} {totalHeight - PADDING_Y + 4}L{width} {totalHeight -
+        PADDING_Y +
+        4}"
     />
 
     {#each hours as hour, i}
@@ -336,7 +381,7 @@
       />
     {/each}
     <path
-      class=" mix-blend-darken dark:mix-blend-color-dodge"
+      class="mix-blend-darken dark:mix-blend-color-dodge"
       opacity="50%"
       d="M{nowLineX} 0v{totalHeight}"
       stroke={colors.currentTime}
@@ -349,7 +394,6 @@
       transform="scale(1 {$clipPercent})"
     >
       <path
-        clip-path="url(#precipitation-clip-{dayString})"
         fill={colors.sunninessFill}
         stroke={colors.sunniness}
         stroke-dasharray="1 3"
@@ -381,7 +425,7 @@
         <g
           transform="translate({point.x +
             (i === 0
-              ? 9
+              ? -7
               : point.temperature.toString().length > 1
                 ? -9
                 : -6)} {point.y + (point.flipY ? -3 : 8)})"

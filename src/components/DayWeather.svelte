@@ -46,21 +46,21 @@
             />
           </div>
         </div>
-        <div class="flex w-full flex-col items-center text-3xl *:flex">
-          <div class="-mb-1">
+        <div class="flex w-full flex-col items-end text-3xl *:flex">
+          <div class="-mb-1 mr-3">
             <div class="celsius" class:negative={day.max.temperature < 0}>
               {Math.abs(day.max.temperature)}
             </div>
           </div>
 
-          <div class="mt-1 items-end text-lg">
+          <div class="mr-3 mt-1 items-end justify-end text-lg">
             <div class="celsius" class:negative={day.min.temperature < 0}>
               {Math.abs(day.min.temperature)}
             </div>
           </div>
         </div>
         <div
-          class="flex w-full space-x-0.5 text-base font-light *:flex *:w-1/2"
+          class="mr-5 flex w-full justify-end space-x-0.5 text-base font-light *:flex"
         >
           <div class="justify-end font-medium">{formattedDay[i].day}</div>
           <div class="items-end">
