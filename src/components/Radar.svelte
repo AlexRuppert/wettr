@@ -275,7 +275,7 @@
       style="width: calc(100% - 60px)"
     >
       <div
-        class="absolute inline-block w-[60px] rounded-b-md bg-surface-100 py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear"
+        class="absolute inline-block w-[60px] rounded-b-md bg-surface-500 py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear dark:bg-surface-100"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}
       >
         {currentTimeLabel}

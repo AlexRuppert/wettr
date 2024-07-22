@@ -15,12 +15,11 @@
     locationState,
   } from '@/stores/store.svelte'
   import Radar from './Radar.svelte'
-  import { createColorMap } from '@/logic/colorMap'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
 
-  let radarFilmPopupOpened = $state(true)
+  let radarFilmPopupOpened = $state(false)
   const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
   let weather: CurrentWeatherDataType = $derived(currentWeatherData.value)
@@ -31,7 +30,7 @@
     })()
   })
 
-  let stateAbbreviation = $derived(locationState.value)
+  //let stateAbbreviation = $derived(locationState.value)
 </script>
 
 <Popup bind:opened={radarFilmPopupOpened}
