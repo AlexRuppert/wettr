@@ -94,3 +94,23 @@ button {
   background-color: #222;
   border-radius: 10px;
 }
+
+.celsius {
+  @apply relative;
+}
+.celsius::after {
+  content: '°';
+  top: -0.1rem;
+  right: -0.25rem;
+  @apply absolute text-sm;
+}
+
+.celsius.negative {
+  @apply text-rain;
+}
+.celsius.negative::before {
+  content: '-';
+  top: 0;
+  left: -0.4em;
+  @apply absolute;
+}

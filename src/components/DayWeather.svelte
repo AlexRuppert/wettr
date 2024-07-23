@@ -60,7 +60,7 @@
           </div>
         </div>
         <div
-          class="mr-5 flex w-full justify-end space-x-0.5 text-base font-light *:flex"
+          class="mr-4 flex w-full justify-end space-x-0.5 text-base font-light *:flex"
         >
           <div class="justify-end font-medium">{formattedDay[i].day}</div>
           <div class="items-end">
@@ -85,27 +85,7 @@
   :global(.dark) .right-box {
     box-shadow: inset -7px 0 9px -7px rgba(0, 0, 0, 0.4);
   }
-
-  .celsius {
-    @apply relative;
-  }
-  .celsius::after {
-    content: '°';
-    top: -0.1rem;
-    right: -0.25rem;
-    @apply absolute text-sm;
-  }
   .push-down {
     margin-bottom: -0.1em;
-  }
-
-  .celsius.negative {
-    @apply text-rain;
-  }
-  .celsius.negative::before {
-    content: '-';
-    top: 0;
-    left: -0.4em;
-    @apply absolute;
   }
 </style>

@@ -5,8 +5,9 @@
 
   interface Props extends CustomElement {
     icon: WeatherIconType
+    monochrome?: boolean
   }
-  let { icon, className = '', ...other }: Props = $props()
+  let { icon, monochrome = false, className = '', ...other }: Props = $props()
 
   const iconLookup: { [key in WeatherIconType]: string } = {
     'clear-day': 'sun,sun-rays',
@@ -33,8 +34,8 @@
   fill="none"
   stroke="currentColor"
   class={classProp('', className)}
-  class:text-rain={colorClass === 'rain'}
-  class:text-sun={colorClass === 'sun'}
+  class:text-rain={colorClass === 'rain' && !monochrome}
+  class:text-sun={colorClass === 'sun' && !monochrome}
   {...other}
 >
   {#each iconData as href}

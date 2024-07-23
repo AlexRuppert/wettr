@@ -18,6 +18,7 @@
 
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { stageReload } from '@/logic/reloader'
+  import SvgCorner from './icons/SvgCorner.svelte'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
@@ -183,6 +184,7 @@
     class:z-50={openedSuggestions}
     class:!bg-surface-400={openedSuggestions}
   >
+    <SvgCorner></SvgCorner>
     <label
       class="justify-cente flex size-full items-center overflow-hidden rounded-default ring-inset ring-primary"
       class:ring-2={noLocation}
@@ -194,7 +196,7 @@
         type="text"
         class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-none"
         placeholder="Ort"
-        autocomplete="new-password"
+        autocomplete="off"
         bind:this={inputElement}
         bind:value={place}
         onkeydown={handleInputKeys}

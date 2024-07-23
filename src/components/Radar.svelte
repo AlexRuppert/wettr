@@ -94,7 +94,7 @@
   let currentFrame = 0
 
   let autoplay = $state(true)
-  const AUTO_ANIMATION_SPEED = 200
+  const AUTO_ANIMATION_SPEED = 300
 
   let currentTimeLabel = $state('')
   let oldWeatherPrecipitation = ''
@@ -228,7 +228,7 @@
 
     imgElems.forEach(imgElem => {
       ctx.globalCompositeOperation = 'screen'
-      ctx.globalAlpha = 0.3
+      ctx.globalAlpha = 0.5
       ctx.drawImage(imgElem, 0, 0)
     })
     frames = images.map(img => {
@@ -269,6 +269,7 @@
 </script>
 
 <div class="-mb-2 flex flex-col">
+  <div class="self-center pb-2">Regenradar</div>
   <div class="relative aspect-square w-screen max-w-xs" bind:this={mapElement}>
     <div
       class="absolute left-0 top-0 z-[99999]"
