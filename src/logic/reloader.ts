@@ -8,7 +8,7 @@ import {
 import Worker from '@/workers/worker.ts?worker'
 import { get } from '@/logic/svelte.svelte'
 
-export const FORECAST_DAYS = 7
+export const FORECAST_DAYS = 8
 const CHECK_INTERVAL_MS = 10 * 60 * 1000
 
 let nextCheckTimeout
