@@ -13,7 +13,7 @@
     locationCoordinates,
     locationState,
   } from '@/stores/store.svelte'
-
+  import { fade } from 'svelte/transition'
   import SvgCorner from './icons/SvgCorner.svelte'
   let lazyRadar = $state(null)
   function loadRadar() {
@@ -50,12 +50,14 @@
     {/await}
   {/if}</Popup
 >
-
-{#if weather && weather.timestamp}
-  <div
-    class="flex select-none space-x-1 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
-  >
-    <div class="flex h-16 grow items-center justify-center">
+<div
+  class="flex select-none space-x-1 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
+>
+  {#if weather && weather.timestamp}
+    <div
+      transition:fade={{ duration: 200 }}
+      class="flex h-16 grow items-center justify-center"
+    >
       <div class="w-16 shrink-0 text-text-hard">
         <WeatherIcon className="pt-2 pl-2" icon={weather.icon} />
       </div>
@@ -124,8 +126,10 @@
         </div>
       </div>
     </div>
-  </div>
-{/if}
+  {:else}
+    <div class="skeleton h-16 w-full"></div>
+  {/if}
+</div>
 
 <style>
   .current-warning-text {
