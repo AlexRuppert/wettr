@@ -11,7 +11,7 @@
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { type Coordinates } from '@/logic/locations'
   import './radar.css'
-  import { weatherPrecipitation } from '@/stores/store.svelte'
+  import { darkMode, weatherPrecipitation } from '@/stores/store.svelte'
 
   import { reloadPercipitation } from '@/logic/reloader'
   import { drawImage, GRID_CONSTANTS } from '@/logic/radar'
@@ -76,15 +76,26 @@
   async function initialize() {
     initialized = 0
     const pr = reloadPercipitation()
+    const tileLayer = new TileLayer({
+      source: new OSM(),
+    })
+    tileLayer.on('prerender', evt => {
+      if (evt.context && darkMode.value) {
+        const context = evt.context as CanvasRenderingContext2D
+        context.filter = 'invert(100%) brightness(1.55)  hue-rotate(180deg)'
+        context.globalCompositeOperation = 'source-over'
+      }
+    })
+
+    tileLayer.on('postrender', evt => {
+      if (evt.context) {
+        const context = evt.context as CanvasRenderingContext2D
+        context.filter = 'none'
+      }
+    })
     map = new olMap({
       target: mapElement,
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-        imageLayer,
-        vectorLayer,
-      ],
+      layers: [tileLayer, imageLayer, vectorLayer],
     })
     await pr
     initialized = 1
@@ -164,9 +175,6 @@
     currentTimeLabel = frames.at(-1).label
     currentFrame = frames.length - 1
     imageLayer.setSource(superFrame.source)
-  }
-  function hideSuperFrame() {
-    showCurrentFrame()
   }
 
   function setView(coordinates, records) {
