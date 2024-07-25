@@ -10,7 +10,6 @@
 
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { type Coordinates } from '@/logic/locations'
-  import './radar.css'
   import { darkMode, weatherPrecipitation } from '@/stores/store.svelte'
 
   import { reloadPercipitation } from '@/logic/reloader'
