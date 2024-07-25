@@ -32,14 +32,14 @@ export const loadLocations = async () => {
     await getCachedRequest(locationsUrl, 7 * 60 * 24)
   ).arrayBuffer()
 
-  const decodedLcoations = locationDecoder.decode(locationList)
+  const decodedLocations = locationDecoder.decode(locationList)
   const loadedLocations = []
   //@ts-ignore
-  const locationNames = decodedLcoations.names.split('%')
+  const locationNames = decodedLocations.names.split('%')
   //@ts-ignore
-  for (let i = 0; i < decodedLcoations.lons.length; i++) {
-    let lon = (decodedLcoations.lons[i] + decodedLcoations.minLon) / 1000
-    let lat = (decodedLcoations.lats[i] + decodedLcoations.minLat) / 1000
+  for (let i = 0; i < decodedLocations.lons.length; i++) {
+    let lon = (decodedLocations.lons[i] + decodedLocations.minLon) / 1000
+    let lat = (decodedLocations.lats[i] + decodedLocations.minLat) / 1000
     let name = locationNames[i]
     loadedLocations.push({ name, lat, lon })
   }
