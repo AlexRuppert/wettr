@@ -21,6 +21,7 @@
         weekday: formatted
           .find(f => f.type === 'weekday')
           .value.replace(/\./g, ''),
+        isWeekend: w.day.getDay() % 6 === 0,
       }
     }),
   )
@@ -65,7 +66,12 @@
           <div
             class="mr-4 flex w-full justify-end space-x-0.5 text-base font-light *:flex"
           >
-            <div class="justify-end font-medium">{formattedDay[i].day}</div>
+            <div
+              class="justify-end font-medium"
+              class:text-warning={formattedDay[i].isWeekend}
+            >
+              {formattedDay[i].day}
+            </div>
             <div class="items-end">
               {formattedDay[i].weekday}
             </div>
@@ -89,13 +95,4 @@
 </div>
 
 <style>
-  .right-box {
-    box-shadow: inset -7px 0 9px -7px rgba(0, 0, 0, 0.15);
-  }
-  :global(.dark) .right-box {
-    box-shadow: inset -7px 0 9px -7px rgba(0, 0, 0, 0.4);
-  }
-  .push-down {
-    margin-bottom: -0.1em;
-  }
 </style>

@@ -445,10 +445,4 @@
 </svg>
 
 <style>
-  .top-box {
-    box-shadow: inset 0 5px 2px -5px rgba(0, 0, 0, 0.1);
-  }
-  :global(.dark) .top-box {
-    box-shadow: inset 0 5px 2px -5px rgba(255, 255, 255, 0.4);
-  }
 </style>

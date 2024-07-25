@@ -102,6 +102,7 @@
 
   let frames = $state([])
   let superFrame = $state(null)
+  // svelte-ignore non_reactive_update
   let currentFrame = 0
 
   let autoplay = $state(true)
@@ -144,10 +145,6 @@
   function nextFrame() {
     currentFrame++
     showCurrentFrame()
-  }
-  function resetFrame() {
-    currentFrame = 0
-    showFrame(currentFrame)
   }
 
   function showCurrentFrame() {
@@ -283,6 +280,7 @@
       class="absolute left-0 top-0 z-[99999]"
       style="width: calc(100% - 60px)"
     >
+      <!-- svelte-ignore non_reactive_update -->
       <div
         class="absolute inline-block w-[60px] rounded-b-md bg-surface-500 py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear dark:bg-surface-100"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}
