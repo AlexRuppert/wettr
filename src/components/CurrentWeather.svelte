@@ -4,7 +4,7 @@
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import { humidity, windDirection } from '@/components/icons/icons'
-  import { getLocationData, lookupStateUrlPart } from '@/logic/locations'
+  import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { toLocalDecimal } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
