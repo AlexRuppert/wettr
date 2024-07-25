@@ -1,6 +1,7 @@
-import locationsUrl from '@/assets/locations.json?url'
+import locationsUrl from '@/assets/locations.bin.json?url'
 import { getCachedRequest } from '@/logic/cache'
 import { trimCoordinates } from '@/logic/utils'
+import { encoder } from 'tinybuf'
 
 export interface Coordinates {
   lat: number
@@ -13,12 +14,36 @@ const UMLAUT_REPLACEMENTS = [
   { regex: /ü/g, replacement: 'u' },
   { regex: /ß/g, replacement: 'ss' },
 ]
+
 export const loadLocations = async () => {
+  const locationDecoder = encoder({
+    //@ts-ignore
+    minLat: 'uint32',
+    //@ts-ignore
+    minLon: 'uint32',
+    //@ts-ignore
+    lons: ['uint16'],
+    //@ts-ignore
+    lats: ['uint16'],
+    //@ts-ignore
+    names: 'str',
+  })
   const locationList = await (
     await getCachedRequest(locationsUrl, 7 * 60 * 24)
-  ).json()
+  ).arrayBuffer()
 
-  const locations = locationList.map((location: { name: string }) => {
+  const decodedLcoations = locationDecoder.decode(locationList)
+  const loadedLocations = []
+  //@ts-ignore
+  const locationNames = decodedLcoations.names.split('%')
+  //@ts-ignore
+  for (let i = 0; i < decodedLcoations.lons.length; i++) {
+    let lon = (decodedLcoations.lons[i] + decodedLcoations.minLon) / 1000
+    let lat = (decodedLcoations.lats[i] + decodedLcoations.minLat) / 1000
+    let name = locationNames[i]
+    loadedLocations.push({ name, lat, lon })
+  }
+  const locations = loadedLocations.map((location: { name: string }) => {
     let normalizedName = location.name
       .toLowerCase()
       .split(/,|(\s(bei|am|in)\s)/)[0]
@@ -42,7 +67,7 @@ const getLocations = async () => {
   return locations.length < 1 ? await loadLocations() : locations
 }
 
-export async function filterLocations(search: string, maxResults = 5) {
+export async function filterLocations(search: string, maxResults = 8) {
   search = search.trim().toLowerCase()
   return (await getLocations())
     .filter(l => l.search.includes(search))
