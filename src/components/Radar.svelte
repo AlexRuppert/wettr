@@ -26,8 +26,9 @@
   import { clamp } from '@/logic/utils'
   import { onDestroy, onMount } from 'svelte'
   import IconButton from './common/IconButton.svelte'
-  import { pause, play } from './icons/icons'
+  import { overlapAll, pause, play } from './icons/icons'
   import Button from './common/Button.svelte'
+  import SvgIcon from './icons/SvgIcon.svelte'
 
   interface Props extends CustomElement {
     coordinates: Coordinates
@@ -296,8 +297,9 @@
       <Button onclick={() => advanceFrame(15)}>+15</Button>
     </div>
     <div>
-      <Button className="w-full" onclick={() => showSuperFrame()}
-        >Überlagert</Button
+      <Button className="w-full space-x-2 flex" onclick={() => showSuperFrame()}
+        ><SvgIcon d={overlapAll} outline class="mr-1 size-5"
+        ></SvgIcon>Überlagern</Button
       >
     </div>
   </div>

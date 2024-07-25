@@ -15,3 +15,5 @@ export const shareIcon =
 export const addBox =
   'M15 9h-4a2 2 0 00-2 2v8a2 2 0 00 2 2h8a2 2 0 00 2-2v-8a2 2 0 00-2-2zm0 3v6m-3-3h6'
 export const closeIcon = 'M10 10l10 10m-10 0l10-10'
+export const overlapAll =
+  'M28 5h-15v15h15v-15zm-15 2-4 0v17h17v-4m-17-11h-4v19h19v-4'
