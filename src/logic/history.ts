@@ -1,7 +1,7 @@
 import { Coordinates, serializeCoordinates } from '@/logic/locations'
 
 let data = { history: [] }
-const MAX_ITEMS = 4
+const MAX_ITEMS = 7
 function loadHistory() {
   data = localStorage.wettr ? JSON.parse(localStorage.wettr) : { history: [] }
 }
