@@ -190,7 +190,8 @@
       class:ring-2={noLocation}
       class:dark:bg-surface-100={noLocation}
     >
-      <span class="hidden">Ort</span>
+      <span class="hidden">O-r-t</span
+      ><!--prevent stupid browsers to show autocomplete despite off-flag-->
       <input
         id="location"
         type="text"
