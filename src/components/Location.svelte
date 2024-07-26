@@ -208,6 +208,7 @@
 
     {#if openedSuggestions}
       <div class="absolute left-0 top-0">
+        <SvgCorner></SvgCorner>
         <IconButton
           label="Get Current Location"
           icon={gps}

@@ -14,6 +14,9 @@
   height: 100%;
   margin: 0;
 }
+html {
+  scrollbar-gutter: stable;
+}
 html.dark {
   @apply bg-[#000];
 }
@@ -21,6 +24,7 @@ html.dark {
 body {
   margin: 0;
 }
+
 .rain {
   @apply !bg-rain/10;
 }

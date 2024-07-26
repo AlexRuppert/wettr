@@ -74,14 +74,14 @@
         class="flex h-full w-full justify-end space-x-2 self-center *:flex *:h-full *:w-16 *:flex-col *:items-center *:justify-center"
       >
         <div>
-          <SvgIcon className="block size-5" d={humidity} outline />
+          <SvgIcon className="block size-6" d={humidity} outline />
           <div class="flex items-center space-x-0.5">
             <div class="text-right">{weather.relative_humidity}</div>
             <div class="text-[0.8em]">%</div>
           </div>
         </div>
         <div>
-          <SvgIcon className="block size-5" d={windDirection} outline />
+          <SvgIcon className="block size-6" d={windDirection} outline />
           <div
             class="flex items-center space-x-0.5"
             class:current-warning-text={weather.wind_speed_10 >
@@ -103,7 +103,7 @@
           tabindex="-1"
         >
           <SvgCorner></SvgCorner>
-          <WeatherIcon monochrome icon={'rain'} class="size-5" />
+          <WeatherIcon monochrome icon={'rain'} class="size-6" />
           <div class="flex items-center space-x-0.5">
             <div class=" text-right">
               {toLocalDecimal(weather.precipitation_60)}
