@@ -22,10 +22,10 @@ body {
   margin: 0;
 }
 .rain {
-  @apply bg-rain/10;
+  @apply !bg-rain/10;
 }
 .sun {
-  @apply bg-sun/10;
+  @apply !bg-sun/10;
 }
 
 .clickable {

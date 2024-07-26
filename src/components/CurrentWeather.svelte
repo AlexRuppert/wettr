@@ -6,7 +6,7 @@
   import { humidity, windDirection } from '@/components/icons/icons'
   import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { toLocalDecimal } from '@/logic/utils'
+  import { getWeatherIconClass, toLocalDecimal } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import {
     currentWeatherData,
@@ -51,12 +51,14 @@
   {/if}</Popup
 >
 <div
-  class="flex select-none space-x-1 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
+  class="flex select-none space-x-1 rounded-default bg-surface-500 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
 >
   {#if weather && weather.timestamp}
     <div
       transition:fade={{ duration: 200 }}
       class="flex h-16 grow items-center justify-center"
+      class:rain={getWeatherIconClass(weather.icon) == 'rain'}
+      class:sun={getWeatherIconClass(weather.icon) == 'sun'}
     >
       <div class="w-16 shrink-0 text-text-hard">
         <WeatherIcon className="pt-2 pl-2" icon={weather.icon} />
