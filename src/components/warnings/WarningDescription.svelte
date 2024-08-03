@@ -9,7 +9,7 @@
   let { description, instruction, hintText, className, ...other }: Props =
     $props()
 
-  const LINK_REGEX = /https?:\/\/\S+/g
+  const LINK_REGEX = /(https?:\/\/\S+)|(www\.\S+)/gm
 
   let texts = $derived(instruction?.split(LINK_REGEX) ?? [])
   let links = $derived(instruction?.match(LINK_REGEX) ?? [])
@@ -22,10 +22,10 @@
   <div>
     {description}
   </div>
-  <p class="my-1">
+  <p class="my-1 hyphens-auto whitespace-pre-wrap pt-1">
     <strong>{!!texts ? hintText : ''}</strong><br />
     {#each texts as text, i}
-      {text}
+      {text.trim()}
       {#if links[i]}
         <a class="underline" href={links[i]} target="_blank">{links[i]}</a>
       {/if}

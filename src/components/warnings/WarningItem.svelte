@@ -3,6 +3,7 @@
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
 
   import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import SvgCorner from '../icons/SvgCorner.svelte'
 
   interface Props extends CustomElement {
     collapsed?: boolean
@@ -23,7 +24,7 @@
 </script>
 
 <div
-  class={classProp('flex h-14 w-full space-x-1', className)}
+  class={classProp('relative flex h-14 w-full space-x-1', className)}
   role="button"
   tabindex="0"
   class:shadow-md={!collapsed}
@@ -32,6 +33,10 @@
   class:rounded-md={!subItem}
   {...other}
 >
+  {#if !subItem}
+    <SvgCorner></SvgCorner>
+  {/if}
+
   <div
     class="ml-2 flex h-5 w-5 flex-shrink-0 self-center text-text-soft"
     class:text-warning={!subItem}
@@ -42,8 +47,7 @@
     class="flex flex-grow self-center overflow-hidden overflow-ellipsis font-semibold"
   >
     {title}
-    <span
-      class="mb-0.5 ml-1 self-end text-xs font-light tabular-nums tracking-wide"
+    <span class="ml-1 self-center text-xs font-light tabular-nums tracking-wide"
       >{suffix}</span
     >
   </div>
