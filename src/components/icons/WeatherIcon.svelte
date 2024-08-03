@@ -8,12 +8,14 @@
     standalone?: boolean
     transform?: { x: number; y: number; s: number }
     monochrome?: boolean
+    strokeWidth?: number
   }
   let {
     icon,
     monochrome = false,
     standalone = false,
     transform = { x: 0, y: 0, s: 1 },
+    strokeWidth = 1,
     className = '',
     ...other
   }: Props = $props()
@@ -38,7 +40,6 @@
 
 {#snippet iconBody()}
   <g
-    class={classProp('', className)}
     class:text-rain={colorClass === 'rain' && !monochrome}
     class:text-sun={colorClass === 'sun' && !monochrome}
     stroke="currentColor"
@@ -57,7 +58,12 @@
 {#if standalone}
   {@render iconBody()}
 {:else}
-  <svg viewBox="0 0 30 30" {...other}>
+  <svg
+    viewBox="0 0 30 30"
+    stroke-width={strokeWidth}
+    class={classProp('', className)}
+    {...other}
+  >
     {@render iconBody()}
   </svg>
 {/if}

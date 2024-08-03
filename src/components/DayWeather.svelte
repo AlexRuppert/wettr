@@ -35,11 +35,11 @@
         class="relative flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
       >
         <div
-          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 shadow-md dark:border-surface-300"
+          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 tracking-tighter shadow-md dark:border-surface-300"
           class:!border-highlight={formattedDay[i].isWeekend}
         >
-          <div class="flex items-end space-x-0.5">
-            <div class="w-6 text-center">
+          <div class="flex items-end">
+            <div class="w-7 text-center text-xl">
               {formattedDay[i].day}
             </div>
             <div class="flex pb-0.5 text-start text-xs">

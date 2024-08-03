@@ -61,7 +61,11 @@
       class:sun={getWeatherIconClass(weather.icon) == 'sun'}
     >
       <div class="w-16 shrink-0 text-text-hard">
-        <WeatherIcon className="pt-2 pl-2" icon={weather.icon} />
+        <WeatherIcon
+          className="pt-2 pl-2"
+          icon={weather.icon}
+          strokeWidth={2}
+        />
       </div>
       <div
         class="mb-1 flex w-24 shrink-0 grow justify-center text-5xl font-light"
