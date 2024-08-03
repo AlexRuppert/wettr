@@ -1,11 +1,10 @@
 <script lang="ts">
   import DayChart from '@/components/DayChart.svelte'
-  import MoonPhase from '@/components/icons/MoonPhase.svelte'
   import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import { FORECAST_DAYS } from '@/logic/reloader'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { weatherData } from '@/stores/store.svelte'
-  import { fade, scale } from 'svelte/transition'
+  import { fade } from 'svelte/transition'
 
   let weather: DayWeatherData[] = $derived(weatherData.value)
   let dummySkeletonDays = new Array(FORECAST_DAYS + 1)
@@ -79,9 +78,9 @@
         </div>
         <div class="relative grow overflow-hidden">
           <DayChart weather={day} />
-          <div class="absolute bottom-[5px] right-1 z-10 size-2">
+          <!--div class="absolute bottom-[5px] right-1 z-10 size-2">
             <MoonPhase timestamp={day.day} />
-          </div>
+          </!--div-->
         </div>
       </div>
     {/each}

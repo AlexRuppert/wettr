@@ -9,6 +9,8 @@
   import { tweened } from 'svelte/motion'
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
+  import { timelineNumbers } from './icons/icons'
+  import TimelineNumber from './icons/TimelineNumber.svelte'
   interface Props extends CustomElement {
     weather: DayWeatherData
   }
@@ -295,17 +297,6 @@
         <path d={precipitationPath + 'V0H0V100z'} />
       </clipPath>
     </defs>
-
-    <!--path
-      stroke={colors.sunniness}
-      stroke-width="2"
-      stroke-linecap="round"
-      d="M{dayLengthsX[0]} {totalHeight -
-        PADDING_Y +
-        2}l-80 {height}M{dayLengthsX[1]} {totalHeight -
-        PADDING_Y +
-        2}l80 {height}"
-    /-->
     <path
       stroke={colors.night}
       stroke-width="3"
@@ -317,8 +308,7 @@
         4}"
     />
 
-    {#each hours as hour, i}
-      {@const a = summaryBlocks[i]}
+    <!--{#each hours as hour, i}
       <text
         fill={'currentColor'}
         x={getX(hour)}
@@ -329,8 +319,27 @@
       >
         {hour >= maxHour ? 0 : hour}</text
       >
-    {/each}
+    {/each}-->
+    <!--g>
+      {#each hours as hour, i}
+        <path
+          transform-origin="4 0"
+          transform={`translate(${getX(hour) - 15 / 2}, ${totalHeight - PADDING_Y - 40}) scale(0.5)`}
+          d={timelineNumbers[i]}
+          vector-effect="non-scaling-stroke"
+          stroke={'currentColor'}
+          stroke-width="1"
+        ></path>
+      {/each}
+    </!--g-->
 
+    {#each hours as hour, i}
+      <TimelineNumber
+        x={getX(hour)}
+        y={totalHeight - PADDING_Y - 16}
+        number={hour}
+      ></TimelineNumber>
+    {/each}
     <foreignObject
       x="0"
       y="{height - 1}px"
