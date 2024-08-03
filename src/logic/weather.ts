@@ -103,10 +103,11 @@ function getDayGraphData(times: WeatherDataType[]): {
             : Math.abs((temperature - min) / temperatureRange)
         let precipitationFraction =
           Math.min(
-            Math.pow(
-              (1 + precipitation_probability / 100) * precipitation * 1.6,
-              2,
-            ),
+            Math.min(precipitation, 5) +
+              Math.pow(
+                (1 + precipitation_probability / 100) * precipitation * 1.6,
+                2,
+              ),
             6,
           ) / 6
 
@@ -177,7 +178,6 @@ function smoothPastGraph(dayGraph: DayGraph[]): DayGraph[] {
     next: DayGraph,
     prop: string,
   ) {
-    const delta = Math.abs(prev[prop] - curr[prop])
     if (curr[prop] < 0.1 && prev[prop] > 0.2 && next[prop] > 0.2) {
       curr[prop] =
         Math.min(prev[prop], next[prop]) + Math.abs(prev[prop] - next[prop]) / 2

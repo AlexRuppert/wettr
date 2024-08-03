@@ -214,7 +214,7 @@
       sunninessPoints,
       temperaturePoints,
       precipitationPoints,
-    ].map((points, i) =>
+    ].map(points =>
       getPathData(extendPoints(points, width), height, PADDING_Y / 2),
     )
 
