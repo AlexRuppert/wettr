@@ -67,9 +67,7 @@
           strokeWidth={2}
         />
       </div>
-      <div
-        class="mb-1 flex w-24 shrink-0 grow justify-center text-5xl font-light"
-      >
+      <div class="flex w-24 shrink-0 grow justify-center text-5xl font-light">
         <div class="celsius" class:negative={weather.temperature < 0}>
           {Math.abs(weather.temperature)}
         </div>

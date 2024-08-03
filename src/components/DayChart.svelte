@@ -9,7 +9,6 @@
   import { tweened } from 'svelte/motion'
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
-  import { timelineNumbers } from './icons/icons'
   import TimelineNumber from './icons/TimelineNumber.svelte'
   interface Props extends CustomElement {
     weather: DayWeatherData

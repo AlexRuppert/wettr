@@ -1,6 +1,5 @@
 <script lang="ts">
   import DayChart from '@/components/DayChart.svelte'
-  import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import { FORECAST_DAYS } from '@/logic/reloader'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { weatherData } from '@/stores/store.svelte'
@@ -35,14 +34,14 @@
         class="relative flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
       >
         <div
-          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 tracking-tighter shadow-md dark:border-surface-300"
+          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 tracking-tighter shadow-md dark:border-surface-100"
           class:!border-highlight={formattedDay[i].isWeekend}
         >
           <div class="flex items-end">
             <div class="w-7 text-center text-xl">
               {formattedDay[i].day}
             </div>
-            <div class="flex pb-0.5 text-start text-xs">
+            <div class="flex self-center text-start text-xs">
               {formattedDay[i].weekday}
             </div>
           </div>
