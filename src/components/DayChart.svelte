@@ -308,36 +308,12 @@
         4}"
     />
 
-    <!--{#each hours as hour, i}
-      <text
-        fill={'currentColor'}
-        x={getX(hour)}
-        y={totalHeight - PADDING_Y}
-        class="font-light"
-        class:text-rain={summaryBlocks[i].iconClass == 'rain'}
-        class:text-sun={summaryBlocks[i].iconClass == 'sun'}
-      >
-        {hour >= maxHour ? 0 : hour}</text
-      >
-    {/each}-->
-    <!--g>
-      {#each hours as hour, i}
-        <path
-          transform-origin="4 0"
-          transform={`translate(${getX(hour) - 15 / 2}, ${totalHeight - PADDING_Y - 40}) scale(0.5)`}
-          d={timelineNumbers[i]}
-          vector-effect="non-scaling-stroke"
-          stroke={'currentColor'}
-          stroke-width="1"
-        ></path>
-      {/each}
-    </!--g-->
-
     {#each hours as hour, i}
       <TimelineNumber
         x={getX(hour)}
         y={totalHeight - PADDING_Y - 16}
         number={hour}
+        className={'text-' + summaryBlocks[i].iconClass}
       ></TimelineNumber>
     {/each}
     <foreignObject
