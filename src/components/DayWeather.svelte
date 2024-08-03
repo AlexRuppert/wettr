@@ -68,7 +68,7 @@
           >
             <div
               class="justify-end font-medium"
-              class:text-warning={formattedDay[i].isWeekend}
+              class:text-highlight={formattedDay[i].isWeekend}
             >
               {formattedDay[i].day}
             </div>

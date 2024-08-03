@@ -318,11 +318,14 @@
     />
 
     {#each hours as hour, i}
+      {@const a = summaryBlocks[i]}
       <text
-        fill={colors.tick}
+        fill={'currentColor'}
         x={getX(hour)}
         y={totalHeight - PADDING_Y}
         class="font-light"
+        class:text-rain={summaryBlocks[i].iconClass == 'rain'}
+        class:text-sun={summaryBlocks[i].iconClass == 'sun'}
       >
         {hour >= maxHour ? 0 : hour}</text
       >
@@ -359,14 +362,14 @@
 
     <path
       stroke={colors.tick}
-      stroke-width="3"
+      stroke-width="4"
       stroke-linecap="butt"
       stroke-dasharray="1 {hourWidth * 2 - 2}"
       d="M{PADDING_X - 1} {height + 0.5}h{width}"
     />
     <path
       stroke={colors.tick}
-      stroke-width="1"
+      stroke-width="2"
       opacity="70%"
       stroke-linecap="butt"
       stroke-dasharray="1 {hourWidth * 2 - 2}"

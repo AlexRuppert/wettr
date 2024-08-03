@@ -8,6 +8,7 @@ export const light = {
     200: 'hsl(214 10% 70%)',
     100: 'hsl(214 10% 50%)',
   },
+  highlight: 'hsl(260 90% 60%)',
   warning: 'hsl(21 90% 48%)',
   text: {
     hard: 'hsl(0 0% 0%)',
@@ -29,6 +30,7 @@ export const dark = {
     200: 'hsl(214 5% 18%)',
     100: 'hsl(214 5% 20%)',
   },
+  highlight: 'hsl(260 90% 70%)',
   warning: 'hsl(21 90% 48%)',
   text: {
     hard: 'hsl(210 7.60% 80%)',
