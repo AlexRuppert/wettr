@@ -17,7 +17,7 @@ export const light = {
   },
 
   rain: 'hsl(214 100% 46.50%)',
-  sun: 'hsl(43 100% 50.20%)',
+  sun: 'hsl(40 100% 45%)',
 }
 
 export const dark = {

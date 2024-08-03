@@ -36,7 +36,7 @@
   class={classProp('', className)}
   {d}
   transform-origin="4 0"
-  transform={`translate(${x - 15 / 2}, ${y}) scale(0.4)`}
+  transform={`translate(${x - 15 / 2}, ${y}) scale(0.45)`}
   vector-effect="non-scaling-stroke"
   stroke={'currentColor'}
   stroke-width="1"

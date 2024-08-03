@@ -25,6 +25,9 @@
     flipY: boolean
     temperature: number
     hour: number
+    isExtremeTemperature: boolean
+    isHighest: boolean
+    isLowest: boolean
   }
   const [minHour, maxHour] = [0, 24]
   const hours = [...new Array(12)].map((_, i) => i * 2)
@@ -83,7 +86,7 @@
     return {
       dataLabelBackgroundColor: hslOpacity(theme.surface[500], 0.9),
       pointBackgroundColor: hslOpacity(theme.surface[500], 1),
-      currentTime: theme.warning,
+      currentTime: theme.highlight,
       tick: hslOpacity(theme.text.soft, 0.9),
       night: hslOpacity(theme.surface[100], 1),
       temperature: theme.text.hard,
@@ -136,9 +139,10 @@
             clamp((Math.tanh(4 * sunninessFraction - 2) + 0.9) / 1.8, 0, 1),
           ),
         })
-        const isExtremeTemperature =
-          temperature >= weather.max.temperature ||
-          temperature <= weather.min.temperature
+        const isLowest = temperature <= weather.min.temperature
+        const isHighest = temperature >= weather.max.temperature
+        const isExtremeTemperature = isLowest || isHighest
+
         if (isExtremeTemperature || hour % 2 === 0)
           temperaturePoints.push({
             x,
@@ -146,6 +150,8 @@
             temperature,
             flipY,
             isExtremeTemperature,
+            isLowest,
+            isHighest,
           })
         precipitationPoints.push({ x, y: getGraphY(precipitationFraction) })
 
@@ -176,6 +182,8 @@
           y: number
           temperature: number
           isExtremeTemperature: boolean
+          isLowest: boolean
+          isHighest: boolean
           hour: number
           x: number
           flipY: boolean
@@ -185,6 +193,8 @@
           y: number
           temperature: number
           isExtremeTemperature: boolean
+          isLowest: boolean
+          isHighest: boolean
         }[],
       ) => {
         const previous = points[index - 1] ?? current
@@ -310,40 +320,28 @@
 
     {#each hours as hour, i}
       <TimelineNumber
-        x={getX(hour)}
+        x={getX(hour) + i * 0.2}
         y={totalHeight - PADDING_Y - 16}
         number={hour}
         className={'text-' + summaryBlocks[i].iconClass}
       ></TimelineNumber>
     {/each}
-    <foreignObject
-      x="0"
-      y="{height - 1}px"
-      width="100%"
-      height={HEIGHT_SUMMARY_BLOCK + HEIGHT_TIMELINE + 1}
-    >
-      <div class=" relative h-full pt-1">
-        {#each summaryBlocks as block, i}
-          {@const isDay =
-            block.x > dayLengthsX[0] && block.x - hourWidth < dayLengthsX[1]}
-          <div
-            class="absolute flex h-full items-start justify-start"
-            style:left="{getX(block.hours.start) - hourWidth / 2}px"
-            style:width={(block.hours.end - block.hours.start) * hourWidth -
-              0.5 +
-              'px'}
-          >
-            <WeatherIcon
-              icon={isDay ? block.icon : block.icon.replace('day', 'night')}
-              stroke-width="1.5"
-              style="width:{hourWidth * 1.6}px; margin-left:-{hourWidth /
-                (2 * 1.6) -
-                1}px"
-            ></WeatherIcon>
-          </div>
-        {/each}
-      </div>
-    </foreignObject>
+
+    {#each summaryBlocks as block, i}
+      {@const isDay =
+        block.x > dayLengthsX[0] && block.x - hourWidth < dayLengthsX[1]}
+      {@const scale = 0.65}
+      <WeatherIcon
+        icon={isDay ? block.icon : block.icon.replace('day', 'night')}
+        stroke-width="1"
+        standalone
+        transform={{
+          x: getX(block.hours.start) - hourWidth * scale + (i / 2) * scale,
+          y: totalHeight - PADDING_Y - 39,
+          s: scale,
+        }}
+      ></WeatherIcon>
+    {/each}
 
     <path
       stroke={colors.tick}
@@ -363,17 +361,16 @@
     {#each windGustPoints as windGust}
       <use
         href="#wind-indicator"
-        x={windGust.x + 7}
-        y={totalHeight - PADDING_Y - HEIGHT_TIMELINE}
+        x={windGust.x + 10}
+        y={totalHeight - PADDING_Y - 18}
         stroke={colors.temperature}
       />
     {/each}
     <path
-      class="mix-blend-darken dark:mix-blend-color-dodge"
-      opacity="50%"
+      class="mix-blend-darken dark:mix-blend-lighten"
       d="M{nowLineX} 0v{totalHeight}"
       stroke={colors.currentTime}
-      stroke-width="2"
+      stroke-width="1"
     />
 
     <g
@@ -400,23 +397,32 @@
         stroke={colors.precipitation}
         d={precipitationPath + pathFillCloseSuffix}
       />
-      <path stroke={colors.temperatureGraph} d={temperaturePath} />
+      <path
+        stroke-width="1"
+        stroke={colors.temperatureGraph}
+        d={temperaturePath}
+      />
 
       {#each temperatureLabelPoints as point, i}
         <use
           href={'#celsius-circle'}
-          x={point.x}
+          x={point.x + 2}
           y={Math.min(point.y, height - 2.7)}
           stroke={colors.temperature}
           fill={colors.pointBackgroundColor}
         />
         <g
+          font-size={point.isExtremeTemperature ? '1.7em' : '0.9em'}
+          fill-opacity={point.isExtremeTemperature ? '1' : '0.8'}
           transform="translate({point.x +
             (i === 0
               ? -7
               : point.temperature.toString().length > 1
                 ? -9
-                : -6)} {point.y + (point.flipY ? -3 : 8)})"
+                : -6)} {point.y +
+            (point.flipY ? -3 : 8) +
+            (point.isHighest ? 10 : 0) +
+            (point.isLowest ? -2 : 0)})"
         >
           <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
             >{point.temperature}

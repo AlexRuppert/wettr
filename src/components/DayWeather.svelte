@@ -5,6 +5,7 @@
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { weatherData } from '@/stores/store.svelte'
   import { fade } from 'svelte/transition'
+  import MoonPhase from './icons/MoonPhase.svelte'
 
   let weather: DayWeatherData[] = $derived(weatherData.value)
   let dummySkeletonDays = new Array(FORECAST_DAYS + 1)
@@ -26,61 +27,31 @@
   )
 </script>
 
-<div class="grid select-none gap-1 font-light tabular-nums">
+<div class="grid select-none gap-1 tabular-nums">
   {#if weather?.length > 0}
     {#each weather as day, i (day)}
       <div
         transition:fade={{ duration: 200 }}
-        class="flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
+        class="relative flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
       >
         <div
-          class="right-box relative flex w-14 flex-col items-center justify-between bg-surface-400"
-          class:rain={day.daySummary.iconClass == 'rain'}
-          class:sun={day.daySummary.iconClass == 'sun'}
+          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 shadow-md dark:border-surface-300"
+          class:!border-highlight={formattedDay[i].isWeekend}
         >
-          <div class="flex justify-center">
-            <div
-              class="relative flex size-8 items-center self-end"
-              style="stroke-width:1.5"
-            >
-              <WeatherIcon
-                icon={day.daySummary.icon}
-                className=" absolute inset-0 top-1 left-0.5"
-              />
-            </div>
-          </div>
-          <div class="flex w-full flex-col items-end text-3xl *:flex">
-            <div class="-mb-1 mr-3">
-              <div class="celsius" class:negative={day.max.temperature < 0}>
-                {Math.abs(day.max.temperature)}
-              </div>
-            </div>
-
-            <div class="mr-3 mt-1 items-end justify-end text-lg">
-              <div class="celsius" class:negative={day.min.temperature < 0}>
-                {Math.abs(day.min.temperature)}
-              </div>
-            </div>
-          </div>
-          <div
-            class="mr-4 flex w-full justify-end space-x-0.5 text-base font-light *:flex"
-          >
-            <div
-              class="justify-end font-medium"
-              class:text-highlight={formattedDay[i].isWeekend}
-            >
+          <div class="flex items-end space-x-0.5">
+            <div class="w-6 text-center">
               {formattedDay[i].day}
             </div>
-            <div class="items-end">
+            <div class="flex pb-0.5 text-start text-xs">
               {formattedDay[i].weekday}
             </div>
           </div>
         </div>
         <div class="relative grow overflow-hidden">
           <DayChart weather={day} />
-          <!--div class="absolute bottom-[5px] right-1 z-10 size-2">
+          <div class="absolute bottom-[32px] right-1 z-10 size-2">
             <MoonPhase timestamp={day.day} />
-          </!--div-->
+          </div>
         </div>
       </div>
     {/each}
