@@ -1,4 +1,4 @@
-import { Coordinates, serializeCoordinates } from '@/logic/locations'
+import { Coordinates } from '@/logic/locations'
 
 let data = { history: [] }
 const MAX_ITEMS = 7
@@ -14,11 +14,11 @@ export function getHistory() {
 
 export function pushHistory(location: string, { lon, lat }: Coordinates) {
   const coordinates = { lon, lat }
-  const serCoordinates = serializeCoordinates(coordinates)
+
   data.history = [
     { location, coordinates },
     ...data.history
-      .filter(el => serializeCoordinates(el.coordinates) !== serCoordinates)
+      .filter(el => el.location !== location)
       .slice(0, MAX_ITEMS - 1),
   ]
   saveHistory()

@@ -206,16 +206,16 @@
       />
     </label>
 
+    <div class="absolute left-0 top-0 opacity-30">
+      <SvgCorner></SvgCorner>
+      <IconButton
+        label="Get Current Location"
+        icon={gps}
+        outline
+        onclick={getGeoLocation}
+      />
+    </div>
     {#if openedSuggestions}
-      <div class="absolute left-0 top-0">
-        <SvgCorner></SvgCorner>
-        <IconButton
-          label="Get Current Location"
-          icon={gps}
-          outline
-          onclick={getGeoLocation}
-        />
-      </div>
       <div
         class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
         in:fly={{ duration: TRANSITION_TIME, y: -5 }}
