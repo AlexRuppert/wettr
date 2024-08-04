@@ -26,7 +26,7 @@
   )
 </script>
 
-<div class="grid select-none gap-1 tabular-nums">
+<div class="grid select-none gap-1">
   {#if weather?.length > 0}
     {#each weather as day, i (day)}
       <div
@@ -34,10 +34,10 @@
         class="relative flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
       >
         <div
-          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 tracking-tighter shadow-md dark:border-surface-100"
+          class="border-surface-50 absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r bg-surface-500 tracking-tighter shadow-sm dark:border-surface-100"
           class:!border-highlight={formattedDay[i].isWeekend}
         >
-          <div class="flex items-end">
+          <div class="flex items-end tracking-tighter">
             <div class="w-7 text-center text-xl">
               {formattedDay[i].day}
             </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="relative grow overflow-hidden">
           <DayChart weather={day} />
-          <div class="absolute bottom-[32px] right-1 z-10 size-2">
+          <div class="absolute bottom-[32px] right-1 z-10 size-2 opacity-50">
             <MoonPhase timestamp={day.day} />
           </div>
         </div>

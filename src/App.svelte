@@ -16,7 +16,9 @@
   <meta name="theme-color" content={darkMode.value ? '#000' : '#fff'} />
 </svelte:head>
 <SvgLib />
-<main class="relative m-auto flex w-full max-w-sm flex-col gap-1 p-1 *:w-full">
+<main
+  class="relative m-auto flex w-full max-w-sm flex-col gap-1 px-0.5 py-1 *:w-full"
+>
   <Location />
   <CurrentWeather />
   <WeatherWarning />
