@@ -11,7 +11,7 @@
   import SvgLib from './components/common/SvgLib.svelte'
   import Footer from './components/Footer.svelte'
 
-  function deviceOrientation() {
+  async function deviceOrientation() {
     const body = document.body
 
     switch (screen.orientation.type) {
@@ -26,15 +26,18 @@
         break
     }
   }
-  try {
-    //@ts-ignore
-    screen?.orientation?.lock('portrait')
-  } catch (ex) {}
-  if (window.navigator['standalone']) {
-    //skip if not in PWA mode
-    window.addEventListener('orientationchange', deviceOrientation)
-    deviceOrientation()
+  async function init() {
+    try {
+      //@ts-ignore
+      await screen?.orientation?.lock('portrait')
+    } catch (ex) {}
+    if (window.navigator['standalone']) {
+      //skip if not in PWA mode
+      window.addEventListener('orientationchange', deviceOrientation)
+      deviceOrientation()
+    }
   }
+  init()
 </script>
 
 <svelte:head>
