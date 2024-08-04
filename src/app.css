@@ -33,7 +33,13 @@ body {
 }
 
 .clickable {
-  @apply cursor-pointer hover:bg-primary/20 active:bg-primary/50;
+  @apply cursor-pointer active:bg-primary/50;
+  -webkit-tap-highlight-color: hsl(var(--twc-primary) / 0.2);
+}
+@media (hover: hover) {
+  .clickable:hover {
+    @apply bg-primary/20;
+  }
 }
 
 input {
