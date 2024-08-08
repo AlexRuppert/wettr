@@ -10,6 +10,7 @@
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
   import TimelineNumber from './icons/TimelineNumber.svelte'
+  import { onDestroy } from 'svelte'
   interface Props extends CustomElement {
     weather: DayWeatherData
   }
@@ -46,7 +47,8 @@
   let pathFillCloseSuffix = $state('')
 
   let dayLengthsX = $state([0, 100])
-  let nowLineX = $state(-5)
+  let now = $state(new Date())
+  let isToday = $state(false)
 
   let temperatureLabelPoints: TemperatureGraphPoint[] = $state([])
 
@@ -59,6 +61,9 @@
   let dayString = $derived(weather.day.toISOString())
 
   let colors = $derived(updateColors(darkMode.value))
+  let nowLineX = $derived(
+    isToday ? getX(now.getHours() + now.getMinutes() / 60) : -5,
+  )
 
   const clipPercent = tweened(0, {
     duration: 300,
@@ -77,6 +82,17 @@
       }, 50)
     }
   })
+
+  let nowInterval = setInterval(() => updateNow(), 1 * 1000)
+  onDestroy(() => {
+    try {
+      clearInterval(nowInterval)
+    } catch (error) {}
+  })
+
+  function updateNow() {
+    now = new Date()
+  }
   function updateColors(darkMode: boolean) {
     const theme = darkMode ? dark : light
     function hslOpacity(hsl: string, opacity = 1) {
@@ -103,12 +119,7 @@
       getX(dateToHoursFraction(weather.day, t)),
     )
 
-    const now = new Date()
-    const today = weather.dayGraph[0].timestamp.getDate() === now.getDate()
-
-    if (today) {
-      nowLineX = getX(dateToHoursFraction(weather.day, now))
-    }
+    isToday = weather.dayGraph[0].timestamp.getDate() === now.getDate()
 
     const sunninessPoints = []
     const temperaturePoints = []
@@ -250,7 +261,7 @@
     width = rect.width
     height = rect.height - HEIGHT_TIMELINE - HEIGHT_SUMMARY_BLOCK
     totalHeight = rect.height
-    hourWidth = width / hoursTotal
+    hourWidth = (width - PADDING_X) / hoursTotal
     pathFillCloseSuffix = `V${height + 1}H${getX(-PADDING_X)}z`
   }
   function dateToHoursFraction(day: Date, date: Date) {
@@ -260,7 +271,7 @@
     return date.getHours() + date.getMinutes() / 60
   }
   function getX(hour: number) {
-    return PADDING_X + hourWidth * (hour - minHour) * 0.96
+    return PADDING_X + hourWidth * (hour - minHour)
   }
 
   function getY(value: number) {
@@ -319,7 +330,7 @@
 
     {#each hours as hour, i}
       <TimelineNumber
-        x={getX(hour) + i * 0.2}
+        x={getX(hour)}
         y={totalHeight - PADDING_Y - 16}
         number={hour}
         className={'text-' + summaryBlocks[i].iconClass}
@@ -335,7 +346,7 @@
         stroke-width="1"
         standalone
         transform={{
-          x: getX(block.hours.start) - hourWidth * scale + (i / 2) * scale,
+          x: getX(i * 2) - PADDING_X * scale,
           y: totalHeight - PADDING_Y - 39,
           s: scale,
         }}
@@ -346,15 +357,15 @@
       stroke={colors.tick}
       stroke-width="4"
       stroke-linecap="butt"
-      stroke-dasharray="1 {hourWidth * 2 - 2}"
-      d="M{PADDING_X - 1} {height + 0.5}h{width}"
+      stroke-dasharray="1 {2 * ((width - 4) / hoursTotal) - 2}"
+      d="M{PADDING_X} {height + 0.5}h{width - 2 * hourWidth}"
     />
     <path
       stroke={colors.tick}
       stroke-width="2"
       opacity="70%"
       stroke-linecap="butt"
-      stroke-dasharray="1 {hourWidth * 2 - 2}"
+      stroke-dasharray="1 {2 * ((width - 2) / hoursTotal) - 2}"
       d="M{PADDING_X + hourWidth - 1} {height - 0.5}h{width - hourWidth}"
     />
     {#each windGustPoints as windGust}
