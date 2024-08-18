@@ -1,10 +1,11 @@
 import { getCachedRequest } from '@/logic/cache'
 import { sortBy, trimCoordinates } from '@/logic/utils'
-import { Coordinates } from '@/logic/locations'
+import { Coordinates, isLocationSet } from '@/logic/locations'
 const ENDPOINT = `https://api.brightsky.dev/`
 let weatherWarningsUrl = new URL(ENDPOINT + 'alerts')
 
 export async function getWeatherWarnings(coordinates: Coordinates) {
+  if (!isLocationSet(coordinates)) return []
   weatherWarningsUrl.search = new URLSearchParams({
     ...trimCoordinates(coordinates),
   }).toString()
