@@ -198,6 +198,7 @@
         class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-none"
         placeholder="Ort"
         autocomplete="off"
+        spellcheck="false"
         bind:this={inputElement}
         bind:value={place}
         onkeydown={handleInputKeys}
