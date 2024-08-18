@@ -273,13 +273,12 @@
   }
 </script>
 
-<div class="-mb-2 flex flex-col">
-  <div class="self-center pb-2">Regenradar</div>
-  <div class="relative aspect-square w-screen max-w-xs" bind:this={mapElement}>
-    <div
-      class="absolute left-0 top-0 z-[99999]"
-      style="width: calc(100% - 60px)"
-    >
+<div class="flex w-[52rem] max-w-full select-none flex-col">
+  <div class="w-full self-center bg-surface-400 py-2 text-center">
+    Regenradar
+  </div>
+  <div class="max-h-radar relative aspect-square w-full" bind:this={mapElement}>
+    <div class="absolute left-0 top-0 z-[99999]">
       <!-- svelte-ignore non_reactive_update -->
       <div
         class="absolute inline-block w-[60px] rounded-b-md bg-surface-500 py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear dark:bg-surface-100"
@@ -311,4 +310,7 @@
 </div>
 
 <style>
+  .max-h-radar {
+    max-height: calc(70dvh - 9rem);
+  }
 </style>

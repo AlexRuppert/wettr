@@ -13,20 +13,25 @@ export async function getCachedRequest(
     console.log('cached ' + url)
     return result
   }
-  result = await fetch(url)
-  //no need to wait before returning
+  try {
+    result = await fetch(url)
 
-  const newHeaders = new Headers(result.headers)
-  newHeaders.set(TIMESTAMP_HEADER, Date.now().toString())
+    //no need to wait before returning
 
-  const copy = result.clone()
+    const newHeaders = new Headers(result.headers)
+    newHeaders.set(TIMESTAMP_HEADER, Date.now().toString())
 
-  const cloned = new Response(copy.body, {
-    status: copy.status,
-    statusText: copy.statusText,
-    headers: newHeaders,
-  })
+    const copy = result.clone()
 
-  ;(await caches.open('v1')).put(url, cloned)
-  return result
+    const cloned = new Response(copy.body, {
+      status: copy.status,
+      statusText: copy.statusText,
+      headers: newHeaders,
+    })
+
+    ;(await caches.open('v1')).put(url, cloned)
+    return result
+  } catch (err) {
+    return null
+  }
 }

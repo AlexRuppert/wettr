@@ -15,22 +15,21 @@
   let links = $derived(instruction?.match(LINK_REGEX) ?? [])
 </script>
 
-<div
-  class={classProp('bg-surface-400 p-3 pr-6 leading-4', className)}
-  {...other}
->
+<div class={classProp('hyphens-auto p-2 leading-5', className)} {...other}>
   <div>
     {description}
   </div>
-  <p class="my-1 hyphens-auto whitespace-pre-wrap pt-1">
-    <strong>{!!texts ? hintText : ''}</strong><br />
+  <div class="my-1 whitespace-pre-wrap pt-1">
+    <strong class="leading-5 underline">{!!texts ? hintText : ''}</strong>
     {#each texts as text, i}
-      {text.trim()}
-      {#if links[i]}
-        <a class="underline" href={links[i]} target="_blank">{links[i]}</a>
-      {/if}
+      <p>
+        {text.trim()}
+        {#if links[i]}
+          <a class="underline" href={links[i]} target="_blank">{links[i]}</a>
+        {/if}
+      </p>
     {/each}
-  </p>
+  </div>
 </div>
 
 <style>

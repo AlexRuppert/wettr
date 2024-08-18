@@ -24,7 +24,6 @@
   let { ...other }: Props = $props()
 
   let radarFilmPopupOpened = $state(false)
-  const MIN_PRECIPITATION = 0.3
   const SHOW_WINDSPEED_WARNING_AFTER = 25
   let weather: CurrentWeatherDataType = $derived(currentWeatherData.value)
   //todo: hacky via warning-meta-data, better use proper location lookup apis
@@ -39,8 +38,6 @@
       loadRadar()
     }
   })
-
-  //let stateAbbreviation = $derived(locationState.value)
 </script>
 
 <Popup bind:opened={radarFilmPopupOpened}>
@@ -50,6 +47,8 @@
     {/await}
   {/if}</Popup
 >
+
+
 <div
   class="flex select-none space-x-1 rounded-default bg-surface-500 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
 >
