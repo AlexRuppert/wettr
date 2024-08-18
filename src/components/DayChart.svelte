@@ -103,7 +103,7 @@
       pointBackgroundColor: hslOpacity(theme.surface[500], 1),
       currentTime: theme.highlight,
       tick: hslOpacity(theme.text.soft, 0.9),
-      night: hslOpacity(theme.surface[100], 1),
+      night: hslOpacity(theme.surface[50], 1),
       temperature: theme.text.hard,
       temperatureGraph: hslOpacity(theme.text.soft, 0.8),
       precipitation: theme.rain,
@@ -317,16 +317,23 @@
         <path d={precipitationPath + 'V0H0V100z'} />
       </clipPath>
     </defs>
-    <path
-      stroke={colors.night}
-      stroke-width="3"
-      stroke-linecap="round"
-      d="M{0} {totalHeight - PADDING_Y + 4}L{dayLengthsX[0]} {totalHeight -
-        PADDING_Y +
-        4}M{dayLengthsX[1]} {totalHeight - PADDING_Y + 4}L{width} {totalHeight -
-        PADDING_Y +
-        4}"
-    />
+    <g stroke={colors.night} stroke-width="3" stroke-linecap="round">
+      {#if darkMode.value}
+        <path
+          d="M{dayLengthsX[0] + 1} {totalHeight -
+            PADDING_Y +
+            4}H{dayLengthsX[1] - 1}"
+        />
+      {:else}
+        <path
+          d="M{0} {totalHeight -
+            PADDING_Y +
+            4}H{dayLengthsX[0]}M{dayLengthsX[1]} {totalHeight -
+            PADDING_Y +
+            4}H{width}"
+        />
+      {/if}
+    </g>
 
     {#each hours as hour, i}
       <TimelineNumber
