@@ -50,19 +50,6 @@ export function writable<T>(initial: T) {
   }
 }
 
-export function writableFrozen<T>(initial: T) {
-  let value = $state.frozen<T>(initial)
-
-  return {
-    get value() {
-      return value
-    },
-    set value(val) {
-      value = val
-    },
-  }
-}
-
 export function get<T>(w: { value: T }) {
   return { ...w.value } //shallow clone
 }
