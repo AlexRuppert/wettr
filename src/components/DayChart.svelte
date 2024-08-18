@@ -331,7 +331,7 @@
             4}H{dayLengthsX[0]}M{dayLengthsX[1]} {totalHeight -
             PADDING_Y +
             4}H{width}"
-        />
+        />per
       {/if}
     </g>
 

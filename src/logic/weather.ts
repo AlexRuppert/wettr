@@ -105,7 +105,7 @@ function getDayGraphData(times: WeatherDataType[]): {
           Math.min(
             Math.min(precipitation, 5) +
               Math.pow(
-                (1 + precipitation_probability / 100) * precipitation * 1.6,
+                (1 + precipitation_probability / 100) * precipitation * 1.4,
                 2,
               ),
             6,
