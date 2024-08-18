@@ -10,12 +10,13 @@
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
   import TimelineNumber from './icons/TimelineNumber.svelte'
-  import { onDestroy } from 'svelte'
+  import { onDestroy, untrack } from 'svelte'
   interface Props extends CustomElement {
     weather: DayWeatherData
+    animate: boolean
   }
 
-  let { weather, className = '', ...other }: Props = $props()
+  let { weather, animate, className = '', ...other }: Props = $props()
 
   type GraphPoint = {
     x: number
@@ -70,13 +71,15 @@
     delay: 0,
     easing: cubicOut,
   })
-  clipPercent.set(0, { duration: 0 })
+  clipPercent.set(animate ? 0 : 1, {
+    duration: 0,
+  })
 
   $effect(() => {
     if (weather && svg) {
-      clipPercent.set(0, { duration: 0 })
+      clipPercent.set(untrack(() => animate) ? 0 : 1, { duration: 0 })
       setTimeout(() => {
-        updateDimensions(svg.getBoundingClientRect())
+        updateDimensions()
         updateData(weather)
         clipPercent.set(1)
       }, 50)
@@ -257,7 +260,8 @@
     summaryBlocks = mergedSummaryBlocks
   }
 
-  function updateDimensions(rect: DOMRect) {
+  function updateDimensions() {
+    let rect = svg.getBoundingClientRect()
     width = rect.width
     height = rect.height - HEIGHT_TIMELINE - HEIGHT_SUMMARY_BLOCK
     totalHeight = rect.height
