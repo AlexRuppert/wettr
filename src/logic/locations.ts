@@ -1,7 +1,7 @@
 import locationsUrl from '@/assets/locations.bin.json?url'
 import { getCachedRequest } from '@/logic/cache'
 import { trimCoordinates } from '@/logic/utils'
-import { encoder } from 'tinybuf'
+import { defineFormat } from 'tinybuf'
 
 export interface Coordinates {
   lat: number
@@ -16,7 +16,7 @@ const UMLAUT_REPLACEMENTS = [
 ]
 
 export const loadLocations = async () => {
-  const locationDecoder = encoder({
+  const locationDecoderFormat = defineFormat({
     //@ts-ignore
     minLat: 'uint32',
     //@ts-ignore
@@ -32,7 +32,7 @@ export const loadLocations = async () => {
     await getCachedRequest(locationsUrl, 7 * 60 * 24)
   ).arrayBuffer()
 
-  const decodedLocations = locationDecoder.decode(locationList)
+  const decodedLocations = locationDecoderFormat.decode(locationList)
   const loadedLocations = []
   //@ts-ignore
   const locationNames = decodedLocations.names.split('%')
