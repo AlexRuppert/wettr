@@ -48,9 +48,8 @@
   {/if}</Popup
 >
 
-
 <div
-  class="flex select-none space-x-1 rounded-default bg-surface-500 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
+  class="rounded-default bg-surface-500 *:rounded-default *:bg-surface-500 flex space-x-1 tabular-nums select-none *:relative *:shadow-md"
 >
   {#if weather && weather.timestamp}
     <div
@@ -59,7 +58,7 @@
       class:rain={getWeatherIconClass(weather.icon) == 'rain'}
       class:sun={getWeatherIconClass(weather.icon) == 'sun'}
     >
-      <div class="w-16 shrink-0 text-text-hard">
+      <div class="text-text-hard w-16 shrink-0">
         <WeatherIcon
           className="pt-2 pl-2"
           icon={weather.icon}
@@ -85,7 +84,9 @@
           <SvgIcon className="block size-6" d={windDirection} outline />
           <div
             class="flex items-center space-x-0.5"
-            class:current-warning-text={weather.wind_speed_10 >
+            class:text-warning={weather.wind_speed_10 >
+              SHOW_WINDSPEED_WARNING_AFTER}
+            class:font-semibold={weather.wind_speed_10 >
               SHOW_WINDSPEED_WARNING_AFTER}
           >
             <div class="text-right">
@@ -118,9 +119,3 @@
     <div class="skeleton h-16 w-full"></div>
   {/if}
 </div>
-
-<style>
-  .current-warning-text {
-    @apply font-semibold text-warning;
-  }
-</style>

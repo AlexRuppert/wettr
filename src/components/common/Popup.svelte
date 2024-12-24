@@ -30,7 +30,7 @@
 {#if opened}
   <div
     in:scale={{ duration: 150, easing: backOut }}
-    class="pointer-events-none fixed inset-0 z-[99] flex justify-center"
+    class="pointer-events-none fixed inset-0 z-99 flex justify-center"
   >
     <div
       class="pointer-events-auto relative mx-5 mt-8 h-fit min-w-20 max-w-md rounded-default bg-surface-500 dark:bg-surface-100"

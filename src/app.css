@@ -1,53 +1,93 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer utilities {
-  .center {
-    @apply flex items-center justify-center;
+@variant dark (&:is(.dark *));
+
+@theme {
+  --radius-default: 0.375rem;
+
+  --color-primary: oklch(var(--color-tw-primary));
+  --color-secondary: oklch(var(--color-tw-secondary));
+
+  --color-surface-50: oklch(var(--color-tw-surface-50));
+  --color-surface-100: oklch(var(--color-tw-surface-100));
+  --color-surface-200: oklch(var(--color-tw-surface-200));
+  --color-surface-300: oklch(var(--color-tw-surface-300));
+  --color-surface-400: oklch(var(--color-tw-surface-400));
+  --color-surface-500: oklch(var(--color-tw-surface-500));
+
+  --color-highlight: oklch(var(--color-tw-highlight));
+  --color-warning: oklch(var(--color-tw-warning));
+
+  --color-text-hard: oklch(var(--color-tw-text-hard));
+  --color-text-soft: oklch(var(--color-tw-text-soft));
+  --color-text-primary: oklch(var(--color-tw-text-primary));
+
+  --color-rain: oklch(var(--color-tw-rain));
+  --color-sun: oklch(var(--color-tw-sun));
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
+}
+
+@utility center {
+  @apply flex items-center justify-center;
 }
 
 @layer base {
   :root {
-    --color-primary: 0.55 0.218 259.46;
-    --color-secondary: 0.41 20 21;
-    --color-surface-500: 1 0 106;
-    --color-surface-400: 0.96 0 255;
-    --color-surface-300: 0.84 0 255;
-    --color-surface-200: 0.76 0 255;
-    --color-surface-100: 0.59 0 255;
-    --color-surface-50: 0.54 0 255;
-    --color-highlight: 0.55 0.25 291;
-    --color-warning: 0.64 0.19 42;
-    --color-text-hard: 0 0 0;
-    --color-text-soft: 0.39 0 0;
-    --color-text-primary: 0.96 0 248;
-    --color-rain: 0.55 0.22 259;
-    --color-sun: 0.74 0.16 74;
+    --color-tw-primary: 0.55 0.218 259.46;
+    --color-tw-secondary: 0.41 20 21;
+    --color-tw-surface-500: 1 0 106;
+    --color-tw-surface-400: 0.96 0 255;
+    --color-tw-surface-300: 0.84 0 255;
+    --color-tw-surface-200: 0.76 0 255;
+    --color-tw-surface-100: 0.59 0 255;
+    --color-tw-surface-50: 0.54 0 255;
+    --color-tw-highlight: 0.55 0.25 291;
+    --color-tw-warning: 0.64 0.19 42;
+    --color-tw-text-hard: 0 0 0;
+    --color-tw-text-soft: 0.39 0 0;
+    --color-tw-text-primary: 0.96 0 248;
+    --color-tw-rain: 0.55 0.22 259;
+    --color-tw-sun: 0.74 0.16 74;
   }
   :root[class~='dark'] {
-    --color-primary: 54.98% 0.218 259.46;
-    --color-secondary: 41.3% 0.081 21.18;
-    --color-surface-500: 20.2% 0.006 255.1;
-    --color-surface-400: 23.45% 0.0078 255.11;
-    --color-surface-300: 26.6% 0.0094 255.12;
-    --color-surface-200: 29.86% 0.0055 255.05;
-    --color-surface-100: 31.87% 0.006 255.05;
-    --color-surface-50: 41.5% 0.0084 255.06;
-    --color-highlight: 64.85% 0.1979 295.76;
-    --color-warning: 64.55% 0.1918 41.71;
-    --color-text-hard: 84.33% 0.0069 247.91;
-    --color-text-soft: 71.27% 0.0129 248.01;
-    --color-text-primary: 96.14% 0.0017 247.84;
-    --color-rain: 62.91% 0.2013 257.36;
-    --color-sun: 85.59% 0.1606 85.41;
+    --color-tw-primary: 54.98% 0.218 259.46;
+    --color-tw-secondary: 41.3% 0.081 21.18;
+    --color-tw-surface-500: 20.2% 0.006 255.1;
+    --color-tw-surface-400: 23.45% 0.0078 255.11;
+    --color-tw-surface-300: 26.6% 0.0094 255.12;
+    --color-tw-surface-200: 29.86% 0.0055 255.05;
+    --color-tw-surface-100: 31.87% 0.006 255.05;
+    --color-tw-surface-50: 41.5% 0.0084 255.06;
+    --color-tw-highlight: 64.85% 0.1979 295.76;
+    --color-tw-warning: 64.55% 0.1918 41.71;
+    --color-tw-text-hard: 84.33% 0.0069 247.91;
+    --color-tw-text-soft: 71.27% 0.0129 248.01;
+    --color-tw-text-primary: 96.14% 0.0017 247.84;
+    --color-tw-rain: 62.91% 0.2013 257.36;
+    --color-tw-sun: 85.59% 0.1606 85.41;
   }
 }
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  @apply bg-gray-200 text-text-hard;
+  @apply text-text-hard bg-gray-200;
   height: 100%;
   margin: 0;
 }
@@ -63,14 +103,14 @@ body {
 }
 
 .rain {
-  @apply !bg-rain/10;
+  @apply bg-rain/10!;
 }
 .sun {
-  @apply !bg-sun/10;
+  @apply bg-sun/10!;
 }
 
 .clickable {
-  @apply cursor-pointer active:bg-primary/50;
+  @apply active:bg-primary/50 cursor-pointer;
   -webkit-tap-highlight-color: hsl(var(--twc-primary) / 0.2);
 }
 @media (hover: hover) {
@@ -199,12 +239,12 @@ button {
   left: 0;
   transform: translateX(-100%);
   opacity: 0.5;
-  @apply bg-gradient-to-r from-transparent from-0% via-gray-600/50 via-50%;
+  @apply bg-linear-to-r from-transparent from-0% via-gray-600/50 via-50%;
   animation: shimmer 4s infinite ease-in-out;
   content: '';
 }
 .dark .skeleton::after {
-  @apply bg-gradient-to-r from-transparent from-0% via-white/30 via-50%;
+  @apply bg-linear-to-r from-transparent from-0% via-white/30 via-50%;
 }
 
 @keyframes shimmer {

@@ -195,7 +195,7 @@
       <input
         id="location"
         type="text"
-        class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-none"
+        class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-hidden"
         placeholder="Ort"
         autocomplete="off"
         spellcheck="false"

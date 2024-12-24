@@ -56,7 +56,7 @@
   >
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
-      class="helper relative rounded bg-neutral-100 p-2 text-neutral-900 shadow-md"
+      class="helper relative rounded-sm bg-neutral-100 p-2 text-neutral-900 shadow-md"
       role="button"
       tabindex="0"
       onclick={() => (showInstallOverlay = false)}
