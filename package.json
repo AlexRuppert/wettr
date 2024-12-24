@@ -27,7 +27,6 @@
     "svelte": "^5.15.0",
     "svelte-preprocess": "^6.0.3",
     "tailwindcss": "^3.4.17",
-    "tw-colors": "^3.3.2",
     "typescript": "^5.7.2",
     "vite": "^6.0.5",
     "vite-plugin-pwa": "^0.21.1",
