@@ -90,6 +90,7 @@
   @apply text-text-hard bg-gray-200;
   height: 100%;
   margin: 0;
+  color-scheme: light dark;
 }
 html {
   scrollbar-gutter: stable;
@@ -140,46 +141,6 @@ button {
   border-top: solid 5px #fefefe;
   border-left: solid 5px transparent;
   border-right: solid 5px transparent;
-}
-
-/* ===== Scrollbar CSS ===== */
-/* Firefox */
-* {
-  scrollbar-width: auto;
-  scrollbar-color: #383838 #ffffff;
-}
-
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 12px;
-}
-
-*::-webkit-scrollbar-track {
-  background: #ffffff;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: #383838;
-  border-radius: 10px;
-}
-
-.dark > * {
-  scrollbar-width: auto;
-  scrollbar-color: #222 #111;
-}
-
-/* Chrome, Edge, and Safari */
-.dark *::-webkit-scrollbar {
-  width: 12px;
-}
-
-.dark *::-webkit-scrollbar-track {
-  background: #111;
-}
-
-.dark *::-webkit-scrollbar-thumb {
-  background-color: #222;
-  border-radius: 10px;
 }
 
 .celsius {
