@@ -8,7 +8,7 @@
     y: number
   }
 
-  let { number, x, y, className, ...other }: Props = $props()
+  let { number, x, y, class: className, ...other }: Props = $props()
   let d = $derived(getDigits(number))
   const REGEX = /^M(\S+)/
   function placeDigitX(digitPath: string, x: number) {
@@ -34,7 +34,7 @@
 </script>
 
 <path
-  class={cn('', className)}
+  class={cn(className)}
   {d}
   transform-origin="4 0"
   transform={`translate(${x - 15 / 2}, ${y}) scale(0.45)`}

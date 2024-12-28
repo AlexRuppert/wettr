@@ -1,13 +1,19 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {
     description: string
     instruction: string
     hintText: string
   }
-  let { description, instruction, hintText, className, ...other }: Props =
-    $props()
+  let {
+    description,
+    instruction,
+    hintText,
+    class: className,
+    ...other
+  }: Props = $props()
 
   const LINK_REGEX = /(https?:\/\/\S+)|(www\.\S+)/gm
 

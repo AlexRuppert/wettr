@@ -15,7 +15,7 @@
     color = 'currentColor',
     strokeWidth = 2,
     extraLength = 4,
-    className,
+    class: className,
     ...other
   }: Props = $props()
   let widthOffset = $derived(strokeWidth / 2)

@@ -6,7 +6,7 @@
     bottom: string
   }
 
-  let { top, bottom, className = '', ...other }: Props = $props()
+  let { top, bottom, class: className, ...other }: Props = $props()
 </script>
 
 <div class={cn('self-center pt-0.5 text-[0.6rem]', className)} {...other}>

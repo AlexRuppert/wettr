@@ -273,15 +273,15 @@
   }
 </script>
 
-<div class="flex w-[52rem] max-w-full select-none flex-col">
-  <div class="w-full self-center bg-surface-400 py-2 text-center">
+<div class="flex w-[52rem] max-w-full flex-col select-none">
+  <div class="bg-surface-400 w-full self-center py-2 text-center">
     Regenradar
   </div>
   <div class="max-h-radar relative aspect-square w-full" bind:this={mapElement}>
-    <div class="absolute left-0 top-0 z-99999">
+    <div class="absolute top-0 left-0 z-99999">
       <!-- svelte-ignore non_reactive_update -->
       <div
-        class="absolute inline-block w-[60px] rounded-b-md bg-surface-500 py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear dark:bg-surface-100"
+        class="bg-surface-500 dark:bg-surface-100 absolute inline-block w-[60px] rounded-b-md py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}
       >
         {currentTimeLabel}
@@ -301,7 +301,7 @@
       <Button onclick={() => advanceFrame(15)}>+15</Button>
     </div>
     <div>
-      <Button className="w-full space-x-2 flex" onclick={() => showSuperFrame()}
+      <Button class="flex w-full space-x-2" onclick={() => showSuperFrame()}
         ><SvgIcon d={overlapAll} outline class="mr-1 size-5"
         ></SvgIcon>Überlagern</Button
       >

@@ -8,7 +8,7 @@
     direction: number
     strength: number
   }
-  let { direction, strength, className = '', ...other }: Props = $props()
+  let { direction, strength, class: className, ...other }: Props = $props()
 
   let scale = $derived(0.8 + clamp(strength / 20, 0, 1.7))
 </script>

@@ -7,12 +7,7 @@
     onclose: () => void
   }
 
-  let {
-    show = $bindable(false),
-    onclose,
-    className = '',
-    ...other
-  }: Props = $props()
+  let { show = $bindable(false), onclose, ...other }: Props = $props()
 
   function close(e?: Event) {
     e?.stopPropagation()

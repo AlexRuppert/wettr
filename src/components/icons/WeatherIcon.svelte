@@ -16,7 +16,7 @@
     standalone = false,
     transform = { x: 0, y: 0, s: 1 },
     strokeWidth = 1,
-    className = '',
+    class: className,
     ...other
   }: Props = $props()
 

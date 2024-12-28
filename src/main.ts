@@ -8,7 +8,6 @@ const updateSW = registerSW({
     // show a ready to work offline to user
   },
 })
-//@ts-ignore
-const app = mount(App, { target: document.getElementById('app') })
 
+const app = mount(App, { target: document.body.firstChild as Element })
 export default app

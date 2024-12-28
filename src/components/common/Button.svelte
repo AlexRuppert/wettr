@@ -5,7 +5,12 @@
     label?: string
   }
 
-  let { label = 'Button', className = '', children, ...other }: Props = $props()
+  let {
+    label = 'Button',
+    class: className,
+    children,
+    ...other
+  }: Props = $props()
 </script>
 
 <button

@@ -17,7 +17,7 @@
     suffix = '',
     time = '',
     subItem = false,
-    className,
+    class: className,
     ...other
   }: Props = $props()
 </script>
@@ -32,7 +32,7 @@
   {...other}
 >
   {#if !subItem}
-    <SvgCorner className="text-warning"></SvgCorner>
+    <SvgCorner class="text-warning"></SvgCorner>
   {/if}
 
   <div

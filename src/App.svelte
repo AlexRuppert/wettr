@@ -12,19 +12,9 @@
   import Footer from './components/Footer.svelte'
 
   async function deviceOrientation() {
-    const body = document.body
-
-    switch (screen.orientation.type) {
-      case 'landscape-primary':
-        body.className = 'rotation90'
-        break
-      case 'landscape-secondary':
-        body.className = 'rotation-90'
-        break
-      default:
-        body.className = 'portrait'
-        break
-    }
+    document.body.className = screen.orientation.type.startsWith('landscape-')
+      ? 'rotation90'
+      : 'portrait'
   }
   async function init() {
     try {

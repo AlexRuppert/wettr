@@ -324,7 +324,7 @@
         x={getX(hour)}
         y={totalHeight - PADDING_Y - 16}
         number={hour}
-        className={'text-' + summaryBlocks[i].iconClass}
+        class={'text-' + summaryBlocks[i].iconClass}
       ></TimelineNumber>
     {/each}
 

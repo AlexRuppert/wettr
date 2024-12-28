@@ -60,11 +60,7 @@
       })}
     >
       <div class="text-text-hard w-16 shrink-0">
-        <WeatherIcon
-          className="pt-2 pl-2"
-          icon={weather.icon}
-          strokeWidth={2}
-        />
+        <WeatherIcon class="pt-2 pl-2" icon={weather.icon} strokeWidth={2} />
       </div>
       <div class="flex w-24 shrink-0 grow justify-center text-5xl font-light">
         <div class={cn('celsius', { negative: weather.temperature < 0 })}>
@@ -75,14 +71,14 @@
         class="flex h-full w-full justify-end space-x-2 self-center *:flex *:h-full *:w-16 *:flex-col *:items-center *:justify-center"
       >
         <div>
-          <SvgIcon className="block size-6" d={humidity} outline />
+          <SvgIcon class="block size-6" d={humidity} outline />
           <div class="flex items-center space-x-0.5">
             <div class="text-right">{weather.relative_humidity}</div>
             <div class="text-[0.8em]">%</div>
           </div>
         </div>
         <div>
-          <SvgIcon className="block size-6" d={windDirection} outline />
+          <SvgIcon class="block size-6" d={windDirection} outline />
           <div
             class={cn('flex items-center space-x-0.5', {
               'text-warning font-semibold':

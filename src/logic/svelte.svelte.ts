@@ -1,5 +1,5 @@
 export interface CustomElement {
-  className?: string
+  class?: string
   [k: string]: any
 }
 

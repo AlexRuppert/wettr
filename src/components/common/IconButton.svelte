@@ -13,11 +13,10 @@
     label = 'Button',
     outline = false,
     strokeWidth = 1,
-    className = '',
     ...other
   }: Props = $props()
 </script>
 
-<Button {className} {label} {...other}>
+<Button {label} {...other}>
   <SvgIcon d={icon} {outline} {strokeWidth} />
 </Button>
