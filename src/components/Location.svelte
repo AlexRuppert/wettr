@@ -183,7 +183,7 @@
   <div
     class={cn('rounded-default relative h-10 w-full shadow-md', {
       'bg-surface-400 z-50': openedSuggestions,
-      'bg-surface-500': !openSuggestions,
+      'bg-surface-500': !openedSuggestions,
     })}
   >
     <SvgCorner></SvgCorner>
