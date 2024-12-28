@@ -15,11 +15,11 @@
   let links = $derived(instruction?.match(LINK_REGEX) ?? [])
 </script>
 
-<div class={classProp('hyphens-auto p-2 leading-5', className)} {...other}>
+<div class={classProp('p-2 leading-5 hyphens-auto', className)} {...other}>
   <div>
     {description}
   </div>
-  <div class="my-1 whitespace-pre-wrap pt-1">
+  <div class="my-1 pt-1 whitespace-pre-wrap">
     <strong class="leading-5 underline">{!!texts ? hintText : ''}</strong>
     {#each texts as text, i}
       <p>
