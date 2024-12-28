@@ -98,3 +98,19 @@ export function toLocalDecimal(num: string | number, precision = 0) {
 export function trimCoordinates({ lon, lat }) {
   return { lon: lon.toFixed(3), lat: lat.toFixed(3) }
 }
+
+export function cn(...props: (string | Record<string, boolean>)[]) {
+  return props
+    .flatMap(p => {
+      if (p === undefined) {
+        return ''
+      } else if (typeof p === 'string') {
+        return p
+      } else {
+        return Object.entries(p)
+          .filter(([_, value]) => !!value)
+          .map(([key, _]) => key)
+      }
+    })
+    .join(' ')
+}

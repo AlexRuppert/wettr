@@ -6,7 +6,7 @@
   import { humidity, windDirection } from '@/components/icons/icons'
   import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { getWeatherIconClass, toLocalDecimal } from '@/logic/utils'
+  import { cn, getWeatherIconClass, toLocalDecimal } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import {
     currentWeatherData,
@@ -54,9 +54,10 @@
   {#if weather && weather.timestamp}
     <div
       transition:fade={{ duration: 200 }}
-      class="flex h-16 grow items-center justify-center"
-      class:rain={getWeatherIconClass(weather.icon) == 'rain'}
-      class:sun={getWeatherIconClass(weather.icon) == 'sun'}
+      class={cn('flex h-16 grow items-center justify-center', {
+        'bg-rain/10': getWeatherIconClass(weather.icon) == 'rain',
+        'bg-sun/10': getWeatherIconClass(weather.icon) == 'sun',
+      })}
     >
       <div class="text-text-hard w-16 shrink-0">
         <WeatherIcon
@@ -66,7 +67,7 @@
         />
       </div>
       <div class="flex w-24 shrink-0 grow justify-center text-5xl font-light">
-        <div class="celsius" class:negative={weather.temperature < 0}>
+        <div class={cn('celsius', { negative: weather.temperature < 0 })}>
           {Math.abs(weather.temperature)}
         </div>
       </div>
@@ -83,11 +84,10 @@
         <div>
           <SvgIcon className="block size-6" d={windDirection} outline />
           <div
-            class="flex items-center space-x-0.5"
-            class:text-warning={weather.wind_speed_10 >
-              SHOW_WINDSPEED_WARNING_AFTER}
-            class:font-semibold={weather.wind_speed_10 >
-              SHOW_WINDSPEED_WARNING_AFTER}
+            class={cn('flex items-center space-x-0.5', {
+              'text-warning font-semibold':
+                weather.wind_speed_10 > SHOW_WINDSPEED_WARNING_AFTER,
+            })}
           >
             <div class="text-right">
               {toLocalDecimal(weather.wind_speed_10 ?? 0)}

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn } from '@/logic/utils'
   import { timelineNumbers } from './icons'
   interface Props extends CustomElement {
     number: number
@@ -33,7 +34,7 @@
 </script>
 
 <path
-  class={classProp('', className)}
+  class={cn('', className)}
   {d}
   transform-origin="4 0"
   transform={`translate(${x - 15 / 2}, ${y}) scale(0.45)`}

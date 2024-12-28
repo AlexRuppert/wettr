@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { chunk, clamp, getWeatherIconClass } from '@/logic/utils'
+  import { chunk, clamp, cn, getWeatherIconClass } from '@/logic/utils'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { darkMode } from '@/stores/store.svelte'
   import { cubicOut } from 'svelte/easing'
@@ -420,8 +420,11 @@
           <text class="stroke-surface-500/90" stroke-width="3"
             >{point.temperature}
           </text>
-          <text class="fill-text-hard" class:!fill-rain={point.temperature < 0}
-            >{point.temperature}</text
+          <text
+            class={cn({
+              'fill-text-hard': point.temperature >= 0,
+              'fill-rain': point.temperature < 0,
+            })}>{point.temperature}</text
           >
         </g>
       {/each}

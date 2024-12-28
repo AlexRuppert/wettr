@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
-  import { clamp } from '@/logic/utils'
   import { windDirection } from '@/components/icons/icons'
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { clamp, cn } from '@/logic/utils'
 
   interface Props extends CustomElement {
     direction: number
@@ -14,7 +14,7 @@
 </script>
 
 <div
-  class={classProp('outlined-path origin-center', className)}
+  class={cn('outlined-path origin-center', className)}
   {...other}
   style="transform: scale({scale}) rotate({direction + 90}deg)"
 >

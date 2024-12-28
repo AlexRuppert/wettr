@@ -3,10 +3,6 @@ export interface CustomElement {
   [k: string]: any
 }
 
-export function classProp(baseClass: string, classString: string) {
-  return baseClass + ' ' + (classString ?? '')
-}
-
 export function once(fn: { call: (arg0: any, arg1: any) => void }) {
   return function (event: Event) {
     if (fn) fn.call(this, event)

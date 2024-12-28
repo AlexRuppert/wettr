@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
     d: string
     fill?: string

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import Button from '@/components/common/Button.svelte'
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import SvgIcon from '@/components/icons/SvgIcon.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
     icon: string
     label?: string

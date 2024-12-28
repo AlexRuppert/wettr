@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
 
   interface Props extends CustomElement {
     description: string
@@ -15,7 +15,7 @@
   let links = $derived(instruction?.match(LINK_REGEX) ?? [])
 </script>
 
-<div class={classProp('p-2 leading-5 hyphens-auto', className)} {...other}>
+<div class={cn('p-2 leading-5 hyphens-auto', className)} {...other}>
   <div>
     {description}
   </div>

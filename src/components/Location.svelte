@@ -19,6 +19,7 @@
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { stageReload } from '@/logic/reloader'
   import SvgCorner from './icons/SvgCorner.svelte'
+  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
@@ -178,17 +179,21 @@
 
 <ModalBackground show={openedSuggestions} onclose={closeSuggestions} />
 
-<div class="flex items-center" class:h-dvh={noLocation}>
+<div class={cn('flex items-center', { 'h-dvh': noLocation })}>
   <div
-    class="relative h-10 w-full rounded-default bg-surface-500 shadow-md"
-    class:z-50={openedSuggestions}
-    class:!bg-surface-400={openedSuggestions}
+    class={cn('rounded-default relative h-10 w-full shadow-md', {
+      'bg-surface-400 z-50': openedSuggestions,
+      'bg-surface-500': !openSuggestions,
+    })}
   >
     <SvgCorner></SvgCorner>
     <label
-      class="justify-cente flex size-full items-center overflow-hidden rounded-default ring-inset ring-primary"
-      class:ring-2={noLocation}
-      class:dark:bg-surface-100={noLocation}
+      class={cn(
+        'justify-cente rounded-default ring-primary flex size-full items-center overflow-hidden ring-inset',
+        {
+          'dark:bg-surface-100 ring-2': noLocation,
+        },
+      )}
     >
       <span class="hidden">O-r-t</span
       ><!--prevent stupid browsers to show autocomplete despite off-flag-->
@@ -207,7 +212,7 @@
       />
     </label>
 
-    <div class="absolute left-0 top-0 opacity-30">
+    <div class="absolute top-0 left-0 opacity-30">
       <SvgCorner></SvgCorner>
       <IconButton
         label="Get Current Location"
@@ -218,14 +223,15 @@
     </div>
     {#if openedSuggestions}
       <div
-        class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
+        class="rounded-default bg-surface-500 absolute left-0 mt-px w-full overflow-hidden shadow-lg"
         in:fly={{ duration: TRANSITION_TIME, y: -5 }}
       >
         {#each suggestions as entry, i}
           <a
             href={'#'}
-            class="block cursor-pointer px-3 py-2 text-lg no-underline"
-            class:selected={i === selectedSuggestion}
+            class={cn('block cursor-pointer px-3 py-2 text-lg no-underline', {
+              selected: i === selectedSuggestion,
+            })}
             onclick={() => selectSuggestion(entry)}
             onmouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
           >
