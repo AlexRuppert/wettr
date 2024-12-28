@@ -48,11 +48,9 @@
         >
           <div
             class={cn(
-              'absolute top-0 left-0 z-10 flex h-8 w-12 items-center rounded-br-md border-r border-b tracking-tighter shadow-xs',
+              'border-surface-300 absolute top-0 left-0 z-10 flex h-8 w-12 items-center rounded-br-md border-r border-b tracking-tighter shadow-xs backdrop-blur-[3px]',
               {
-                'border-surface-50 dark:border-surface-100':
-                  !formattedDay[i].isWeekend,
-                'border-highlight': formattedDay[i].isWeekend,
+                'bg-highlight/20': formattedDay[i].isWeekend,
               },
             )}
           >

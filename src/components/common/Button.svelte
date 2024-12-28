@@ -15,7 +15,7 @@
 
 <button
   class={cn(
-    'clickable rounded-default flex size-10 appearance-none items-center justify-center border-none bg-transparent p-1',
+    'clickable rounded-default flex  appearance-none items-center justify-center border-none bg-transparent p-1',
     className,
   )}
   aria-label={label}
