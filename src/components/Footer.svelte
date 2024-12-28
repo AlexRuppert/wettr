@@ -40,7 +40,7 @@
     <Button
       class="flex rounded-md border border-solid border-gray-400 px-4"
       onclick={() => (showShareScreen = true)}
-      ><SvgIcon d={shareIcon} class="w-6" outline></SvgIcon>Teilen</Button
+      ><SvgIcon d={shareIcon} class="w-6"></SvgIcon>Teilen</Button
     >
   </div>
 </footer>

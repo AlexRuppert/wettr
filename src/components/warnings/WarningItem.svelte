@@ -40,7 +40,7 @@
       'text-warning': !subItem,
     })}
   >
-    <SvgIcon d={alertWarning} />
+    <SvgIcon d={alertWarning} outline={false} />
   </div>
   <div
     class="flex grow self-center overflow-hidden font-semibold text-ellipsis"

@@ -1,12 +1,5 @@
 import { type WeatherIconType } from '@/logic/weatherTypes'
 
-export function getDarkLightColor(
-  color: { dark: any; light: any },
-  darkMode: any,
-) {
-  return darkMode ? color.dark : color.light
-}
-
 export function getWeatherIconClass(icon: WeatherIconType) {
   switch (icon) {
     case 'rain':
@@ -66,7 +59,7 @@ export function isInBounds({ lon, lat }, viewBounds: GeoBounds) {
     lat - EPSILON <= viewBounds.rt.lat
   )
 }
-export interface GeoBounds {
+interface GeoBounds {
   lb: {
     lat: number
     lon: number
@@ -74,20 +67,6 @@ export interface GeoBounds {
   rt: {
     lat: number
     lon: number
-  }
-}
-
-export function getLocationBounds({ lon, lat }, radiusKm = 8) {
-  const deg = radiusKm / 70
-  return {
-    lb: {
-      lat: lat - deg,
-      lon: lon - deg,
-    },
-    rt: {
-      lat: lat + deg,
-      lon: lon + deg,
-    },
   }
 }
 

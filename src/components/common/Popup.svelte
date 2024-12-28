@@ -44,7 +44,7 @@
           opened = false
         }}
       >
-        <SvgIcon outline d={closeIcon}></SvgIcon>
+        <SvgIcon d={closeIcon}></SvgIcon>
       </button>
     </div>
   </div>

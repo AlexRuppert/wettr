@@ -7,7 +7,7 @@
     strokeWidth?: number
   }
 
-  let { d, fill, outline = false, strokeWidth = 1, ...other }: Props = $props()
+  let { d, fill, outline = true, strokeWidth = 1, ...other }: Props = $props()
 
   let { svgStroke, svgFill } = $derived(getStrokeFill(fill))
 

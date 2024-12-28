@@ -217,7 +217,6 @@
       <IconButton
         label="Get Current Location"
         icon={gps}
-        outline
         onclick={getGeoLocation}
       />
     </div>

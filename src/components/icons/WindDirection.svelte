@@ -18,5 +18,5 @@
   {...other}
   style="transform: scale({scale}) rotate({direction + 90}deg)"
 >
-  <SvgIcon d={windDirection} outline />
+  <SvgIcon d={windDirection} />
 </div>

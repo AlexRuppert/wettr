@@ -66,14 +66,12 @@
         class="-mx-1 inline-block h-5 w-5 align-middle "
         d={shareIcon}
         fill="#16c"
-        outline
       />
       und
       <SvgIcon
         class="-mx-1 inline-block h-5 w-5 align-middle "
         d={addBox}
         fill="#16c"
-        outline
       />
     </div>
   </div>

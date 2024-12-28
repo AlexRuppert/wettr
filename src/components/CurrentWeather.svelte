@@ -71,14 +71,14 @@
         class="flex h-full w-full justify-end space-x-2 self-center *:flex *:h-full *:w-16 *:flex-col *:items-center *:justify-center"
       >
         <div>
-          <SvgIcon class="block size-6" d={humidity} outline />
+          <SvgIcon class="block size-6" d={humidity} />
           <div class="flex items-center space-x-0.5">
             <div class="text-right">{weather.relative_humidity}</div>
             <div class="text-[0.8em]">%</div>
           </div>
         </div>
         <div>
-          <SvgIcon class="block size-6" d={windDirection} outline />
+          <SvgIcon class="block size-6" d={windDirection} />
           <div
             class={cn('flex items-center space-x-0.5', {
               'text-warning font-semibold':

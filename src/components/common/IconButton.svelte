@@ -12,7 +12,7 @@
   let {
     icon,
     label = 'Button',
-    outline = false,
+    outline = true,
     strokeWidth = 1,
     class: className,
     ...other

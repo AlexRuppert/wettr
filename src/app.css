@@ -79,6 +79,7 @@
 
 html {
   scrollbar-gutter: stable;
+  background-color: #fafafa;
 }
 html.dark {
   background-color: #000;

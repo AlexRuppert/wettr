@@ -296,13 +296,14 @@
         icon={autoplay ? pause : play}
         label="Abspielen/Pause"
         onclick={() => (autoplay = !autoplay)}
+        outline={false}
       ></IconButton>
       <Button onclick={() => advanceFrame(5)}>+5</Button>
       <Button onclick={() => advanceFrame(15)}>+15</Button>
     </div>
     <div>
       <Button class="flex w-full space-x-2" onclick={() => showSuperFrame()}
-        ><SvgIcon d={overlapAll} outline class="mr-1 size-5"
+        ><SvgIcon d={overlapAll} class="mr-1 size-5"
         ></SvgIcon>Überlagern</Button
       >
     </div>
