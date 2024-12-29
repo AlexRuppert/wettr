@@ -5,7 +5,7 @@
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { darkMode } from '@/stores/store.svelte'
   import { cubicOut } from 'svelte/easing'
-  import { tweened } from 'svelte/motion'
+  import { Tween } from 'svelte/motion'
   import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
   import TimelineNumber from './icons/TimelineNumber.svelte'
@@ -64,7 +64,7 @@
     isToday ? getX(now.getHours() + now.getMinutes() / 60) : -5,
   )
 
-  const clipPercent = tweened(0, {
+  const clipPercent = new Tween(0, {
     duration: 300,
     delay: 0,
     easing: cubicOut,
@@ -376,7 +376,7 @@
     <g
       clip-path="url(#cut-off)"
       class="origin-bottom"
-      transform="scale(1 {$clipPercent})"
+      transform="scale(1 {clipPercent.current})"
     >
       <path
         class="fill-sun/10 stroke-sun"
