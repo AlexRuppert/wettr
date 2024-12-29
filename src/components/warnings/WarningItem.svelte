@@ -23,10 +23,11 @@
 </script>
 
 <div
-  class={cn('relative flex h-14 w-full space-x-1 pr-3', className, {
-    'bg-surface-500': subItem,
-    'clickable rounded-md': !subItem,
-  })}
+  class={cn(
+    'relative flex h-14 w-full space-x-1 pr-3',
+    className,
+    subItem ? 'bg-surface-500' : 'clickable rounded-md',
+  )}
   role="button"
   tabindex="0"
   {...other}

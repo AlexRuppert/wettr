@@ -81,15 +81,13 @@ export function trimCoordinates({ lon, lat }) {
 export function cn(...props: (string | Record<string, boolean>)[]) {
   return props
     .flatMap(p => {
-      if (p === undefined) {
-        return ''
-      } else if (typeof p === 'string') {
+      if (typeof p === 'string') {
         return p
-      } else {
+      } else if (typeof p === 'object') {
         return Object.entries(p)
           .filter(([_, value]) => !!value)
           .map(([key, _]) => key)
-      }
+      } else return ''
     })
     .join(' ')
 }

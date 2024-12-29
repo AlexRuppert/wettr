@@ -181,15 +181,15 @@
 
 <div class={cn('flex items-center', { 'h-dvh': noLocation })}>
   <div
-    class={cn('rounded-default relative h-10 w-full shadow-md', {
-      'bg-surface-400 z-50': openedSuggestions,
-      'bg-surface-500': !openedSuggestions,
-    })}
+    class={cn(
+      'rounded-default relative h-10 w-full shadow-md',
+      openedSuggestions ? 'bg-surface-400 z-50' : 'bg-surface-500',
+    )}
   >
     <SvgCorner></SvgCorner>
     <label
       class={cn(
-        'justify-cente rounded-default ring-primary flex size-full items-center overflow-hidden ring-inset',
+        'rounded-default ring-primary flex size-full items-center justify-center overflow-hidden ring-inset',
         {
           'dark:bg-surface-100 ring-2': noLocation,
         },

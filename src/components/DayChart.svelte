@@ -421,10 +421,8 @@
             >{point.temperature}
           </text>
           <text
-            class={cn({
-              'fill-text-hard': point.temperature >= 0,
-              'fill-rain': point.temperature < 0,
-            })}>{point.temperature}</text
+            class={cn(point.temperature < 0 ? 'fill-rain' : 'fill-text-hard')}
+            >{point.temperature}</text
           >
         </g>
       {/each}

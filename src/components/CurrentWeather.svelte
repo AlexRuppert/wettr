@@ -54,7 +54,7 @@
   {#if weather && weather.timestamp}
     <div
       transition:fade={{ duration: 200 }}
-      class={cn('flex h-16 grow items-center justify-center', {
+      class={cn('flex h-16  grow  items-center justify-center', {
         'bg-rain/10': getWeatherIconClass(weather.icon) == 'rain',
         'bg-sun/10': getWeatherIconClass(weather.icon) == 'sun',
       })}
