@@ -53,17 +53,21 @@ export default defineConfig({
     cssMinify: 'lightningcss',
     terserOptions: {
       compress: {
+        ecma: 2020,
         keep_fargs: false,
+        booleans: true,
+        booleans_as_integers: true,
         pure_getters: true,
+        pure_new: true,
         toplevel: true,
         unsafe_arrows: false,
         unsafe_comps: true,
         unsafe_math: true,
         unsafe_undefined: true,
+        unsafe_methods: true,
         unsafe_regexp: true,
-        //
-
-        passes: 2,
+        module: true,
+        passes: 4,
       },
     },
   },
