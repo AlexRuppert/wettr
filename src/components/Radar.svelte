@@ -1,33 +1,33 @@
 <script lang="ts">
   import olMap from 'ol/Map'
   import olView from 'ol/View'
-  import TileLayer from 'ol/layer/Tile'
   import ImageLayer from 'ol/layer/Image'
+  import TileLayer from 'ol/layer/Tile'
   import OSM from 'ol/source/OSM'
 
   import { transform } from 'ol/proj'
   import olImageStatic from 'ol/source/ImageStatic'
 
-  import { type CustomElement } from '@/logic/svelte.svelte'
   import { type Coordinates } from '@/logic/locations'
-  import { darkMode, weatherPrecipitation } from '@/stores/store.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { weatherPrecipitation } from '@/stores/store.svelte'
 
-  import { reloadPercipitation } from '@/logic/reloader'
   import { drawImage, GRID_CONSTANTS } from '@/logic/radar'
-  import VectorLayer from 'ol/layer/Vector'
-  import VectorSource from 'ol/source/Vector'
+  import { reloadPercipitation } from '@/logic/reloader'
+  import { clamp, isDarkMode } from '@/logic/utils'
   import Feature from 'ol/Feature'
   import Point from 'ol/geom/Point'
-  import Style from 'ol/style/Style'
-  import Stroke from 'ol/style/Stroke'
-  import Fill from 'ol/style/Fill'
+  import VectorLayer from 'ol/layer/Vector'
+  import VectorSource from 'ol/source/Vector'
   import Circle from 'ol/style/Circle'
-  import { clamp } from '@/logic/utils'
+  import Fill from 'ol/style/Fill'
+  import Stroke from 'ol/style/Stroke'
+  import Style from 'ol/style/Style'
   import { onDestroy, onMount } from 'svelte'
-  import IconButton from './common/IconButton.svelte'
-  import { overlapAll, pause, play } from './icons/icons'
   import Button from './common/Button.svelte'
+  import IconButton from './common/IconButton.svelte'
   import SvgIcon from './icons/SvgIcon.svelte'
+  import { overlapAll, pause, play } from './icons/icons'
 
   interface Props extends CustomElement {
     coordinates: Coordinates
@@ -79,7 +79,7 @@
       source: new OSM(),
     })
     tileLayer.on('prerender', evt => {
-      if (evt.context && darkMode.value) {
+      if (evt.context && isDarkMode()) {
         const context = evt.context as CanvasRenderingContext2D
         context.filter = 'invert(100%) brightness(1.55)  hue-rotate(180deg)'
         context.globalCompositeOperation = 'source-over'

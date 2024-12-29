@@ -91,3 +91,7 @@ export function cn(...props: (string | Record<string, boolean>)[]) {
     })
     .join(' ')
 }
+
+export function isDarkMode() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+}

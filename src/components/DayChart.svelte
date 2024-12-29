@@ -1,15 +1,14 @@
 <script lang="ts">
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { chunk, clamp, cn, getWeatherIconClass } from '@/logic/utils'
+  import { chunk, clamp, getWeatherIconClass } from '@/logic/utils'
   import { type DayWeatherData } from '@/logic/weatherTypes'
-  import { darkMode } from '@/stores/store.svelte'
+  import { getMostRelevantIcon } from '@/logic/weather'
+  import { onDestroy, untrack } from 'svelte'
   import { cubicOut } from 'svelte/easing'
   import { Tween } from 'svelte/motion'
-  import WeatherIcon from './icons/WeatherIcon.svelte'
-  import { getMostRelevantIcon } from '@/logic/weather'
   import TimelineNumber from './icons/TimelineNumber.svelte'
-  import { onDestroy, untrack } from 'svelte'
+  import WeatherIcon from './icons/WeatherIcon.svelte'
   interface Props extends CustomElement {
     weather: DayWeatherData
     animate: boolean
@@ -302,21 +301,20 @@
       </clipPath>
     </defs>
     <g class="stroke-surface-50" stroke-width="3" stroke-linecap="round">
-      {#if darkMode.value}
-        <path
-          d="M{dayLengthsX[0] + 1} {totalHeight -
-            PADDING_Y +
-            4}H{dayLengthsX[1] - 1}"
-        />
-      {:else}
-        <path
-          d="M{0} {totalHeight -
-            PADDING_Y +
-            4}H{dayLengthsX[0]}M{dayLengthsX[1]} {totalHeight -
-            PADDING_Y +
-            4}H{width}"
-        />per
-      {/if}
+      <path
+        class="invisible dark:visible"
+        d="M{dayLengthsX[0] + 1} {totalHeight - PADDING_Y + 4}H{dayLengthsX[1] -
+          1}"
+      />
+
+      <path
+        class="visible dark:invisible"
+        d="M{0} {totalHeight -
+          PADDING_Y +
+          4}H{dayLengthsX[0]}M{dayLengthsX[1]} {totalHeight -
+          PADDING_Y +
+          4}H{width}"
+      />
     </g>
 
     {#each hours as hour, i}
