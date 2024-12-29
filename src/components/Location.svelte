@@ -1,7 +1,7 @@
 <script lang="ts">
   import IconButton from '@/components/common/IconButton.svelte'
-  import { gps } from '@/components/icons/icons'
   import ModalBackground from '@/components/common/ModalBackground.svelte'
+  import { gps } from '@/components/icons/icons'
   import { getHistory, pushHistory } from '@/logic/history'
   import {
     filterLocations,
@@ -9,17 +9,16 @@
     getCoordinatesFromUrl,
     getGeolocationCoordinates,
     getLocationCoordinates,
+    isLocationSet,
     serializeCoordinates,
     type Coordinates,
-    isLocationSet,
   } from '@/logic/locations'
   import { locationCoordinates } from '@/stores/store.svelte'
   import { fly } from 'svelte/transition'
 
-  import { type CustomElement } from '@/logic/svelte.svelte'
   import { stageReload } from '@/logic/reloader'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   import SvgCorner from './icons/SvgCorner.svelte'
-  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
@@ -212,14 +211,15 @@
       />
     </label>
 
-    <div class="absolute top-0 left-0 opacity-30">
+    <IconButton
+      label="Get Current Location"
+      class="absolute top-0 left-0 opacity-30"
+      icon={gps}
+      onclick={getGeoLocation}
+    >
       <SvgCorner></SvgCorner>
-      <IconButton
-        label="Get Current Location"
-        icon={gps}
-        onclick={getGeoLocation}
-      />
-    </div>
+    </IconButton>
+
     {#if openedSuggestions}
       <div
         class="bg-surface-500 absolute left-0 mt-px w-full overflow-hidden rounded-md shadow-lg"
@@ -231,7 +231,7 @@
             class={[
               'block cursor-pointer px-3 py-2 text-lg no-underline',
               {
-                selected: i === selectedSuggestion,
+                'bg-primary text-text-primary': i === selectedSuggestion,
               },
             ]}
             onclick={() => selectSuggestion(entry)}

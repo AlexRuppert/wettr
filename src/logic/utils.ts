@@ -95,3 +95,10 @@ export function cn(...props: (string | Record<string, boolean>)[]) {
 export function isDarkMode() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
+
+export function getStrokeFill(outline: boolean) {
+  return {
+    stroke: outline ? 'currentColor' : 'none',
+    fill: !outline ? 'currentColor' : 'none',
+  }
+}

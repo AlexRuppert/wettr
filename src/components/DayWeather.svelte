@@ -3,10 +3,9 @@
   import { FORECAST_DAYS } from '@/logic/reloader'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { weatherData } from '@/stores/store.svelte'
+  import debounce from 'lodash-debounce-tiny'
   import { fade } from 'svelte/transition'
   import MoonPhase from './icons/MoonPhase.svelte'
-  import debounce from 'lodash-debounce-tiny'
-  import { cn } from '@/logic/utils'
 
   let weather: DayWeatherData[] = $derived(weatherData.value)
   let dummySkeletonDays = new Array(FORECAST_DAYS + 1)
@@ -44,11 +43,11 @@
       {#each weather as day, i (day)}
         <div
           transition:fade={{ duration: 200 }}
-          class="bg-surface-500 relative flex h-32 overflow-hidden rounded-md shadow-md"
+          class="bg-surface-500 relative flex h-32 w-full overflow-hidden rounded-md shadow-md"
         >
           <div
             class={[
-              'border-surface-300 absolute top-0 left-0 z-10 flex h-8 w-12 items-center rounded-br-md border-r border-b tracking-tighter shadow-xs backdrop-blur-[3px]',
+              'border-surface-300 absolute top-0 left-0 z-10 flex h-8 w-12 items-center rounded-br-md border-r border-b tracking-tighter shadow-xs backdrop-blur-xs',
               {
                 'bg-highlight/20': formattedDay[i].isWeekend,
               },
@@ -63,9 +62,9 @@
               </div>
             </div>
           </div>
-          <div class="relative grow overflow-hidden">
+          <div class="grow">
             <DayChart weather={day} {animate} />
-            <div class="absolute right-1 bottom-[32px] z-10 size-2 opacity-50">
+            <div class="absolute right-1 bottom-8 size-2 opacity-50">
               <MoonPhase timestamp={day.day} />
             </div>
           </div>
@@ -75,11 +74,8 @@
   {:else}
     {#each dummySkeletonDays as day, i}
       <div
-        class="skeleton bg-surface-500 h-32 w-full overflow-hidden rounded-md shadow-md"
+        class="skeleton bg-surface-500 relative flex h-32 w-full overflow-hidden rounded-md shadow-md"
       ></div>
     {/each}
   {/if}
 </div>
-
-<style>
-</style>

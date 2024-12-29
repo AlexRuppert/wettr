@@ -2,8 +2,8 @@
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { chunk, clamp, getWeatherIconClass } from '@/logic/utils'
-  import { type DayWeatherData } from '@/logic/weatherTypes'
   import { getMostRelevantIcon } from '@/logic/weather'
+  import { type DayWeatherData } from '@/logic/weatherTypes'
   import { onDestroy, untrack } from 'svelte'
   import { cubicOut } from 'svelte/easing'
   import { Tween } from 'svelte/motion'
@@ -281,10 +281,10 @@
 </script>
 
 <svg
-  width="100%"
-  height="100%"
   stroke-linecap="round"
   stroke-linejoin="round"
+  width="100%"
+  height="100%"
   fill="none"
   bind:this={svg}
   font-size="1rem"
@@ -330,16 +330,14 @@
       {@const isDay =
         block.x > dayLengthsX[0] && block.x - hourWidth < dayLengthsX[1]}
       {@const scale = 0.65}
-      <WeatherIcon
-        icon={isDay ? block.icon : block.icon.replace('day', 'night')}
-        stroke-width="1"
-        standalone
-        transform={{
-          x: getX(i * 2) - PADDING_X * scale,
-          y: totalHeight - PADDING_Y - 39,
-          s: scale,
-        }}
-      ></WeatherIcon>
+      <g
+        transform={`translate(${getX(i * 2) - PADDING_X * scale}, ${totalHeight - PADDING_Y - 39}) scale(${scale})`}
+      >
+        <WeatherIcon
+          icon={isDay ? block.icon : block.icon.replace('day', 'night')}
+          standalone
+        ></WeatherIcon>
+      </g>
     {/each}
 
     <path
@@ -352,36 +350,36 @@
     <path
       class="stroke-text-soft/90"
       stroke-width="2"
-      opacity="70%"
       stroke-linecap="butt"
       stroke-dasharray="1 {2 * ((width - 2) / hoursTotal) - 2}"
       d="M{PADDING_X + hourWidth - 1} {height - 0.5}h{width - hourWidth}"
+      opacity="70%"
     />
     {#each windGustPoints as windGust}
       <use
+        class="stroke-text-hard/90"
         href="#wind-indicator"
         x={windGust.x + 10}
         y={totalHeight - PADDING_Y - 18}
-        class="stroke-text-hard/90"
       />
     {/each}
     <path
       class="stroke-highlight mix-blend-darken dark:mix-blend-lighten"
-      d="M{nowLineX} 0v{totalHeight}"
       stroke-width="1"
+      d="M{nowLineX} 0v{totalHeight}"
     />
 
     <g
-      clip-path="url(#cut-off)"
       class="origin-bottom"
+      clip-path="url(#cut-off)"
       transform="scale(1 {clipPercent.current})"
     >
       <path
         class="fill-sun/10 stroke-sun"
-        stroke-dasharray="1 3"
         stroke-width="2"
         stroke-linecap="butt"
         stroke-linejoin="round"
+        stroke-dasharray="1 3"
         d={sunninessPath + pathFillCloseSuffix}
         transform-origin="50% 50%"
         transform="translate(0, -{HEIGHT_TIMELINE +
@@ -389,18 +387,18 @@
           1}) scale(1, -1)"
       />
       <path
-        stroke-dasharray="4,5"
         class="fill-rain/20 stroke-rain"
+        stroke-dasharray="4,5"
         d={precipitationPath + pathFillCloseSuffix}
       />
-      <path stroke-width="1" class="stroke-text-soft/80" d={temperaturePath} />
+      <path class="stroke-text-soft/80" stroke-width="1" d={temperaturePath} />
 
       {#each temperatureLabelPoints as point, i}
         <use
+          class="fill-surface-500 stroke-text-hard"
           href={'#celsius-circle'}
           x={point.x + 2}
           y={Math.min(point.y, height - 2.7)}
-          class="fill-surface-500 stroke-text-hard"
         />
         <g
           font-size={point.isExtremeTemperature ? '1.7em' : '0.9em'}
@@ -426,6 +424,3 @@
     </g>
   {/if}
 </svg>
-
-<style>
-</style>

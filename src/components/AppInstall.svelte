@@ -2,6 +2,7 @@
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import { addBox, shareIcon } from '@/components/icons/icons'
   import { scale } from 'svelte/transition'
+  import Button from './common/Button.svelte'
   let isIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
   let showInstallButton = $state(false)
   let showInstallOverlay = $state(false)
@@ -21,7 +22,6 @@
     showInstallButton = false
     alreadyInstalled = true
   })
-
   const install = async () => {
     if (isIos) {
       showInstallOverlay = !showInstallOverlay
@@ -34,7 +34,6 @@
       }
     }
   }
-
   $effect(() => {
     if (!alreadyInstalled && iOSCanInstall && !iOSIsInstalled) {
       showInstallButton = true
@@ -42,12 +41,15 @@
   })
 </script>
 
-{#if showInstallButton}
-  <button
-    class="dark:(bg-neutral-900 text-gray-300) light:(text-gray-800) mb-4 inline-block rounded-md border border-solid border-gray-400 p-2"
-    onclick={install}>Als App installieren</button
-  >
-{/if}
+<Button
+  class={[
+    'border-primary border-2 p-2',
+    showInstallButton ? 'inline-block' : 'hidden',
+  ]}
+  onclick={install}
+>
+  Als App installieren
+</Button>
 
 {#if showInstallButton && showInstallOverlay}
   <div
@@ -56,23 +58,17 @@
   >
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
-      class="helper relative rounded-sm bg-neutral-100 p-2 text-neutral-900 shadow-md"
+      class="helper relative rounded-sm bg-neutral-100 p-2 text-center text-neutral-900 shadow-md"
       role="button"
       tabindex="0"
       onclick={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:
-      <SvgIcon
-        class="-mx-1 inline-block h-5 w-5 align-middle "
-        d={shareIcon}
-        fill="#16c"
-      />
-      und
-      <SvgIcon
-        class="-mx-1 inline-block h-5 w-5 align-middle "
-        d={addBox}
-        fill="#16c"
-      />
+      <p class="*:inline-block *:size-5">
+        <SvgIcon d={shareIcon} />
+        und dann
+        <SvgIcon d={addBox} />
+      </p>
     </div>
   </div>
 {/if}

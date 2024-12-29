@@ -39,18 +39,3 @@
   <DayWeather />
 </main>
 <Footer />
-
-<style>
-  :global(.rotation-90) {
-    width: 100vh;
-    height: 100vw;
-    transform-origin: 0 0;
-    transform: rotate(90deg) translateY(-100%);
-  }
-  :global(body.rotation90) {
-    width: 100vh;
-    height: 100vw;
-    transform-origin: 0 0;
-    transform: rotate(-90deg) translateX(-100%);
-  }
-</style>

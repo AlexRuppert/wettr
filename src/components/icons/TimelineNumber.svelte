@@ -1,6 +1,5 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { cn } from '@/logic/utils'
   import { timelineNumbers } from './icons'
   interface Props extends CustomElement {
     number: number
@@ -39,7 +38,7 @@
   transform-origin="4 0"
   transform={`translate(${x - 15 / 2}, ${y}) scale(0.45)`}
   vector-effect="non-scaling-stroke"
-  stroke={'currentColor'}
+  stroke="currentColor"
   stroke-width="1"
   {...other}
 />

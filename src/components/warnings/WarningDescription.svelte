@@ -1,6 +1,5 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {
     description: string
@@ -22,9 +21,7 @@
 </script>
 
 <div class={['p-2 leading-5 hyphens-auto', className]} {...other}>
-  <div>
-    {description}
-  </div>
+  {description}
   <div class="my-1 pt-1 whitespace-pre-wrap">
     <strong class="leading-5 underline">{!!texts ? hintText : ''}</strong>
     {#each texts as text, i}
@@ -37,6 +34,3 @@
     {/each}
   </div>
 </div>
-
-<style>
-</style>

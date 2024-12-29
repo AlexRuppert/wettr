@@ -273,15 +273,18 @@
   }
 </script>
 
-<div class="flex w-[52rem] max-w-full flex-col select-none">
+<div class="flex w-208 max-w-full flex-col select-none">
   <div class="bg-surface-400 w-full self-center py-2 text-center">
     Regenradar
   </div>
-  <div class="max-h-radar relative aspect-square w-full" bind:this={mapElement}>
-    <div class="absolute top-0 left-0 z-99999 w-[calc(100%_-_60px)]">
+  <div
+    class="relative aspect-square max-h-[calc(70dvh_-_9rem)] w-full"
+    bind:this={mapElement}
+  >
+    <div class="absolute top-0 left-0 z-99999 w-[calc(100%_-_3.75rem)]">
       <!-- svelte-ignore non_reactive_update -->
       <div
-        class="bg-surface-500/40 absolute inline-block w-[60px] rounded-b-md py-1 text-center tabular-nums shadow-md backdrop-blur-xs transition-all ease-linear"
+        class="bg-surface-500/40 absolute inline-block w-15 rounded-b-md py-1 text-center tabular-nums shadow-md backdrop-blur-xs transition-all ease-linear"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}
       >
         {currentTimeLabel}
@@ -311,9 +314,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .max-h-radar {
-    max-height: calc(70dvh - 9rem);
-  }
-</style>

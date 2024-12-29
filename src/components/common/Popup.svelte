@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { type CustomElement } from '@/logic/svelte.svelte'
   import ModalBackground from '@/components/common/ModalBackground.svelte'
-  import { scale } from 'svelte/transition'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   import { backOut } from 'svelte/easing'
+  import { scale } from 'svelte/transition'
   import SvgIcon from '../icons/SvgIcon.svelte'
   import { closeIcon } from '../icons/icons'
 
@@ -34,7 +34,9 @@
     <div
       class="bg-surface-500 dark:bg-surface-100 pointer-events-auto relative mx-5 mt-8 h-fit max-w-md min-w-20 rounded-md"
     >
-      <div class="max-popup-h max-popup-w overflow-y-auto rounded-md">
+      <div
+        class="max-h-[calc(100dvh_-_10rem)] max-w-dvw overflow-y-auto rounded-md"
+      >
         {@render children()}
       </div>
 
@@ -49,12 +51,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .max-popup-h {
-    max-height: calc(100dvh - 10rem) !important;
-  }
-  .max-popup-w {
-    max-width: calc(100dvw);
-  }
-</style>

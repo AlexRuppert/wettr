@@ -1,8 +1,8 @@
 <script lang="ts">
   import AppInstall from '@/components/AppInstall.svelte'
   import Button from './common/Button.svelte'
-  import SvgIcon from './icons/SvgIcon.svelte'
   import { shareIcon } from './icons/icons'
+  import SvgIcon from './icons/SvgIcon.svelte'
   import ShareScreen from './ShareScreen.svelte'
   const links = [
     {
@@ -10,7 +10,7 @@
       name: 'Deutscher Wetterdienst',
       href: 'https://www.dwd.de',
     },
-    { label: 'via', name: 'brightsky.dev', href: '"https://brightsky.dev' },
+    { label: 'API', name: 'brightsky.dev', href: '"https://brightsky.dev' },
     {
       label: 'Code',
       name: 'GitHub',
@@ -21,26 +21,32 @@
   let showShareScreen = $state(false)
 </script>
 
-<ShareScreen bind:show={showShareScreen}></ShareScreen>
-<footer class="py-10 text-center text-sm">
-  <div class="self-center">
-    <AppInstall />
-  </div>
+<ShareScreen bind:opened={showShareScreen}></ShareScreen>
+<footer class="flex flex-col items-center space-y-8 py-10 text-sm">
+  <AppInstall />
+  <table>
+    <tbody>
+      {#each links as { label, name, href }}
+        <tr>
+          <td class="pr-5 text-right">{label}</td>
+          <td class="h-6"
+            ><a
+              {href}
+              class="text-text-soft underline"
+              target="_blank"
+              rel="noopener noreferrer">{name}</a
+            ></td
+          >
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 
-  {#each links as { label, name, href }}
-    {label}
-    <a
-      {href}
-      class="text-text-soft leading-7 underline"
-      target="_blank"
-      rel="noopener noreferrer">{name}</a
-    ><br />
-  {/each}
-  <div class="my-5 flex justify-center">
-    <Button
-      class="flex rounded-md border border-solid border-gray-400 px-4"
-      onclick={() => (showShareScreen = true)}
-      ><SvgIcon d={shareIcon} class="w-6"></SvgIcon>Teilen</Button
-    >
-  </div>
+  <Button
+    class="border-surface-100 flex border pr-4 pl-2"
+    onclick={() => (showShareScreen = true)}
+  >
+    <SvgIcon d={shareIcon} class="size-6 pt-1"></SvgIcon>
+    Teilen
+  </Button>
 </footer>

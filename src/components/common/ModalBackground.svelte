@@ -15,10 +15,8 @@
   }
 
   $effect.pre(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
+    document.body.style.overflow = show ? 'hidden' : 'auto'
+    if (!show) {
       onclose?.()
     }
   })

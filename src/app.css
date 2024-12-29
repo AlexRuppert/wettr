@@ -84,10 +84,6 @@ button {
   }
 }
 
-.selected {
-  @apply bg-primary text-text-primary;
-}
-
 .helper:after {
   content: '';
   position: absolute;
@@ -159,6 +155,12 @@ button {
   content: '';
 }
 
+.rotation90 {
+  width: 100vh;
+  height: 100vw;
+  transform-origin: 0 0;
+  transform: rotate(-90deg) translateX(-100%);
+}
 @keyframes shimmer {
   100% {
     transform: translateX(100%);

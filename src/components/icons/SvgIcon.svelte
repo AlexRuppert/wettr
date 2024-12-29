@@ -1,35 +1,23 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
+  import { getStrokeFill } from '@/logic/utils'
   interface Props extends CustomElement {
     d: string
-    fill?: string
     outline?: boolean
     strokeWidth?: number
   }
 
-  let { d, fill, outline = true, strokeWidth = 1, ...other }: Props = $props()
-
-  let { svgStroke, svgFill } = $derived(getStrokeFill(fill))
-
-  function getStrokeFill(fill: Props['fill']) {
-    let _fill = fill ?? 'currentColor'
-    if (outline) {
-      return { svgStroke: _fill, svgFill: 'none' }
-    } else {
-      return { svgStroke: 'none', svgFill: _fill }
-    }
-  }
+  let { d, outline = true, strokeWidth = 1, ...other }: Props = $props()
 </script>
 
 <svg
+  stroke-linejoin="round"
+  stroke-linecap="round"
   width="100%"
   height="100%"
   viewBox="0 0 30 30"
-  stroke-linejoin="round"
-  stroke-linecap="round"
   stroke-width={strokeWidth}
-  stroke={svgStroke}
-  fill={svgFill}
+  {...getStrokeFill(outline)}
   {...other}
 >
   <path {d} />

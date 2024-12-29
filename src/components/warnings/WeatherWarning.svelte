@@ -5,8 +5,10 @@
   import { weatherWarningData } from '@/stores/store.svelte'
   import { fade } from 'svelte/transition'
   import Popup from '../common/Popup.svelte'
+  import Button from '../common/Button.svelte'
+  import SvgCorner from '../icons/SvgCorner.svelte'
 
-  let popupOpened = $state(false)
+  let opened = $state(false)
   const hintText = 'ACHTUNG! Hinweis auf mögliche Gefahren: '
 
   let warnings = $derived(getWarnings(weatherWarningData.value ?? []))
@@ -14,11 +16,8 @@
   function getWarnings(weatherWarnings: any[]) {
     const now = new Date()
     let warnings = weatherWarnings.map(warning => ({
+      ...warning,
       time: formatTimes(now, warning.time),
-      level: warning.level,
-      icon: warning.type,
-      title: warning.event,
-      description: warning.description,
       instruction: warning.instruction.replace(hintText, ''),
     }))
 
@@ -43,8 +42,9 @@
 
   function formatTimes(now: Date, { start, end }) {
     const sameDay = start.getDay() === end.getDay()
-    const [s, e] = [start, end].map(t => formatSingleTime(now, t))
 
+    const s = formatSingleTime(now, start)
+    const e = formatSingleTime(now, end)
     let timeString = ''
     if (start < now) {
       timeString += 'bis '
@@ -60,32 +60,21 @@
   }
 </script>
 
-<Popup bind:opened={popupOpened}>
-  <div>
-    {#each warnings as warning}
-      <WarningItem subItem title={warning.title} time={warning.time} />
-      <WarningDescription
-        description={warning.description}
-        instruction={warning.instruction}
-        {hintText}
-      />
-    {/each}
-  </div>
+<Popup bind:opened>
+  {#each warnings as { event, time, description, instruction }}
+    <WarningItem {event} {time} class="bg-surface-500" />
+    <WarningDescription {description} {instruction} {hintText} />
+  {/each}
 </Popup>
 
 {#if warnings.length > 0}
-  <div
-    class="bg-surface-500 rounded-md shadow-md select-none"
-    in:fade={{ duration: 150 }}
-  >
+  <Button class="bg-surface-500 relative shadow-md select-none">
     <WarningItem
-      suffix={warnings.length > 1 ? `+${warnings.length - 1}` : ''}
-      onclick={() => (popupOpened = true)}
-      title={warnings[0].title}
+      onclick={() => (opened = true)}
+      event={warnings[0].event +
+        (warnings.length > 1 ? ` +${warnings.length - 1}` : '')}
       time={warnings[0].time}
     />
-  </div>
+    <SvgCorner class="text-warning"></SvgCorner>
+  </Button>
 {/if}
-
-<style global>
-</style>

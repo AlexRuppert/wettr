@@ -1,20 +1,16 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { cn, getWeatherIconClass } from '@/logic/utils'
+  import { getStrokeFill, getWeatherIconClass } from '@/logic/utils'
   import type { WeatherIconType } from '@/logic/weatherTypes'
 
   interface Props extends CustomElement {
     icon: WeatherIconType
     standalone?: boolean
-    transform?: { x: number; y: number; s: number }
-    monochrome?: boolean
     strokeWidth?: number
   }
   let {
     icon,
-    monochrome = false,
     standalone = false,
-    transform = { x: 0, y: 0, s: 1 },
     strokeWidth = 1,
     class: className,
     ...other
@@ -40,18 +36,14 @@
 
 {#snippet iconBody()}
   <g
+    vector-effect="non-scaling-stroke"
     class={[
       {
-        'text-rain': colorClass === 'rain' && !monochrome,
-        'text-sun': colorClass === 'sun' && !monochrome,
+        'stroke-rain': colorClass === 'rain',
+        'stroke-sun': colorClass === 'sun',
       },
     ]}
-    stroke="currentColor"
-    fill="none"
-    stroke-linejoin="round"
-    stroke-linecap="round"
-    vector-effect="non-scaling-stroke"
-    transform={`translate(${transform.x}, ${transform.y}) scale(${transform.s})`}
+    {...getStrokeFill(true)}
   >
     {#each iconData as href}
       <use {href} />
@@ -63,6 +55,8 @@
   {@render iconBody()}
 {:else}
   <svg
+    stroke-linejoin="round"
+    stroke-linecap="round"
     viewBox="0 0 30 30"
     stroke-width={strokeWidth}
     class={[className]}

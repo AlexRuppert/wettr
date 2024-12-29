@@ -106,7 +106,13 @@ export function retransform(css) {
     minify: true,
     filename: '',
     visitor: composeVisitors([pass3Visitor]),
-    unusedSymbols: ['container'],
+    unusedSymbols: [
+      'container',
+      '!transition',
+      '!transform',
+      '!visible',
+      '!block',
+    ],
   })
   return pass3.code.toString()
 }

@@ -1,67 +1,24 @@
 <script lang="ts">
   import { alertWarning } from '@/components/icons/icons'
   import SvgIcon from '@/components/icons/SvgIcon.svelte'
-
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { cn } from '@/logic/utils'
-  import SvgCorner from '../icons/SvgCorner.svelte'
 
   interface Props extends CustomElement {
-    title?: string
-    suffix?: string
+    event?: string
     time?: string
-    subItem?: boolean
   }
-  let {
-    title = '',
-    suffix = '',
-    time = '',
-    subItem = false,
-    class: className,
-    ...other
-  }: Props = $props()
+  let { event = '', time = '', class: className, ...other }: Props = $props()
 </script>
 
 <div
-  class={[
-    'relative flex h-14 w-full space-x-1 pr-3',
-    className,
-    subItem ? 'bg-surface-500' : 'clickable rounded-md',
-  ]}
-  role="button"
-  tabindex="0"
+  class={['flex h-14 w-full items-center space-x-1 px-3', className]}
   {...other}
 >
-  {#if !subItem}
-    <SvgCorner class="text-warning"></SvgCorner>
-  {/if}
-
-  <div
-    class={[
-      'text-text-soft ml-2 flex h-5 w-5 shrink-0 self-center',
-      {
-        'text-warning': !subItem,
-      },
-    ]}
-  >
-    <SvgIcon d={alertWarning} outline={false} />
+  <SvgIcon class="text-warning size-5" d={alertWarning} outline={false} />
+  <div class="grow overflow-hidden text-left font-semibold text-ellipsis">
+    {event}
   </div>
-  <div
-    class="flex grow self-center overflow-hidden font-semibold text-ellipsis"
-  >
-    {title}
-    <span class="ml-1 self-center text-xs font-light tracking-wide tabular-nums"
-      >{suffix}</span
-    >
-  </div>
-  <div
-    class={[
-      'flex self-center text-right text-xs font-light',
-      {
-        'pr-6': subItem,
-      },
-    ]}
-  >
+  <div class="text-right text-xs font-light">
     {time}
   </div>
 </div>
