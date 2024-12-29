@@ -9,6 +9,6 @@
   let { top, bottom, class: className, ...other }: Props = $props()
 </script>
 
-<div class={cn('self-center pt-0.5 text-[0.6rem]', className)} {...other}>
+<div class={['self-center pt-0.5 text-[0.6rem]', className]} {...other}>
   <sup>{top}</sup>/<sub>{bottom}</sub>
 </div>

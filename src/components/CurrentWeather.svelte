@@ -49,21 +49,24 @@
 >
 
 <div
-  class="rounded-default bg-surface-500 *:rounded-default *:bg-surface-500 flex space-x-1 tabular-nums select-none *:relative *:shadow-md"
+  class="rounded-default *:rounded-default flex space-x-1 tabular-nums select-none *:relative *:shadow-md"
 >
   {#if weather && weather.timestamp}
     <div
       transition:fade={{ duration: 200 }}
-      class={cn('flex h-16  grow  items-center justify-center', {
-        'bg-rain/10': getWeatherIconClass(weather.icon) == 'rain',
-        'bg-sun/10': getWeatherIconClass(weather.icon) == 'sun',
-      })}
+      class={[
+        'flex h-16 grow items-center justify-center',
+        {
+          'bg-rain/10': getWeatherIconClass(weather.icon) == 'rain',
+          'bg-sun/10': getWeatherIconClass(weather.icon) == 'sun',
+        },
+      ]}
     >
       <div class="text-text-hard w-16 shrink-0">
         <WeatherIcon class="pt-2 pl-2" icon={weather.icon} strokeWidth={2} />
       </div>
       <div class="flex w-24 shrink-0 grow justify-center text-5xl font-light">
-        <div class={cn('celsius', { negative: weather.temperature < 0 })}>
+        <div class={['celsius', { negative: weather.temperature < 0 }]}>
           {Math.abs(weather.temperature)}
         </div>
       </div>
@@ -80,10 +83,13 @@
         <div>
           <SvgIcon class="block size-6" d={windDirection} />
           <div
-            class={cn('flex items-center space-x-0.5', {
-              'text-warning font-semibold':
-                weather.wind_speed_10 > SHOW_WINDSPEED_WARNING_AFTER,
-            })}
+            class={[
+              'flex items-center space-x-0.5',
+              {
+                'text-warning font-semibold':
+                  weather.wind_speed_10 > SHOW_WINDSPEED_WARNING_AFTER,
+              },
+            ]}
           >
             <div class="text-right">
               {toLocalDecimal(weather.wind_speed_10 ?? 0)}

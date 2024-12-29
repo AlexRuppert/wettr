@@ -1,5 +1,6 @@
+type ClassString = string | object | ClassString[]
 export interface CustomElement {
-  class?: string
+  class?: ClassString
   [k: string]: any
 }
 

@@ -179,21 +179,21 @@
 
 <ModalBackground show={openedSuggestions} onclose={closeSuggestions} />
 
-<div class={cn('flex items-center', { 'h-dvh': noLocation })}>
+<div class={['flex items-center', { 'h-dvh': noLocation }]}>
   <div
-    class={cn(
+    class={[
       'rounded-default relative h-10 w-full shadow-md',
       openedSuggestions ? 'bg-surface-400 z-50' : 'bg-surface-500',
-    )}
+    ]}
   >
     <SvgCorner></SvgCorner>
     <label
-      class={cn(
+      class={[
         'rounded-default ring-primary flex size-full items-center justify-center overflow-hidden ring-inset',
         {
           'dark:bg-surface-100 ring-2': noLocation,
         },
-      )}
+      ]}
     >
       <span class="hidden">O-r-t</span
       ><!--prevent stupid browsers to show autocomplete despite off-flag-->
@@ -228,9 +228,12 @@
         {#each suggestions as entry, i}
           <a
             href={'#'}
-            class={cn('block cursor-pointer px-3 py-2 text-lg no-underline', {
-              selected: i === selectedSuggestion,
-            })}
+            class={[
+              'block cursor-pointer px-3 py-2 text-lg no-underline',
+              {
+                selected: i === selectedSuggestion,
+              },
+            ]}
             onclick={() => selectSuggestion(entry)}
             onmouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
           >

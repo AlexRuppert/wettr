@@ -34,7 +34,7 @@
 </script>
 
 <path
-  class={cn(className)}
+  class={[className]}
   {d}
   transform-origin="4 0"
   transform={`translate(${x - 15 / 2}, ${y}) scale(0.45)`}

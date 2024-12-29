@@ -47,12 +47,12 @@
           class="rounded-default bg-surface-500 relative flex h-32 overflow-hidden shadow-md"
         >
           <div
-            class={cn(
+            class={[
               'border-surface-300 absolute top-0 left-0 z-10 flex h-8 w-12 items-center rounded-br-md border-r border-b tracking-tighter shadow-xs backdrop-blur-[3px]',
               {
                 'bg-highlight/20': formattedDay[i].isWeekend,
               },
-            )}
+            ]}
           >
             <div class="flex items-end tracking-tighter">
               <div class="w-7 text-center text-xl">

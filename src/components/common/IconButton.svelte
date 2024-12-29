@@ -19,6 +19,6 @@
   }: Props = $props()
 </script>
 
-<Button class={cn('size-10', className)} {label} {...other}>
+<Button class={['size-10', className]} {label} {...other}>
   <SvgIcon d={icon} {outline} {strokeWidth} />
 </Button>

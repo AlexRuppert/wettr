@@ -420,8 +420,7 @@
           <text class="stroke-surface-500/90" stroke-width="3"
             >{point.temperature}
           </text>
-          <text
-            class={cn(point.temperature < 0 ? 'fill-rain' : 'fill-text-hard')}
+          <text class={[point.temperature < 0 ? 'fill-rain' : 'fill-text-hard']}
             >{point.temperature}</text
           >
         </g>

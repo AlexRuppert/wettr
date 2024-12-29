@@ -26,10 +26,10 @@
 </script>
 
 <div
-  class={cn(
+  class={[
     'pointer-events-none absolute h-full w-full opacity-30 group-hover:opacity-100',
     className,
-  )}
+  ]}
   {...other}
 >
   <svg

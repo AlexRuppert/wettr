@@ -14,10 +14,10 @@
 </script>
 
 <button
-  class={cn(
+  class={[
     'clickable rounded-default flex appearance-none items-center justify-center p-1',
     className,
-  )}
+  ]}
   aria-label={label}
   {...other}
 >

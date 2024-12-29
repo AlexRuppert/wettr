@@ -40,10 +40,12 @@
 
 {#snippet iconBody()}
   <g
-    class={cn({
-      'text-rain': colorClass === 'rain' && !monochrome,
-      'text-sun': colorClass === 'sun' && !monochrome,
-    })}
+    class={[
+      {
+        'text-rain': colorClass === 'rain' && !monochrome,
+        'text-sun': colorClass === 'sun' && !monochrome,
+      },
+    ]}
     stroke="currentColor"
     fill="none"
     stroke-linejoin="round"
@@ -63,7 +65,7 @@
   <svg
     viewBox="0 0 30 30"
     stroke-width={strokeWidth}
-    class={cn(className)}
+    class={[className]}
     {...other}
   >
     {@render iconBody()}

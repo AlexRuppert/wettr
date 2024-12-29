@@ -14,7 +14,7 @@
 </script>
 
 <div
-  class={cn('outlined-path origin-center', className)}
+  class={['outlined-path origin-center', className]}
   {...other}
   style="transform: scale({scale}) rotate({direction + 90}deg)"
 >

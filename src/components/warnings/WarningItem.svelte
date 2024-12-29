@@ -23,11 +23,11 @@
 </script>
 
 <div
-  class={cn(
+  class={[
     'relative flex h-14 w-full space-x-1 pr-3',
     className,
     subItem ? 'bg-surface-500' : 'clickable rounded-md',
-  )}
+  ]}
   role="button"
   tabindex="0"
   {...other}
@@ -37,9 +37,12 @@
   {/if}
 
   <div
-    class={cn('text-text-soft ml-2 flex h-5 w-5 shrink-0 self-center', {
-      'text-warning': !subItem,
-    })}
+    class={[
+      'text-text-soft ml-2 flex h-5 w-5 shrink-0 self-center',
+      {
+        'text-warning': !subItem,
+      },
+    ]}
   >
     <SvgIcon d={alertWarning} outline={false} />
   </div>
@@ -52,9 +55,12 @@
     >
   </div>
   <div
-    class={cn('flex self-center text-right text-xs font-light', {
-      'pr-6': subItem,
-    })}
+    class={[
+      'flex self-center text-right text-xs font-light',
+      {
+        'pr-6': subItem,
+      },
+    ]}
   >
     {time}
   </div>

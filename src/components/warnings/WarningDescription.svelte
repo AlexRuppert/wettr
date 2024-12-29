@@ -21,7 +21,7 @@
   let links = $derived(instruction?.match(LINK_REGEX) ?? [])
 </script>
 
-<div class={cn('p-2 leading-5 hyphens-auto', className)} {...other}>
+<div class={['p-2 leading-5 hyphens-auto', className]} {...other}>
   <div>
     {description}
   </div>
