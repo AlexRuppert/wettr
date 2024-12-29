@@ -278,10 +278,10 @@
     Regenradar
   </div>
   <div class="max-h-radar relative aspect-square w-full" bind:this={mapElement}>
-    <div class="absolute top-0 left-0 z-99999">
+    <div class="absolute top-0 left-0 z-99999 w-[calc(100%_-_60px)]">
       <!-- svelte-ignore non_reactive_update -->
       <div
-        class="bg-surface-500 dark:bg-surface-100 absolute inline-block w-[60px] rounded-b-md py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear"
+        class="bg-surface-500/40 absolute inline-block w-[60px] rounded-b-md py-1 text-center tabular-nums shadow-md backdrop-blur-xs transition-all ease-linear"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}
       >
         {currentTimeLabel}
@@ -302,7 +302,9 @@
       <Button onclick={() => advanceFrame(15)}>+15</Button>
     </div>
     <div>
-      <Button class="flex w-full space-x-2" onclick={() => showSuperFrame()}
+      <Button
+        class="clickable flex h-14 w-full space-x-2"
+        onclick={() => showSuperFrame()}
         ><SvgIcon d={overlapAll} class="mr-1 size-5"
         ></SvgIcon>Überlagern</Button
       >

@@ -34,7 +34,7 @@
     <div
       class="bg-surface-500 dark:bg-surface-100 pointer-events-auto relative mx-5 mt-8 h-fit max-w-md min-w-20 rounded-md"
     >
-      <div class="max-popup-h max-popup-w overflow-y-auto">
+      <div class="max-popup-h max-popup-w overflow-y-auto rounded-md">
         {@render children()}
       </div>
 
