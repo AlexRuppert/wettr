@@ -50,13 +50,13 @@ let pass1Visitor = {
 }
 let pass2Visitor = {
   Declaration(v) {
-    if (v.property === 'custom') {
+    if (v.property === 'custom' && v?.value?.name?.startsWith('--')) {
       if (!referencedVariables.has(v.value.name)) {
         return []
       }
     }
+    return v
   },
-
   VariableExit(v) {
     if (themeLookup.has(v.name.ident)) {
       return themeLookup.get(v.name.ident)
