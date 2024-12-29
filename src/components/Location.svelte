@@ -182,14 +182,14 @@
 <div class={['flex items-center', { 'h-dvh': noLocation }]}>
   <div
     class={[
-      'rounded-default relative h-10 w-full shadow-md',
+      'relative h-10 w-full rounded-md shadow-md',
       openedSuggestions ? 'bg-surface-400 z-50' : 'bg-surface-500',
     ]}
   >
     <SvgCorner></SvgCorner>
     <label
       class={[
-        'rounded-default ring-primary flex size-full items-center justify-center overflow-hidden ring-inset',
+        'ring-primary flex size-full items-center justify-center overflow-hidden rounded-md ring-inset',
         {
           'dark:bg-surface-100 ring-2': noLocation,
         },
@@ -222,7 +222,7 @@
     </div>
     {#if openedSuggestions}
       <div
-        class="rounded-default bg-surface-500 absolute left-0 mt-px w-full overflow-hidden shadow-lg"
+        class="bg-surface-500 absolute left-0 mt-px w-full overflow-hidden rounded-md shadow-lg"
         in:fly={{ duration: TRANSITION_TIME, y: -5 }}
       >
         {#each suggestions as entry, i}

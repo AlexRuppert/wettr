@@ -49,7 +49,7 @@
 >
 
 <div
-  class="rounded-default *:rounded-default flex space-x-1 tabular-nums select-none *:relative *:shadow-md"
+  class="bg-surface-500 flex space-x-1 rounded-md tabular-nums select-none *:relative *:rounded-md *:shadow-md"
 >
   {#if weather && weather.timestamp}
     <div

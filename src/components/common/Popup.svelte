@@ -32,7 +32,7 @@
     class="pointer-events-none fixed inset-0 z-99 flex justify-center"
   >
     <div
-      class="rounded-default bg-surface-500 dark:bg-surface-100 pointer-events-auto relative mx-5 mt-8 h-fit max-w-md min-w-20"
+      class="bg-surface-500 dark:bg-surface-100 pointer-events-auto relative mx-5 mt-8 h-fit max-w-md min-w-20 rounded-md"
     >
       <div class="max-popup-h max-popup-w overflow-y-auto">
         {@render children()}

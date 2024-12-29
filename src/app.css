@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 
 @theme {
-  --radius-default: 0.375rem;
   --color-primary: var(--color-tw-primary);
   --color-surface-50: var(--color-tw-surface-50);
   --color-surface-100: var(--color-tw-surface-100);
@@ -66,6 +65,14 @@ html {
   scrollbar-gutter: stable;
   background-color: #fafafa;
 }
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  touch-action: manipulation;
+  color: inherit;
+}
 
 .clickable {
   @apply active:bg-primary/50 cursor-pointer;
@@ -77,16 +84,10 @@ html {
   }
 }
 
-input {
-  -webkit-tap-highlight-color: transparent;
-}
 .selected {
   @apply bg-primary text-text-primary;
 }
-button {
-  touch-action: manipulation;
-  color: inherit;
-}
+
 .helper:after {
   content: '';
   position: absolute;

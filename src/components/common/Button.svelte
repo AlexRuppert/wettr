@@ -15,7 +15,7 @@
 
 <button
   class={[
-    'clickable rounded-default flex appearance-none items-center justify-center p-1',
+    'clickable flex appearance-none items-center justify-center rounded-md p-1',
     className,
   ]}
   aria-label={label}

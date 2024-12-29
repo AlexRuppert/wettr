@@ -44,7 +44,7 @@
       {#each weather as day, i (day)}
         <div
           transition:fade={{ duration: 200 }}
-          class="rounded-default bg-surface-500 relative flex h-32 overflow-hidden shadow-md"
+          class="bg-surface-500 relative flex h-32 overflow-hidden rounded-md shadow-md"
         >
           <div
             class={[
@@ -75,7 +75,7 @@
   {:else}
     {#each dummySkeletonDays as day, i}
       <div
-        class="skeleton rounded-default bg-surface-500 h-32 w-full overflow-hidden shadow-md"
+        class="skeleton bg-surface-500 h-32 w-full overflow-hidden rounded-md shadow-md"
       ></div>
     {/each}
   {/if}
