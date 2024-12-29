@@ -1,7 +1,8 @@
 <script lang="ts">
-  import SvgIcon from '@/components/icons/SvgIcon.svelte'
   import Button from '@/components/common/Button.svelte'
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import SvgIcon from '@/components/icons/SvgIcon.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn } from '@/logic/utils'
   interface Props extends CustomElement {
     icon: string
     label?: string
@@ -11,13 +12,13 @@
   let {
     icon,
     label = 'Button',
-    outline = false,
+    outline = true,
     strokeWidth = 1,
-    className = '',
+    class: className,
     ...other
   }: Props = $props()
 </script>
 
-<Button {className} {label} {...other}>
+<Button class={['size-10', className]} {label} {...other}>
   <SvgIcon d={icon} {outline} {strokeWidth} />
 </Button>

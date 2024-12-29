@@ -1,10 +1,7 @@
+type ClassString = string | object | ClassString[]
 export interface CustomElement {
-  className?: string
+  class?: ClassString
   [k: string]: any
-}
-
-export function classProp(baseClass: string, classString: string) {
-  return baseClass + ' ' + (classString ?? '')
 }
 
 export function once(fn: { call: (arg0: any, arg1: any) => void }) {

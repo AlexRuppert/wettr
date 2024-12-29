@@ -6,7 +6,7 @@
   import { humidity, windDirection } from '@/components/icons/icons'
   import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { getWeatherIconClass, toLocalDecimal } from '@/logic/utils'
+  import { cn, getWeatherIconClass, toLocalDecimal } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import {
     currentWeatherData,
@@ -48,26 +48,25 @@
   {/if}</Popup
 >
 
-
 <div
-  class="flex select-none space-x-1 rounded-default bg-surface-500 tabular-nums *:relative *:rounded-default *:bg-surface-500 *:shadow-md"
+  class="bg-surface-500 flex space-x-1 rounded-md tabular-nums select-none *:relative *:rounded-md *:shadow-md"
 >
   {#if weather && weather.timestamp}
     <div
       transition:fade={{ duration: 200 }}
-      class="flex h-16 grow items-center justify-center"
-      class:rain={getWeatherIconClass(weather.icon) == 'rain'}
-      class:sun={getWeatherIconClass(weather.icon) == 'sun'}
+      class={[
+        'flex h-16 grow items-center justify-center',
+        {
+          'bg-rain/10': getWeatherIconClass(weather.icon) == 'rain',
+          'bg-sun/10': getWeatherIconClass(weather.icon) == 'sun',
+        },
+      ]}
     >
-      <div class="w-16 shrink-0 text-text-hard">
-        <WeatherIcon
-          className="pt-2 pl-2"
-          icon={weather.icon}
-          strokeWidth={2}
-        />
+      <div class="text-text-hard w-16 shrink-0">
+        <WeatherIcon class="pt-2 pl-2" icon={weather.icon} strokeWidth={2} />
       </div>
       <div class="flex w-24 shrink-0 grow justify-center text-5xl font-light">
-        <div class="celsius" class:negative={weather.temperature < 0}>
+        <div class={['celsius', { negative: weather.temperature < 0 }]}>
           {Math.abs(weather.temperature)}
         </div>
       </div>
@@ -75,18 +74,22 @@
         class="flex h-full w-full justify-end space-x-2 self-center *:flex *:h-full *:w-16 *:flex-col *:items-center *:justify-center"
       >
         <div>
-          <SvgIcon className="block size-6" d={humidity} outline />
+          <SvgIcon class="block size-6" d={humidity} />
           <div class="flex items-center space-x-0.5">
             <div class="text-right">{weather.relative_humidity}</div>
             <div class="text-[0.8em]">%</div>
           </div>
         </div>
         <div>
-          <SvgIcon className="block size-6" d={windDirection} outline />
+          <SvgIcon class="block size-6" d={windDirection} />
           <div
-            class="flex items-center space-x-0.5"
-            class:current-warning-text={weather.wind_speed_10 >
-              SHOW_WINDSPEED_WARNING_AFTER}
+            class={[
+              'flex items-center space-x-0.5',
+              {
+                'text-warning font-semibold':
+                  weather.wind_speed_10 > SHOW_WINDSPEED_WARNING_AFTER,
+              },
+            ]}
           >
             <div class="text-right">
               {toLocalDecimal(weather.wind_speed_10 ?? 0)}
@@ -118,9 +121,3 @@
     <div class="skeleton h-16 w-full"></div>
   {/if}
 </div>
-
-<style>
-  .current-warning-text {
-    @apply font-semibold text-warning;
-  }
-</style>

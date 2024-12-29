@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { dark, light } from '@/../themes'
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { chunk, clamp, getWeatherIconClass } from '@/logic/utils'
   import { type DayWeatherData } from '@/logic/weatherTypes'
-  import { darkMode } from '@/stores/store.svelte'
-  import { cubicOut } from 'svelte/easing'
-  import { tweened } from 'svelte/motion'
-  import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
-  import TimelineNumber from './icons/TimelineNumber.svelte'
   import { onDestroy, untrack } from 'svelte'
+  import { cubicOut } from 'svelte/easing'
+  import { Tween } from 'svelte/motion'
+  import TimelineNumber from './icons/TimelineNumber.svelte'
+  import WeatherIcon from './icons/WeatherIcon.svelte'
   interface Props extends CustomElement {
     weather: DayWeatherData
     animate: boolean
@@ -61,12 +59,11 @@
   let windGustPoints = $state([])
   let dayString = $derived(weather.day.toISOString())
 
-  let colors = $derived(updateColors(darkMode.value))
   let nowLineX = $derived(
     isToday ? getX(now.getHours() + now.getMinutes() / 60) : -5,
   )
 
-  const clipPercent = tweened(0, {
+  const clipPercent = new Tween(0, {
     duration: 300,
     delay: 0,
     easing: cubicOut,
@@ -96,25 +93,7 @@
   function updateNow() {
     now = new Date()
   }
-  function updateColors(darkMode: boolean) {
-    const theme = darkMode ? dark : light
-    function hslOpacity(hsl: string, opacity = 1) {
-      return hsl.replace(')', '/ ' + opacity + ')')
-    }
-    return {
-      dataLabelBackgroundColor: hslOpacity(theme.surface[500], 0.9),
-      pointBackgroundColor: hslOpacity(theme.surface[500], 1),
-      currentTime: theme.highlight,
-      tick: hslOpacity(theme.text.soft, 0.9),
-      night: hslOpacity(theme.surface[50], 1),
-      temperature: theme.text.hard,
-      temperatureGraph: hslOpacity(theme.text.soft, 0.8),
-      precipitation: theme.rain,
-      precipitationFill: hslOpacity(theme.rain, 0.2),
-      sunniness: theme.sun,
-      sunninessFill: hslOpacity(theme.sun, 0.1),
-    }
-  }
+
   function updateData(weather: DayWeatherData) {
     const { sunrise, sunset } = weather.dayLight
 
@@ -321,22 +300,21 @@
         <path d={precipitationPath + 'V0H0V100z'} />
       </clipPath>
     </defs>
-    <g stroke={colors.night} stroke-width="3" stroke-linecap="round">
-      {#if darkMode.value}
-        <path
-          d="M{dayLengthsX[0] + 1} {totalHeight -
-            PADDING_Y +
-            4}H{dayLengthsX[1] - 1}"
-        />
-      {:else}
-        <path
-          d="M{0} {totalHeight -
-            PADDING_Y +
-            4}H{dayLengthsX[0]}M{dayLengthsX[1]} {totalHeight -
-            PADDING_Y +
-            4}H{width}"
-        />per
-      {/if}
+    <g class="stroke-surface-50" stroke-width="3" stroke-linecap="round">
+      <path
+        class="invisible dark:visible"
+        d="M{dayLengthsX[0] + 1} {totalHeight - PADDING_Y + 4}H{dayLengthsX[1] -
+          1}"
+      />
+
+      <path
+        class="visible dark:invisible"
+        d="M{0} {totalHeight -
+          PADDING_Y +
+          4}H{dayLengthsX[0]}M{dayLengthsX[1]} {totalHeight -
+          PADDING_Y +
+          4}H{width}"
+      />
     </g>
 
     {#each hours as hour, i}
@@ -344,7 +322,7 @@
         x={getX(hour)}
         y={totalHeight - PADDING_Y - 16}
         number={hour}
-        className={'text-' + summaryBlocks[i].iconClass}
+        class={'text-' + summaryBlocks[i].iconClass}
       ></TimelineNumber>
     {/each}
 
@@ -365,14 +343,14 @@
     {/each}
 
     <path
-      stroke={colors.tick}
+      class="stroke-text-soft/90"
       stroke-width="4"
       stroke-linecap="butt"
       stroke-dasharray="1 {2 * ((width - 4) / hoursTotal) - 2}"
       d="M{PADDING_X} {height + 0.5}h{width - 2 * hourWidth}"
     />
     <path
-      stroke={colors.tick}
+      class="stroke-text-soft/90"
       stroke-width="2"
       opacity="70%"
       stroke-linecap="butt"
@@ -384,24 +362,22 @@
         href="#wind-indicator"
         x={windGust.x + 10}
         y={totalHeight - PADDING_Y - 18}
-        stroke={colors.temperature}
+        class="stroke-text-hard/90"
       />
     {/each}
     <path
-      class="mix-blend-darken dark:mix-blend-lighten"
+      class="stroke-highlight mix-blend-darken dark:mix-blend-lighten"
       d="M{nowLineX} 0v{totalHeight}"
-      stroke={colors.currentTime}
       stroke-width="1"
     />
 
     <g
       clip-path="url(#cut-off)"
       class="origin-bottom"
-      transform="scale(1 {$clipPercent})"
+      transform="scale(1 {clipPercent.current})"
     >
       <path
-        fill={colors.sunninessFill}
-        stroke={colors.sunniness}
+        class="fill-sun/10 stroke-sun"
         stroke-dasharray="1 3"
         stroke-width="2"
         stroke-linecap="butt"
@@ -414,23 +390,17 @@
       />
       <path
         stroke-dasharray="4,5"
-        fill={colors.precipitationFill}
-        stroke={colors.precipitation}
+        class="fill-rain/20 stroke-rain"
         d={precipitationPath + pathFillCloseSuffix}
       />
-      <path
-        stroke-width="1"
-        stroke={colors.temperatureGraph}
-        d={temperaturePath}
-      />
+      <path stroke-width="1" class="stroke-text-soft/80" d={temperaturePath} />
 
       {#each temperatureLabelPoints as point, i}
         <use
           href={'#celsius-circle'}
           x={point.x + 2}
           y={Math.min(point.y, height - 2.7)}
-          stroke={colors.temperature}
-          fill={colors.pointBackgroundColor}
+          class="fill-surface-500 stroke-text-hard"
         />
         <g
           font-size={point.isExtremeTemperature ? '1.7em' : '0.9em'}
@@ -445,13 +415,11 @@
             (point.isHighest ? 10 : 0) +
             (point.isLowest ? -2 : 0)})"
         >
-          <text stroke={colors.dataLabelBackgroundColor} stroke-width="3"
+          <text class="stroke-surface-500/90" stroke-width="3"
             >{point.temperature}
           </text>
-          <text
-            fill={point.temperature < 0
-              ? colors.precipitation
-              : colors.temperature}>{point.temperature}</text
+          <text class={[point.temperature < 0 ? 'fill-rain' : 'fill-text-hard']}
+            >{point.temperature}</text
           >
         </g>
       {/each}

@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn, getWeatherIconClass } from '@/logic/utils'
   import type { WeatherIconType } from '@/logic/weatherTypes'
-  import { getWeatherIconClass } from '@/logic/utils'
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
 
   interface Props extends CustomElement {
     icon: WeatherIconType
@@ -16,7 +16,7 @@
     standalone = false,
     transform = { x: 0, y: 0, s: 1 },
     strokeWidth = 1,
-    className = '',
+    class: className,
     ...other
   }: Props = $props()
 
@@ -40,8 +40,12 @@
 
 {#snippet iconBody()}
   <g
-    class:text-rain={colorClass === 'rain' && !monochrome}
-    class:text-sun={colorClass === 'sun' && !monochrome}
+    class={[
+      {
+        'text-rain': colorClass === 'rain' && !monochrome,
+        'text-sun': colorClass === 'sun' && !monochrome,
+      },
+    ]}
     stroke="currentColor"
     fill="none"
     stroke-linejoin="round"
@@ -61,7 +65,7 @@
   <svg
     viewBox="0 0 30 30"
     stroke-width={strokeWidth}
-    class={classProp('', className)}
+    class={[className]}
     {...other}
   >
     {@render iconBody()}

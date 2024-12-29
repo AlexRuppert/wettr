@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   interface Props extends CustomElement {
     d: string
     fill?: string
@@ -7,14 +7,7 @@
     strokeWidth?: number
   }
 
-  let {
-    d,
-    fill,
-    outline = false,
-    strokeWidth = 1,
-    className,
-    ...other
-  }: Props = $props()
+  let { d, fill, outline = true, strokeWidth = 1, ...other }: Props = $props()
 
   let { svgStroke, svgFill } = $derived(getStrokeFill(fill))
 
@@ -37,7 +30,6 @@
   stroke-width={strokeWidth}
   stroke={svgStroke}
   fill={svgFill}
-  class={className}
   {...other}
 >
   <path {d} />

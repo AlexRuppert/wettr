@@ -19,6 +19,7 @@
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { stageReload } from '@/logic/reloader'
   import SvgCorner from './icons/SvgCorner.svelte'
+  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
@@ -178,24 +179,28 @@
 
 <ModalBackground show={openedSuggestions} onclose={closeSuggestions} />
 
-<div class="flex items-center" class:h-dvh={noLocation}>
+<div class={['flex items-center', { 'h-dvh': noLocation }]}>
   <div
-    class="relative h-10 w-full rounded-default bg-surface-500 shadow-md"
-    class:z-50={openedSuggestions}
-    class:!bg-surface-400={openedSuggestions}
+    class={[
+      'relative h-10 w-full rounded-md shadow-md',
+      openedSuggestions ? 'bg-surface-400 z-50' : 'bg-surface-500',
+    ]}
   >
     <SvgCorner></SvgCorner>
     <label
-      class="justify-cente flex size-full items-center overflow-hidden rounded-default ring-inset ring-primary"
-      class:ring-2={noLocation}
-      class:dark:bg-surface-100={noLocation}
+      class={[
+        'ring-primary flex size-full items-center justify-center overflow-hidden rounded-md ring-inset',
+        {
+          'dark:bg-surface-100 ring-2': noLocation,
+        },
+      ]}
     >
       <span class="hidden">O-r-t</span
       ><!--prevent stupid browsers to show autocomplete despite off-flag-->
       <input
         id="location"
         type="text"
-        class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-none"
+        class="w-full bg-transparent text-center text-xl leading-10 placeholder-current outline-hidden"
         placeholder="Ort"
         autocomplete="off"
         spellcheck="false"
@@ -207,25 +212,28 @@
       />
     </label>
 
-    <div class="absolute left-0 top-0 opacity-30">
+    <div class="absolute top-0 left-0 opacity-30">
       <SvgCorner></SvgCorner>
       <IconButton
         label="Get Current Location"
         icon={gps}
-        outline
         onclick={getGeoLocation}
       />
     </div>
     {#if openedSuggestions}
       <div
-        class="absolute left-0 mt-px w-full overflow-hidden rounded-default bg-surface-500 shadow-lg"
+        class="bg-surface-500 absolute left-0 mt-px w-full overflow-hidden rounded-md shadow-lg"
         in:fly={{ duration: TRANSITION_TIME, y: -5 }}
       >
         {#each suggestions as entry, i}
           <a
             href={'#'}
-            class="block cursor-pointer px-3 py-2 text-lg no-underline"
-            class:selected={i === selectedSuggestion}
+            class={[
+              'block cursor-pointer px-3 py-2 text-lg no-underline',
+              {
+                selected: i === selectedSuggestion,
+              },
+            ]}
             onclick={() => selectSuggestion(entry)}
             onmouseenter={() => (selectedSuggestion = i)}>{entry.name}</a
           >

@@ -51,29 +51,27 @@
 
 {#if showInstallButton && showInstallOverlay}
   <div
-    class="fixed bottom-1 left-0 right-0 flex justify-center"
+    class="fixed right-0 bottom-1 left-0 flex justify-center"
     transition:scale
   >
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
-      class="helper relative rounded bg-neutral-100 p-2 text-neutral-900 shadow-md"
+      class="helper relative rounded-sm bg-neutral-100 p-2 text-neutral-900 shadow-md"
       role="button"
       tabindex="0"
       onclick={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:
       <SvgIcon
-        className="-mx-1 inline-block h-5 w-5 align-middle "
+        class="-mx-1 inline-block h-5 w-5 align-middle "
         d={shareIcon}
         fill="#16c"
-        outline
       />
       und
       <SvgIcon
-        className="-mx-1 inline-block h-5 w-5 align-middle "
+        class="-mx-1 inline-block h-5 w-5 align-middle "
         d={addBox}
         fill="#16c"
-        outline
       />
     </div>
   </div>

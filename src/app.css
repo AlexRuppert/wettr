@@ -1,39 +1,81 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer utilities {
-  .center {
-    @apply flex items-center justify-center;
+@theme {
+  --color-primary: var(--color-tw-primary);
+  --color-surface-50: var(--color-tw-surface-50);
+  --color-surface-100: var(--color-tw-surface-100);
+  --color-surface-200: var(--color-tw-surface-200);
+  --color-surface-300: var(--color-tw-surface-300);
+  --color-surface-400: var(--color-tw-surface-400);
+  --color-surface-500: var(--color-tw-surface-500);
+  --color-highlight: var(--color-tw-highlight);
+  --color-warning: var(--color-tw-warning);
+  --color-text-hard: var(--color-tw-text-hard);
+  --color-text-soft: var(--color-tw-text-soft);
+  --color-text-primary: var(--color-tw-text-primary);
+  --color-rain: var(--color-tw-rain);
+  --color-sun: var(--color-tw-sun);
+}
+
+@layer base {
+  :root {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    @apply text-text-hard bg-gray-200;
+    height: 100%;
+    margin: 0;
+    color-scheme: light dark;
+
+    --color-tw-primary: oklch(0.55 0.22 259);
+    --color-tw-surface-500: oklch(1 0 106);
+    --color-tw-surface-400: oklch(0.96 0 255);
+    --color-tw-surface-300: oklch(0.84 0 255);
+    --color-tw-surface-200: oklch(0.76 0 255);
+    --color-tw-surface-100: oklch(0.59 0 255);
+    --color-tw-surface-50: oklch(0.54 0 255);
+    --color-tw-highlight: oklch(0.55 0.25 291);
+    --color-tw-warning: oklch(0.64 0.19 42);
+    --color-tw-text-hard: oklch(0 0 0);
+    --color-tw-text-soft: oklch(0.39 0 0);
+    --color-tw-text-primary: oklch(0.96 0 248);
+    --color-tw-rain: oklch(0.55 0.22 259);
+    --color-tw-sun: oklch(0.74 0.16 74);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-tw-primary: oklch(0.55 0.22 259);
+      --color-tw-surface-500: oklch(0.2 0 255);
+      --color-tw-surface-400: oklch(0.24 0 255);
+      --color-tw-surface-300: oklch(0.27 0 255);
+      --color-tw-surface-200: oklch(0.29 0 255);
+      --color-tw-surface-100: oklch(0.32 0 255);
+      --color-tw-surface-50: oklch(0.42 0 255);
+      --color-tw-highlight: oklch(0.65 0.2 296);
+      --color-tw-warning: oklch(0.65 0.19 42);
+      --color-tw-text-hard: oklch(0.84 0.01 248);
+      --color-tw-text-soft: oklch(0.71 0.01 248);
+      --color-tw-text-primary: oklch(0.96 0.01 248);
+      --color-tw-rain: oklch(0.63 0.2 257);
+      --color-tw-sun: oklch(0.86 0.16 85);
+    }
   }
 }
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  @apply bg-gray-200 text-text-hard;
-  height: 100%;
-  margin: 0;
-}
+
 html {
   scrollbar-gutter: stable;
+  background-color: #fafafa;
 }
-html.dark {
-  @apply bg-[#000];
-}
-
-body {
-  margin: 0;
+input {
+  -webkit-tap-highlight-color: transparent;
 }
 
-.rain {
-  @apply !bg-rain/10;
-}
-.sun {
-  @apply !bg-sun/10;
+button {
+  touch-action: manipulation;
+  color: inherit;
 }
 
 .clickable {
-  @apply cursor-pointer active:bg-primary/50;
+  @apply active:bg-primary/50 cursor-pointer;
   -webkit-tap-highlight-color: hsl(var(--twc-primary) / 0.2);
 }
 @media (hover: hover) {
@@ -42,16 +84,10 @@ body {
   }
 }
 
-input {
-  -webkit-tap-highlight-color: transparent;
-}
 .selected {
   @apply bg-primary text-text-primary;
 }
-button {
-  touch-action: manipulation;
-  color: inherit;
-}
+
 .helper:after {
   content: '';
   position: absolute;
@@ -63,46 +99,6 @@ button {
   border-top: solid 5px #fefefe;
   border-left: solid 5px transparent;
   border-right: solid 5px transparent;
-}
-
-/* ===== Scrollbar CSS ===== */
-/* Firefox */
-* {
-  scrollbar-width: auto;
-  scrollbar-color: #383838 #ffffff;
-}
-
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 12px;
-}
-
-*::-webkit-scrollbar-track {
-  background: #ffffff;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: #383838;
-  border-radius: 10px;
-}
-
-.dark > * {
-  scrollbar-width: auto;
-  scrollbar-color: #222 #111;
-}
-
-/* Chrome, Edge, and Safari */
-.dark *::-webkit-scrollbar {
-  width: 12px;
-}
-
-.dark *::-webkit-scrollbar-track {
-  background: #111;
-}
-
-.dark *::-webkit-scrollbar-thumb {
-  background-color: #222;
-  border-radius: 10px;
 }
 
 .celsius {
@@ -138,10 +134,6 @@ button {
   user-select: none;
 }
 
-.dark .ol-attribution {
-  color: #ccc;
-}
-
 .ol-zoom,
 .ol-rotate {
   display: none;
@@ -162,16 +154,22 @@ button {
   left: 0;
   transform: translateX(-100%);
   opacity: 0.5;
-  @apply bg-gradient-to-r from-transparent from-0% via-gray-600/50 via-50%;
+  @apply bg-linear-to-r from-transparent from-0% via-gray-600/50 via-50% dark:via-white/30;
   animation: shimmer 4s infinite ease-in-out;
   content: '';
-}
-.dark .skeleton::after {
-  @apply bg-gradient-to-r from-transparent from-0% via-white/30 via-50%;
 }
 
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #000;
+  }
+  .ol-attribution {
+    color: #ccc;
   }
 }

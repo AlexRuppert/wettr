@@ -15,7 +15,6 @@
   let {
     opened = $bindable(false),
     onclose,
-    className = '',
     children,
     ...other
   }: Props = $props()
@@ -30,22 +29,22 @@
 {#if opened}
   <div
     in:scale={{ duration: 150, easing: backOut }}
-    class="pointer-events-none fixed inset-0 z-[99] flex justify-center"
+    class="pointer-events-none fixed inset-0 z-99 flex justify-center"
   >
     <div
-      class="pointer-events-auto relative mx-5 mt-8 h-fit min-w-20 max-w-md rounded-default bg-surface-500 dark:bg-surface-100"
+      class="bg-surface-500 dark:bg-surface-100 pointer-events-auto relative mx-5 mt-8 h-fit max-w-md min-w-20 rounded-md"
     >
-      <div class="max-popup-h max-popup-w overflow-y-auto">
+      <div class="max-popup-h max-popup-w overflow-y-auto rounded-md">
         {@render children()}
       </div>
 
       <button
-        class="absolute -right-6 -top-6 size-10 rounded-full bg-surface-500 font-bold dark:bg-surface-100"
+        class="bg-surface-500 dark:bg-surface-100 absolute -top-6 -right-6 size-10 rounded-full font-bold"
         onclick={() => {
           opened = false
         }}
       >
-        <SvgIcon outline d={closeIcon}></SvgIcon>
+        <SvgIcon d={closeIcon}></SvgIcon>
       </button>
     </div>
   </div>

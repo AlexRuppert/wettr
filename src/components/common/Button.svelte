@@ -1,17 +1,23 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn } from '@/logic/utils'
   interface Props extends CustomElement {
     label?: string
   }
 
-  let { label = 'Button', className = '', children, ...other }: Props = $props()
+  let {
+    label = 'Button',
+    class: className,
+    children,
+    ...other
+  }: Props = $props()
 </script>
 
 <button
-  class={classProp(
-    'clickable flex size-10 appearance-none items-center justify-center rounded-default border-none bg-transparent p-1',
+  class={[
+    'clickable flex appearance-none items-center justify-center rounded-md p-1',
     className,
-  )}
+  ]}
   aria-label={label}
   {...other}
 >

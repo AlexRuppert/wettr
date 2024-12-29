@@ -1,33 +1,33 @@
 <script lang="ts">
   import olMap from 'ol/Map'
   import olView from 'ol/View'
-  import TileLayer from 'ol/layer/Tile'
   import ImageLayer from 'ol/layer/Image'
+  import TileLayer from 'ol/layer/Tile'
   import OSM from 'ol/source/OSM'
 
   import { transform } from 'ol/proj'
   import olImageStatic from 'ol/source/ImageStatic'
 
-  import { type CustomElement } from '@/logic/svelte.svelte'
   import { type Coordinates } from '@/logic/locations'
-  import { darkMode, weatherPrecipitation } from '@/stores/store.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { weatherPrecipitation } from '@/stores/store.svelte'
 
-  import { reloadPercipitation } from '@/logic/reloader'
   import { drawImage, GRID_CONSTANTS } from '@/logic/radar'
-  import VectorLayer from 'ol/layer/Vector'
-  import VectorSource from 'ol/source/Vector'
+  import { reloadPercipitation } from '@/logic/reloader'
+  import { clamp, isDarkMode } from '@/logic/utils'
   import Feature from 'ol/Feature'
   import Point from 'ol/geom/Point'
-  import Style from 'ol/style/Style'
-  import Stroke from 'ol/style/Stroke'
-  import Fill from 'ol/style/Fill'
+  import VectorLayer from 'ol/layer/Vector'
+  import VectorSource from 'ol/source/Vector'
   import Circle from 'ol/style/Circle'
-  import { clamp } from '@/logic/utils'
+  import Fill from 'ol/style/Fill'
+  import Stroke from 'ol/style/Stroke'
+  import Style from 'ol/style/Style'
   import { onDestroy, onMount } from 'svelte'
-  import IconButton from './common/IconButton.svelte'
-  import { overlapAll, pause, play } from './icons/icons'
   import Button from './common/Button.svelte'
+  import IconButton from './common/IconButton.svelte'
   import SvgIcon from './icons/SvgIcon.svelte'
+  import { overlapAll, pause, play } from './icons/icons'
 
   interface Props extends CustomElement {
     coordinates: Coordinates
@@ -79,7 +79,7 @@
       source: new OSM(),
     })
     tileLayer.on('prerender', evt => {
-      if (evt.context && darkMode.value) {
+      if (evt.context && isDarkMode()) {
         const context = evt.context as CanvasRenderingContext2D
         context.filter = 'invert(100%) brightness(1.55)  hue-rotate(180deg)'
         context.globalCompositeOperation = 'source-over'
@@ -273,15 +273,15 @@
   }
 </script>
 
-<div class="flex w-[52rem] max-w-full select-none flex-col">
-  <div class="w-full self-center bg-surface-400 py-2 text-center">
+<div class="flex w-[52rem] max-w-full flex-col select-none">
+  <div class="bg-surface-400 w-full self-center py-2 text-center">
     Regenradar
   </div>
   <div class="max-h-radar relative aspect-square w-full" bind:this={mapElement}>
-    <div class="absolute left-0 top-0 z-[99999]">
+    <div class="absolute top-0 left-0 z-99999 w-[calc(100%_-_60px)]">
       <!-- svelte-ignore non_reactive_update -->
       <div
-        class="absolute inline-block w-[60px] rounded-b-md bg-surface-500 py-1 text-center text-[16px] tabular-nums shadow-md transition-all ease-linear dark:bg-surface-100"
+        class="bg-surface-500/40 absolute inline-block w-[60px] rounded-b-md py-1 text-center tabular-nums shadow-md backdrop-blur-xs transition-all ease-linear"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}
       >
         {currentTimeLabel}
@@ -296,13 +296,16 @@
         icon={autoplay ? pause : play}
         label="Abspielen/Pause"
         onclick={() => (autoplay = !autoplay)}
+        outline={false}
       ></IconButton>
       <Button onclick={() => advanceFrame(5)}>+5</Button>
       <Button onclick={() => advanceFrame(15)}>+15</Button>
     </div>
     <div>
-      <Button className="w-full space-x-2 flex" onclick={() => showSuperFrame()}
-        ><SvgIcon d={overlapAll} outline class="mr-1 size-5"
+      <Button
+        class="clickable flex h-14 w-full space-x-2"
+        onclick={() => showSuperFrame()}
+        ><SvgIcon d={overlapAll} class="mr-1 size-5"
         ></SvgIcon>Überlagern</Button
       >
     </div>

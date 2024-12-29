@@ -6,6 +6,7 @@
   import { fade } from 'svelte/transition'
   import MoonPhase from './icons/MoonPhase.svelte'
   import debounce from 'lodash-debounce-tiny'
+  import { cn } from '@/logic/utils'
 
   let weather: DayWeatherData[] = $derived(weatherData.value)
   let dummySkeletonDays = new Array(FORECAST_DAYS + 1)
@@ -37,17 +38,21 @@
 </script>
 
 <svelte:window on:resize={handleResize} />
-<div class="grid select-none gap-1">
+<div class="grid gap-1 select-none">
   {#if weather?.length > 0}
     {#key lastWindowWidth}
       {#each weather as day, i (day)}
         <div
           transition:fade={{ duration: 200 }}
-          class="relative flex h-32 overflow-hidden rounded-default bg-surface-500 shadow-md"
+          class="bg-surface-500 relative flex h-32 overflow-hidden rounded-md shadow-md"
         >
           <div
-            class="absolute left-0 top-0 z-10 flex h-8 w-12 items-center rounded-br-md border-b border-r border-surface-50 bg-surface-500 tracking-tighter shadow-sm dark:border-surface-100"
-            class:!border-highlight={formattedDay[i].isWeekend}
+            class={[
+              'border-surface-300 absolute top-0 left-0 z-10 flex h-8 w-12 items-center rounded-br-md border-r border-b tracking-tighter shadow-xs backdrop-blur-[3px]',
+              {
+                'bg-highlight/20': formattedDay[i].isWeekend,
+              },
+            ]}
           >
             <div class="flex items-end tracking-tighter">
               <div class="w-7 text-center text-xl">
@@ -60,7 +65,7 @@
           </div>
           <div class="relative grow overflow-hidden">
             <DayChart weather={day} {animate} />
-            <div class="absolute bottom-[32px] right-1 z-10 size-2 opacity-50">
+            <div class="absolute right-1 bottom-[32px] z-10 size-2 opacity-50">
               <MoonPhase timestamp={day.day} />
             </div>
           </div>
@@ -70,7 +75,7 @@
   {:else}
     {#each dummySkeletonDays as day, i}
       <div
-        class="skeleton h-32 w-full overflow-hidden rounded-default bg-surface-500 shadow-md"
+        class="skeleton bg-surface-500 h-32 w-full overflow-hidden rounded-md shadow-md"
       ></div>
     {/each}
   {/if}

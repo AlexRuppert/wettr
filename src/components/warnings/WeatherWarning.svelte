@@ -75,7 +75,7 @@
 
 {#if warnings.length > 0}
   <div
-    class="select-none rounded-default bg-surface-500 shadow-md"
+    class="bg-surface-500 rounded-md shadow-md select-none"
     in:fade={{ duration: 150 }}
   >
     <WarningItem

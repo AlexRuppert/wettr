@@ -1,12 +1,5 @@
 import { type WeatherIconType } from '@/logic/weatherTypes'
 
-export function getDarkLightColor(
-  color: { dark: any; light: any },
-  darkMode: any,
-) {
-  return darkMode ? color.dark : color.light
-}
-
 export function getWeatherIconClass(icon: WeatherIconType) {
   switch (icon) {
     case 'rain':
@@ -66,7 +59,7 @@ export function isInBounds({ lon, lat }, viewBounds: GeoBounds) {
     lat - EPSILON <= viewBounds.rt.lat
   )
 }
-export interface GeoBounds {
+interface GeoBounds {
   lb: {
     lat: number
     lon: number
@@ -77,24 +70,28 @@ export interface GeoBounds {
   }
 }
 
-export function getLocationBounds({ lon, lat }, radiusKm = 8) {
-  const deg = radiusKm / 70
-  return {
-    lb: {
-      lat: lat - deg,
-      lon: lon - deg,
-    },
-    rt: {
-      lat: lat + deg,
-      lon: lon + deg,
-    },
-  }
-}
-
 export function toLocalDecimal(num: string | number, precision = 0) {
   return Number.parseFloat(num.toString()).toFixed(precision).toLocaleString()
 }
 
 export function trimCoordinates({ lon, lat }) {
   return { lon: lon.toFixed(3), lat: lat.toFixed(3) }
+}
+
+export function cn(...props: (string | Record<string, boolean>)[]) {
+  return props
+    .flatMap(p => {
+      if (typeof p === 'string') {
+        return p
+      } else if (typeof p === 'object') {
+        return Object.entries(p)
+          .filter(([_, value]) => !!value)
+          .map(([key, _]) => key)
+      } else return ''
+    })
+    .join(' ')
+}
+
+export function isDarkMode() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
 }

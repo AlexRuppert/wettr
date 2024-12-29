@@ -31,16 +31,16 @@
     {label}
     <a
       {href}
-      class="leading-7 text-text-soft underline"
+      class="text-text-soft leading-7 underline"
       target="_blank"
       rel="noopener noreferrer">{name}</a
     ><br />
   {/each}
   <div class="my-5 flex justify-center">
     <Button
-      class="flex rounded-md border border-solid border-gray-400 pr-2 pt-1"
+      class="flex rounded-md border border-solid border-gray-400 px-4"
       onclick={() => (showShareScreen = true)}
-      ><SvgIcon d={shareIcon} class="w-6" outline></SvgIcon>Teilen</Button
+      ><SvgIcon d={shareIcon} class="w-6"></SvgIcon>Teilen</Button
     >
   </div>
 </footer>

@@ -7,12 +7,7 @@
     onclose: () => void
   }
 
-  let {
-    show = $bindable(false),
-    onclose,
-    className = '',
-    ...other
-  }: Props = $props()
+  let { show = $bindable(false), onclose, ...other }: Props = $props()
 
   function close(e?: Event) {
     e?.stopPropagation()
@@ -33,7 +28,7 @@
   <div
     aria-hidden="true"
     transition:fade={{ duration: 200 }}
-    class="fixed inset-0 z-20 bg-gray-900/60 backdrop-blur-sm"
+    class="fixed inset-0 z-20 bg-gray-900/60 backdrop-blur-xs"
     onclick={close}
   ></div>
 {/if}

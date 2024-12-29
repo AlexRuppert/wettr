@@ -1,13 +1,19 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {
     description: string
     instruction: string
     hintText: string
   }
-  let { description, instruction, hintText, className, ...other }: Props =
-    $props()
+  let {
+    description,
+    instruction,
+    hintText,
+    class: className,
+    ...other
+  }: Props = $props()
 
   const LINK_REGEX = /(https?:\/\/\S+)|(www\.\S+)/gm
 
@@ -15,11 +21,11 @@
   let links = $derived(instruction?.match(LINK_REGEX) ?? [])
 </script>
 
-<div class={classProp('hyphens-auto p-2 leading-5', className)} {...other}>
+<div class={['p-2 leading-5 hyphens-auto', className]} {...other}>
   <div>
     {description}
   </div>
-  <div class="my-1 whitespace-pre-wrap pt-1">
+  <div class="my-1 pt-1 whitespace-pre-wrap">
     <strong class="leading-5 underline">{!!texts ? hintText : ''}</strong>
     {#each texts as text, i}
       <p>

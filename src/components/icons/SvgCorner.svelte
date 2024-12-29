@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { classProp, type CustomElement } from '@/logic/svelte.svelte'
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  import { cn } from '@/logic/utils'
 
   interface Props extends CustomElement {
     radius?: number
@@ -14,7 +15,7 @@
     color = 'currentColor',
     strokeWidth = 2,
     extraLength = 4,
-    className,
+    class: className,
     ...other
   }: Props = $props()
   let widthOffset = $derived(strokeWidth / 2)
@@ -25,10 +26,10 @@
 </script>
 
 <div
-  class={classProp(
+  class={[
     'pointer-events-none absolute h-full w-full opacity-30 group-hover:opacity-100',
     className,
-  )}
+  ]}
   {...other}
 >
   <svg
@@ -40,7 +41,7 @@
     stroke-width={strokeWidth}
     stroke={color}
     fill="none"
-    class="absolute left-0 top-0"
+    class="absolute top-0 left-0"
   >
     <path transform={`rotate(-90 ${dimension / 2} ${dimension / 2})`} {d} />
   </svg>
@@ -53,7 +54,7 @@
     stroke-width={strokeWidth}
     stroke={color}
     fill="none"
-    class="absolute right-0 top-0"
+    class="absolute top-0 right-0"
   >
     <path transform={`rotate(0 ${dimension / 2} ${dimension / 2})`} {d} />
   </svg>
@@ -66,7 +67,7 @@
     stroke-width={strokeWidth}
     stroke={color}
     fill="none"
-    class="absolute bottom-0 right-0"
+    class="absolute right-0 bottom-0"
   >
     <path transform={`rotate(90 ${dimension / 2} ${dimension / 2})`} {d} />
   </svg>
