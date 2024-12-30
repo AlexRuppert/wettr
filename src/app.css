@@ -1,4 +1,6 @@
-@import 'tailwindcss';
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
 
 @theme {
   --color-primary: var(--color-tw-primary);
@@ -18,6 +20,43 @@
 }
 
 @layer base {
+  *,
+  :after,
+  :before,
+  ::backdrop {
+    box-sizing: border-box;
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+  }
+  html,
+  :host {
+    line-height: 1.5;
+  }
+  button,
+  input,
+  select,
+  optgroup,
+  textarea {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    opacity: 1;
+    background-color: #0000;
+    border-radius: 0;
+  }
+  ol,
+  ul,
+  menu {
+    list-style: none;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -117,17 +156,21 @@ button {
   @apply absolute;
 }
 
+.ol-viewport {
+  display: contents;
+}
+
 .ol-attribution {
   position: absolute;
   text-align: right;
-  bottom: 0.5em;
-  right: 0.5em;
-  max-width: calc(100% - 1.3em);
+  bottom: 5px;
+  right: 5px;
   display: flex;
   flex-flow: row-reverse;
   align-items: center;
-  color: #000;
+  color: #222;
   user-select: none;
+  backdrop-filter: blur(2px) invert(20%);
 }
 
 .ol-zoom,
@@ -170,8 +213,5 @@ button {
 @media (prefers-color-scheme: dark) {
   html {
     background-color: #000;
-  }
-  .ol-attribution {
-    color: #ccc;
   }
 }
