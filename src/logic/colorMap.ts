@@ -1,7 +1,7 @@
 const SHADES = 100
 export function createColorMap(stops: { offset: number; color: string }[]) {
   const offscreen = new OffscreenCanvas(SHADES, 1)
-  const ctx = offscreen.getContext('2d', { willReadFrequently: true })
+  const ctx = offscreen.getContext('2d')
   const gradient = ctx.createLinearGradient(0, 0, SHADES, 0)
   stops.forEach(({ offset, color }) => {
     gradient.addColorStop(offset, color)
