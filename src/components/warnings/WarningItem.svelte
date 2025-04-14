@@ -35,13 +35,13 @@
   {/if}
 
   <div
-    class="ml-2 flex h-5 w-5 flex-shrink-0 self-center text-text-soft"
+    class="ml-2 flex h-5 w-5 shrink-0 self-center text-text-soft"
     class:text-warning={!subItem}
   >
     <SvgIcon d={alertWarning} />
   </div>
   <div
-    class="flex flex-grow self-center overflow-hidden overflow-ellipsis font-semibold"
+    class="flex grow self-center overflow-hidden text-ellipsis font-semibold"
   >
     {title}
     <span class="ml-1 self-center text-xs font-light tabular-nums tracking-wide"

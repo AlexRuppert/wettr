@@ -33,7 +33,7 @@
   <div
     aria-hidden="true"
     transition:fade={{ duration: 200 }}
-    class="fixed inset-0 z-20 bg-gray-900/60 backdrop-blur-sm"
+    class="fixed inset-0 z-20 bg-gray-900/60 backdrop-blur-xs"
     onclick={close}
   ></div>
 {/if}

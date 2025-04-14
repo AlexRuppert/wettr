@@ -8,6 +8,7 @@ import postcssVariableCompress from 'postcss-variable-compress'
 import postcss from 'postcss'
 import fs from 'fs'
 import { fileURLToPath, URL } from 'url'
+import tailwindcss from '@tailwindcss/vite';
 
 const BASE = '/wettr/'
 // https://vitejs.dev/config/
@@ -166,6 +167,7 @@ export default defineConfig({
       },
     }),
     svelte({}),
+    tailwindcss(),
     visualizer(),
     createHtmlPlugin({ minify: true }),
     postPostCSS(),
