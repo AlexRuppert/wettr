@@ -70,8 +70,10 @@ interface GeoBounds {
   }
 }
 
-export function toLocalDecimal(num: string | number, precision = 0) {
-  return Number.parseFloat(num.toString()).toFixed(precision).toLocaleString()
+export function toLocalDecimal(num: string | number | null, precision = 0) {
+  return Number.parseFloat(num?.toString() ?? '0')
+    .toFixed(precision)
+    .toLocaleString()
 }
 
 export function trimCoordinates({ lon, lat }) {
