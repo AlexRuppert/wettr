@@ -7,6 +7,7 @@
   import Popup from '../common/Popup.svelte'
   import Button from '../common/Button.svelte'
   import SvgCorner from '../icons/SvgCorner.svelte'
+  import { getGermanHour } from '@/logic/utils'
 
   let opened = $state(false)
   const hintText = 'ACHTUNG! Hinweis auf mögliche Gefahren: '
@@ -29,9 +30,10 @@
 
     const weekday =
       new Intl.DateTimeFormat('de-DE', {
+        timeZone: 'Europe/Berlin',
         weekday: 'short',
       }).formatToParts(date)[0].value + ' '
-    const hour = date.getHours()
+    const hour = getGermanHour(date)
 
     return {
       hour,

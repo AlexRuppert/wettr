@@ -104,3 +104,19 @@ export function getStrokeFill(outline: boolean) {
     fill: !outline ? 'currentColor' : 'none',
   }
 }
+
+function toGermanLocalDate(date: Date) {
+  return new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    hour: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date)
+}
+
+export function getGermanHour(date: Date): number {
+  return +toGermanLocalDate(date).find(part => part.type === 'hour').value
+}
+
+export function getGermanDate(date: Date): number {
+  return +toGermanLocalDate(date).find(part => part.type === 'day').value + 1
+}

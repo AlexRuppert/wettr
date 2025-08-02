@@ -1,5 +1,5 @@
 import { MinMaxSummary } from './weatherTypes'
-import { getWeatherIconClass } from './utils'
+import { getGermanHour, getWeatherIconClass } from './utils'
 import { Coordinates } from './locations'
 import { getCachedRequest } from '@/logic/cache'
 import { getSunriseSunset } from '@/logic/time'
@@ -140,7 +140,7 @@ function processWeatherData(
       return {
         ...weather,
         temperature: Math.round(weather.temperature),
-        hours: new Date(weather.timestamp).getHours(),
+        hours: getGermanHour(new Date(weather.timestamp)),
       } as WeatherDataType
     }),
     24,
