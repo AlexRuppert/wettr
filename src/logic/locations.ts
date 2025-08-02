@@ -1,6 +1,6 @@
 import locationsUrl from '@/assets/locations.bin.json?url'
 import { getCachedRequest } from '@/logic/cache'
-import { trimCoordinates } from '@/logic/utils'
+import { clamp, isInBounds, trimCoordinates } from '@/logic/utils'
 import { defineFormat, Type } from 'tinybuf'
 
 export interface Coordinates {
@@ -86,14 +86,31 @@ function distance(
 ) {
   return Math.pow(sourceLat - targetLan, 2) + Math.pow(sourceLon - targetLon, 2)
 }
+const SIMPLEBOX_GERMANY = {
+  lb: {
+    lat: 40,
+    lon: 2,
+  },
+  rt: {
+    lat: 60,
+    lon: 20,
+  },
+}
 
 export async function getGeolocationCoordinates(successCallback) {
   navigator.geolocation.getCurrentPosition(
     async position => {
       const { latitude, longitude } = position.coords
-      const lat = +latitude.toFixed(3)
-      const lon = +longitude.toFixed(3)
 
+      //{ lat: [40, 60], lon: [2, 20] }
+      let lat = +latitude.toFixed(3)
+      let lon = +longitude.toFixed(3)
+
+      if (!isInBounds({ lat, lon }, SIMPLEBOX_GERMANY)) {
+        //Berlin as fallback to avoid errors from abroad
+        lat = 52.52
+        lon = 13.41
+      }
       let closestCity = await getClosestCity({ lat, lon })
 
       successCallback({ closestCity, coordinates: { lat, lon } })

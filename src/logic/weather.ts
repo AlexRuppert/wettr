@@ -69,10 +69,10 @@ function processCurrentWeatherData(
 ): CurrentWeatherDataType {
   return {
     ...weatherData.weather,
-    precipitation_10: weatherData.weather.precipitation_10 ?? 0,
-    precipitation_30: weatherData.weather.precipitation_30 ?? 0,
-    precipitation_60: weatherData.weather.precipitation_60 ?? 0,
-    temperature: Math.round(weatherData.weather.temperature),
+    precipitation_10: weatherData.weather?.precipitation_10 ?? 0,
+    precipitation_30: weatherData.weather?.precipitation_30 ?? 0,
+    precipitation_60: weatherData.weather?.precipitation_60 ?? 0,
+    temperature: Math.round(weatherData.weather?.temperature ?? 0),
   } as CurrentWeatherDataType
 }
 
