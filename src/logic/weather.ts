@@ -136,13 +136,15 @@ function processWeatherData(
   coordinates: Coordinates,
 ): DayWeatherData[] {
   const days = chunk(
-    weatherData.weather.map(weather => {
-      return {
-        ...weather,
-        temperature: Math.round(weather.temperature),
-        hours: getGermanHour(new Date(weather.timestamp)),
-      } as WeatherDataType
-    }),
+    considerWinterSummerTime(
+      weatherData.weather.map(weather => {
+        return {
+          ...weather,
+          temperature: Math.round(weather.temperature),
+          hours: getGermanHour(new Date(weather.timestamp)),
+        } as WeatherDataType
+      }),
+    ),
     24,
   ).slice(0, -1)
 
@@ -196,4 +198,35 @@ function smoothPastGraph(dayGraph: DayGraph[]): DayGraph[] {
     processItem(prev, curr, next, 'sunninessFraction')
     return curr
   })
+}
+
+function considerWinterSummerTime(weatherData: WeatherDataType[]) {
+  const getTimezoneOffset = (data: WeatherDataType) =>
+    new Date(data.timestamp).getTimezoneOffset()
+  let winterToSummerGapFillIndex = -1
+  for (let i = 1; i < weatherData.length; i++) {
+    const prev = weatherData[i - 1]
+    const curr = weatherData[i]
+
+    const offsetPrev = getTimezoneOffset(prev)
+    const offsetCurr = getTimezoneOffset(curr)
+
+    if (offsetPrev < offsetCurr) {
+      // summer -> winter
+      weatherData[i - 1] = null // remove one
+      break
+    } else if (offsetPrev > offsetCurr) {
+      // winter -> summer
+
+      winterToSummerGapFillIndex = i - 1 // fill gap
+      break
+    }
+  }
+
+  if (winterToSummerGapFillIndex > -1) {
+    const copy = structuredClone(weatherData[winterToSummerGapFillIndex])
+    weatherData.splice(winterToSummerGapFillIndex, 0, copy)
+  }
+
+  return weatherData.filter(data => !!data)
 }
