@@ -1,5 +1,5 @@
 import { MinMaxSummary } from './weatherTypes'
-import { getWeatherIconClass } from './utils'
+import { getGermanHour, getWeatherIconClass } from './utils'
 import { Coordinates } from './locations'
 import { getCachedRequest } from '@/logic/cache'
 import { getSunriseSunset } from '@/logic/time'
@@ -69,7 +69,10 @@ function processCurrentWeatherData(
 ): CurrentWeatherDataType {
   return {
     ...weatherData.weather,
-    temperature: Math.round(weatherData.weather.temperature),
+    precipitation_10: weatherData.weather?.precipitation_10 ?? 0,
+    precipitation_30: weatherData.weather?.precipitation_30 ?? 0,
+    precipitation_60: weatherData.weather?.precipitation_60 ?? 0,
+    temperature: Math.round(weatherData.weather?.temperature ?? 0),
   } as CurrentWeatherDataType
 }
 
@@ -133,13 +136,15 @@ function processWeatherData(
   coordinates: Coordinates,
 ): DayWeatherData[] {
   const days = chunk(
-    weatherData.weather.map(weather => {
-      return {
-        ...weather,
-        temperature: Math.round(weather.temperature),
-        hours: new Date(weather.timestamp).getHours(),
-      } as WeatherDataType
-    }),
+    considerWinterSummerTime(
+      weatherData.weather.map(weather => {
+        return {
+          ...weather,
+          temperature: Math.round(weather.temperature),
+          hours: getGermanHour(new Date(weather.timestamp)),
+        } as WeatherDataType
+      }),
+    ),
     24,
   ).slice(0, -1)
 
@@ -193,4 +198,35 @@ function smoothPastGraph(dayGraph: DayGraph[]): DayGraph[] {
     processItem(prev, curr, next, 'sunninessFraction')
     return curr
   })
+}
+
+function considerWinterSummerTime(weatherData: WeatherDataType[]) {
+  const getTimezoneOffset = (data: WeatherDataType) =>
+    new Date(data.timestamp).getTimezoneOffset()
+  let winterToSummerGapFillIndex = -1
+  for (let i = 1; i < weatherData.length; i++) {
+    const prev = weatherData[i - 1]
+    const curr = weatherData[i]
+
+    const offsetPrev = getTimezoneOffset(prev)
+    const offsetCurr = getTimezoneOffset(curr)
+
+    if (offsetPrev < offsetCurr) {
+      // summer -> winter
+      weatherData[i - 1] = null // remove one
+      break
+    } else if (offsetPrev > offsetCurr) {
+      // winter -> summer
+
+      winterToSummerGapFillIndex = i - 1 // fill gap
+      break
+    }
+  }
+
+  if (winterToSummerGapFillIndex > -1) {
+    const copy = structuredClone(weatherData[winterToSummerGapFillIndex])
+    weatherData.splice(winterToSummerGapFillIndex, 0, copy)
+  }
+
+  return weatherData.filter(data => !!data)
 }

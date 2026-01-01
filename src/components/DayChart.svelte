@@ -1,7 +1,13 @@
 <script lang="ts">
   import { getPathData } from '@/logic/chart/path'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { chunk, clamp, getWeatherIconClass } from '@/logic/utils'
+  import {
+    chunk,
+    clamp,
+    getGermanDate,
+    getGermanHour,
+    getWeatherIconClass,
+  } from '@/logic/utils'
   import { getMostRelevantIcon } from '@/logic/weather'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { onDestroy, untrack } from 'svelte'
@@ -60,7 +66,7 @@
   let dayString = $derived(weather.day.toISOString())
 
   let nowLineX = $derived(
-    isToday ? getX(now.getHours() + now.getMinutes() / 60) : -5,
+    isToday ? getX(getGermanHour(now) + now.getMinutes() / 60) : -5,
   )
 
   const clipPercent = new Tween(0, {
@@ -101,7 +107,8 @@
       getX(dateToHoursFraction(weather.day, t)),
     )
 
-    isToday = weather.dayGraph[0].timestamp.getDate() === now.getDate()
+    isToday =
+      getGermanDate(weather.dayGraph[0].timestamp) === getGermanDate(now)
 
     const sunninessPoints = []
     const temperaturePoints = []
@@ -123,7 +130,7 @@
         const hourFraction = dateToHoursFraction(weather.day, timestamp)
         const x = getX(hourFraction)
         const flipY = temperatureFraction < 0.2
-        const hour = timestamp.getHours()
+        const hour = getGermanHour(timestamp)
 
         sunninessPoints.push({
           x,
@@ -248,10 +255,14 @@
     pathFillCloseSuffix = `V${height + 1}H${getX(-PADDING_X)}z`
   }
   function dateToHoursFraction(day: Date, date: Date) {
-    if (date.getTime() > day.getTime() && day.getDate() !== date.getDate()) {
+    if (
+      date.getTime() > day.getTime() &&
+      getGermanDate(day) !== getGermanDate(date)
+    ) {
       return 24
     }
-    return date.getHours() + date.getMinutes() / 60
+
+    return getGermanHour(date) + date.getMinutes() / 60
   }
   function getX(hour: number) {
     return PADDING_X + hourWidth * (hour - minHour)
