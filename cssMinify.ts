@@ -37,9 +37,12 @@ let pass1Visitor = {
   Rule(v) {
     if (v.type === 'layer-block' && v.value.name?.includes('theme')) {
       const declarations = v.value.rules
-        .flatMap(r => r.value.declarations.declarations)
-        .filter(r => r.property === 'custom')
-      declarations.forEach(declaration => {
+        .flatMap(r => {
+          return r.value?.declarations?.declarations
+        })
+        .filter(r => r?.property === 'custom')
+
+      declarations?.forEach(declaration => {
         const name = declaration.value.name
         const value = declaration.value.value
         themeLookup.set(name, value)

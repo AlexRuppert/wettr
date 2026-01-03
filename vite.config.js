@@ -58,7 +58,7 @@ export default defineConfig({
         booleans: true,
         booleans_as_integers: true,
         pure_getters: true,
-        pure_new: true,
+        //pure_new: true,
         toplevel: true,
         unsafe_arrows: false,
         unsafe_comps: true,
