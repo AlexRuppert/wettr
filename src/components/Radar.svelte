@@ -11,9 +11,6 @@
   import { type Coordinates } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { weatherPrecipitation } from '@/stores/store.svelte'
-  import { platformModifierKeyOnly } from 'ol/events/condition.js'
-  import DragPan from 'ol/interaction/DragPan.js'
-  import MouseWheelZoom from 'ol/interaction/MouseWheelZoom.js'
   import { defaults } from 'ol/interaction/defaults.js'
   import { drawImage, GRID_CONSTANTS } from '@/logic/radar'
   import { reloadPercipitation } from '@/logic/reloader'
@@ -167,7 +164,7 @@
 
   function showFrame(idx) {
     idx = clamp(idx, 0, frames.length - 1)
-
+    //console.log(frames[idx])
     currentTimeLabel = frames[idx].label
     try {
       imageLayer.setSource(frames[idx].source)

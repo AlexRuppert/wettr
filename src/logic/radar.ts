@@ -1,6 +1,6 @@
 import { transform } from 'ol/proj'
 import { createColorMap } from '@/logic/colorMap'
-import proj4 from 'proj4'
+import proj4 from './minProj4js'
 import { register } from 'ol/proj/proj4'
 // DWD DE1200 projection constants
 

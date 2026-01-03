@@ -10,7 +10,7 @@
       name: 'Deutscher Wetterdienst',
       href: 'https://www.dwd.de',
     },
-    { label: 'API', name: 'brightsky.dev', href: '"https://brightsky.dev' },
+    { label: 'API', name: 'brightsky.dev', href: 'https://brightsky.dev' },
     {
       label: 'Code',
       name: 'GitHub',
