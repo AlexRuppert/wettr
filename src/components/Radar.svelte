@@ -11,7 +11,10 @@
   import { type Coordinates } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import { weatherPrecipitation } from '@/stores/store.svelte'
-
+  import { platformModifierKeyOnly } from 'ol/events/condition.js'
+  import DragPan from 'ol/interaction/DragPan.js'
+  import MouseWheelZoom from 'ol/interaction/MouseWheelZoom.js'
+  import { defaults } from 'ol/interaction/defaults.js'
   import { drawImage, GRID_CONSTANTS } from '@/logic/radar'
   import { reloadPercipitation } from '@/logic/reloader'
   import { clamp, isDarkMode } from '@/logic/utils'
@@ -36,15 +39,13 @@
   let { coordinates, ...other }: Props = $props()
 
   let mapElement: HTMLElement
-  let map
+  let map: olMap
   let initialized = $state(0)
 
   const imageLayer = new ImageLayer()
 
   const marker = new Feature({
-    geometry: new Point(
-      transform([coordinates.lon, coordinates.lat], 'EPSG:4326', 'EPSG:3857'),
-    ),
+    geometry: new Point([0, 0]),
   })
   const vectorSource = new VectorSource({
     features: [marker],
@@ -68,7 +69,14 @@
       })
     },
   })
-
+  $effect(() => {
+    const mappedCoordinates = transform(
+      [coordinates.lon, coordinates.lat],
+      'EPSG:4326',
+      'EPSG:3857',
+    )
+    marker.getGeometry()?.setCoordinates(mappedCoordinates)
+  })
   onMount(initialize)
   onDestroy(() => cleanupResources(frames))
 
@@ -93,6 +101,7 @@
       }
     })
     map = new olMap({
+      interactions: defaults({ dragPan: false, mouseWheelZoom: false }),
       target: mapElement,
       layers: [tileLayer, imageLayer, vectorLayer],
     })
@@ -102,8 +111,8 @@
 
   let frames = $state([])
   let superFrame = $state(null)
-  // svelte-ignore non_reactive_update
-  let currentFrame = 0
+
+  let currentFrame = $state(0)
 
   let autoplay = $state(true)
   const AUTO_ANIMATION_SPEED = 300
@@ -193,7 +202,7 @@
     map.getView().set('extent', viewExtent)
 
     const view = new olView({
-      smoothExtentConstraint: false,
+      smoothExtentConstraint: true,
       extent: viewExtent,
       center: viewCenter,
       zoom: 9,
@@ -278,11 +287,10 @@
     Regenradar
   </div>
   <div
-    class="relative aspect-square max-h-[calc(70dvh_-_9rem)] w-full"
+    class="relative aspect-square max-h-[calc(70dvh-9rem)] w-full"
     bind:this={mapElement}
   >
-    <div class="absolute top-0 left-0 z-99999 w-[calc(100%_-_3.75rem)]">
-      <!-- svelte-ignore non_reactive_update -->
+    <div class="absolute top-0 left-0 z-99999 w-[calc(100%-3.75rem)]">
       <div
         class="bg-surface-500/40 absolute inline-block w-15 rounded-b-md py-1 text-center tabular-nums shadow-md backdrop-blur-xs transition-all ease-linear"
         style={`left: ${(currentFrame / (frames.length - 1)) * 100}%`}

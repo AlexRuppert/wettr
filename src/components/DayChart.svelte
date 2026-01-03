@@ -74,13 +74,10 @@
     delay: 0,
     easing: cubicOut,
   })
-  clipPercent.set(animate ? 0 : 1, {
-    duration: 0,
-  })
 
   $effect(() => {
     if (weather && svg) {
-      clipPercent.set(untrack(() => animate) ? 0 : 1, { duration: 0 })
+      clipPercent.set(animate ? 0 : 1, { duration: 0 })
       setTimeout(() => {
         updateDimensions()
         updateData(weather)

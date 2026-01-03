@@ -56,19 +56,16 @@
     class="fixed right-0 bottom-1 left-0 flex justify-center"
     transition:scale
   >
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <div
-      class="helper relative rounded-sm bg-neutral-100 p-2 text-center text-neutral-900 shadow-md"
-      role="button"
-      tabindex="0"
+    <button
+      class="helper relative rounded-sm bg-neutral-100 p-2 text-center text-neutral-900! shadow-md"
       onclick={() => (showInstallOverlay = false)}
     >
       Zum <strong>Home Screen</strong> hinzufügen:
-      <p class="*:inline-block *:size-5">
-        <SvgIcon d={shareIcon} />
-        und dann
-        <SvgIcon d={addBox} />
+      <p>
+        <SvgIcon d={shareIcon} class="inline-block size-5 translate-y-1/4" />
+        <span>und dann</span>
+        <SvgIcon d={addBox} class="inline-block size-5 translate-y-1/4" />
       </p>
-    </div>
+    </button>
   </div>
 {/if}
