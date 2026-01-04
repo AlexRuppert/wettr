@@ -2,13 +2,13 @@
   import './app.css'
 
   import CurrentWeather from './components/CurrentWeather.svelte'
-  import DayWeather from './components/DayWeather.svelte'
   import Location from './components/Location.svelte'
 
   import SvgLib from './components/common/SvgLib.svelte'
   import Footer from './components/Footer.svelte'
   import WeatherWarning from './components/warnings/WeatherWarning.svelte'
   import './logic/colorScheme'
+  import Days from './components/Days.svelte'
 
   async function deviceOrientation() {
     document.body.className = screen.orientation.type.startsWith('landscape-')
@@ -36,6 +36,6 @@
   <Location />
   <CurrentWeather />
   <WeatherWarning />
-  <DayWeather />
+  <Days />
 </main>
 <Footer />

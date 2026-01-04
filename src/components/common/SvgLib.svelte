@@ -18,7 +18,7 @@
     <circle id="celsius-circle" stroke-width="0.7" r="1.2" />
     <path
       id="wind-indicator"
-      d="M8 13h13a2.5 2.5 0 10-2-4M6 16h17a2.5 2.5 0 11-2 4"
+      d="M8 13h13a2.5 2.5 0 10-2-4M6 17h17a2.5 2.5 0 11-2 4"
       transform="scale(0.5 0.5)"
       vector-effect="non-scaling-stroke"
     />

@@ -42,6 +42,10 @@ export function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
+export function minThreshold(threshold: number, num: number) {
+  return num >= threshold ? num : 0
+}
+
 export function chunk<T>(array: T[], size: number) {
   const result: T[][] = []
   for (let i = 0; i < array.length; i += size) {

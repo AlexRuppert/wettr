@@ -1,8 +1,9 @@
 <script lang="ts">
-  interface Props {
+  import { type CustomElement } from '@/logic/svelte.svelte'
+  interface Props extends CustomElement {
     timestamp?: Date
   }
-  let { timestamp = new Date() }: Props = $props()
+  let { timestamp = new Date(), class: className }: Props = $props()
 
   let [l, r] = $derived(
     [
@@ -17,6 +18,11 @@
   }
 </script>
 
-<svg stroke-linecap="butt" viewBox="-3 0 6 6" fill="currentColor">
+<svg
+  stroke-linecap="butt"
+  viewBox="-3 0 6 6"
+  fill="currentColor"
+  class={[className]}
+>
   <path d={`M0 0c${-l * 4} 0 ${-l * 4} 6 0 6c${r * 4} 0 ${r * 4}-6 0-6`} />
 </svg>
