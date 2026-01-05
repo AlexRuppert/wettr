@@ -1,22 +1,23 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import CustomDigits from './icons/CustomDigits.svelte'
-  import {
-    type WeatherIconType,
-    type DayWeatherData,
-  } from '@/logic/weatherTypes'
   import {
     chunk,
     clamp,
     getGermanDate,
     getGermanHour,
+    getGermanTimeString,
     getWeatherIconClass,
     minThreshold,
   } from '@/logic/utils'
-  import WeatherIcon from './icons/WeatherIcon.svelte'
   import { getMostRelevantIcon } from '@/logic/weather'
-  import { onDestroy, untrack } from 'svelte'
+  import { type DayWeatherData } from '@/logic/weatherTypes'
+  import { onDestroy } from 'svelte'
+  import CustomDigits from './icons/CustomDigits.svelte'
   import MoonPhase from './icons/MoonPhase.svelte'
+  import WeatherIcon from './icons/WeatherIcon.svelte'
+  import Button from './common/Button.svelte'
+  import SvgCorner from './icons/SvgCorner.svelte'
+  import { slide } from 'svelte/transition'
 
   interface Props extends CustomElement {
     weather: DayWeatherData
@@ -44,6 +45,8 @@
       isWeekend: (weather?.day?.getDay() ?? 1) % 6 === 0,
     }
   })
+
+  let infoOverlayOpened = $state(false)
 
   function getTemperature(
     first: { temperature: number },
@@ -110,7 +113,7 @@
       const temperatureFraction = clamp(
         (first.temperatureFraction + second.temperatureFraction) / 2,
         0.1,
-        0.9,
+        0.95,
       )
       const windGust = Math.max(first.windGust, second.windGust)
       const isWindy = windGust >= 30
@@ -167,6 +170,28 @@
       updateData(weather)
     }
   })
+
+  function clickOutside(node: HTMLDivElement) {
+    // the node has been mounted in the DOM
+    const delayTimer = setTimeout(
+      () => window.addEventListener('click', handleClick),
+      50,
+    )
+
+    function handleClick(e) {
+      if (!node.contains(e.target)) {
+        node.dispatchEvent(new CustomEvent('outsideclick'))
+      }
+    }
+
+    return {
+      destroy() {
+        clearInterval(delayTimer)
+        // the node has been removed from the DOM
+        window.removeEventListener('click', handleClick)
+      },
+    }
+  }
 </script>
 
 {#snippet temperatureValue(
@@ -176,12 +201,13 @@
 )}
   <div
     class={[
-      'celsius inline-block h-5',
+      'celsius inline-block h-5 font-light',
       { negative: temperature < 0 },
+      { 'is-lowest': isLowestTemperature },
+      { 'is-highest': isHighestTemperature },
       {
-        'translate-y-0.5 scale-80 underline decoration-1': isLowestTemperature,
-        'dark:drop-shadow-highlight/80 drop-shadow-warning/40 drop-shadow-glow -translate-y-1 scale-130':
-          isHighestTemperature,
+        '-translate-y-0.5 text-lg font-medium!':
+          isLowestTemperature || isHighestTemperature,
       },
     ]}
   >
@@ -189,19 +215,55 @@
   </div>
 {/snippet}
 
-<div
-  class="bg-surface-500 flex h-full w-1/13 flex-col items-center justify-center gap-1 overflow-hidden rounded-md shadow-md ring-inset"
+<Button
+  class={[
+    'bg-surface-500 relative flex h-full w-1/13 flex-col items-center justify-center gap-1 overflow-hidden rounded-md shadow-md ring-inset',
+  ]}
+  onclick={() => (infoOverlayOpened = !infoOverlayOpened)}
 >
+  <SvgCorner></SvgCorner>
   <div>{formattedDay?.day}</div>
   <div class="text-sm" class:text-highlight={formattedDay?.isWeekend}>
     {formattedDay?.weekday}
   </div>
-  <MoonPhase
-    class="text-text-soft absolute bottom-1 size-2"
-    timestamp={weather.day}
-  />
-</div>
-{#each mergedHours as data, h (data)}
+</Button>
+{#if infoOverlayOpened && weather?.dayLight}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div
+    transition:slide={{ axis: 'x', duration: 150 }}
+    class="bg-surface-400 absolute left-1/13 z-2 h-full w-8/13 rounded-md text-sm shadow-lg"
+    onclick={() => (infoOverlayOpened = false)}
+    use:clickOutside
+    onoutsideclick={() => (infoOverlayOpened = false)}
+  >
+    <div class="flex size-full place-content-center place-items-center">
+      <table class="">
+        <tbody>
+          <tr>
+            <td class="text-text-soft pr-2 text-right">Sonnenaufgang</td>
+            <td>⇡ {getGermanTimeString(weather.dayLight.sunrise)} </td>
+          </tr>
+          <tr>
+            <td class="text-text-soft pr-2 text-right">Sonnenuntergang</td>
+            <td>⇣ {getGermanTimeString(weather.dayLight.sunset)} </td>
+          </tr>
+          <tr>
+            <td class="text-text-soft pr-2 text-right">Mondphase</td>
+            <td
+              ><MoonPhase
+                class="text-text-soft -mb-1 size-4"
+                timestamp={weather.day}
+              /></td
+            >
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{/if}
+
+{#each mergedHours as data, h}
   <div
     class={[
       'divide-surface-100/30 flex h-full w-1/13 flex-col items-center divide-y rounded-md shadow-md dark:divide-gray-950',
@@ -219,7 +281,7 @@
     >
       <div
         class={[
-          'dark:bg-sun/15 bg-sun/20 ring-sun/20 ring-offset-sun/30 absolute top-0 flex w-full items-start justify-center rounded-b-sm ring-1 ring-offset-1',
+          'dark:bg-sun/15 bg-sun/20 ring-sun/20 ring-offset-sun/30 absolute top-0 flex w-full items-start justify-center rounded-b-sm ring-1 ring-offset-1 transition-all',
           {
             'ring-0! ring-offset-0!':
               data.sunninessFraction > 0.95 || data.sunninessFraction < 0.05,
@@ -227,6 +289,7 @@
           },
         ]}
         style:height={data.sunninessFraction * 100 + '%'}
+        style:transition-delay={h * 10 + 'ms'}
       >
         <WeatherIcon
           icon={'clear-day'}
@@ -239,11 +302,14 @@
         ></WeatherIcon>
       </div>
       <div
-        class={[' absolute bottom-0 flex w-full justify-end']}
+        class={[
+          ' ease-spring absolute bottom-0 flex w-full justify-end transition-all duration-700',
+        ]}
         style:height={data.temperatureFraction * 100 + '%'}
+        style:transition-delay={h * 10 + 'ms'}
       >
         <div
-          class="dark:border-sun dark:ring-rain border-text-hard ring-text-hard -mt-px mr-px size-1.5 rounded-full border opacity-60 ring-1 ring-inset"
+          class="bg-text-hard/50 ring-surface-500 z-1 mx-auto -mt-px size-1.5 rounded-full opacity-50 ring-2"
         ></div>
       </div>
       <div
@@ -263,8 +329,9 @@
         ></WeatherIcon>
       </div>
       <div
-        class="bg-rain/50 border-rain absolute bottom-0 w-full rounded-t-sm"
+        class="bg-rain/50 border-rain absolute bottom-0 w-full rounded-t-sm transition-all"
         style:height={data.precipitationFraction * 100 + '%'}
+        style:transition-delay={h * 10 + 'ms'}
       ></div>
     </div>
     <div
@@ -298,7 +365,9 @@
           <sup>•</sup>
         </div>
       {:else}
-        <WeatherIcon icon={data.icon} class="w-5"></WeatherIcon>
+        <div class="contents">
+          <WeatherIcon icon={data.icon} class="w-5"></WeatherIcon>
+        </div>
       {/if}
 
       <CustomDigits

@@ -10,11 +10,6 @@
   import './logic/colorScheme'
   import Days from './components/Days.svelte'
 
-  async function deviceOrientation() {
-    document.body.className = screen.orientation.type.startsWith('landscape-')
-      ? 'rotation90'
-      : 'portrait'
-  }
   async function init() {
     try {
       //@ts-ignore
@@ -22,8 +17,6 @@
     } catch (ex) {}
     if (window.navigator['standalone']) {
       //skip if not in PWA mode
-      window.addEventListener('orientationchange', deviceOrientation)
-      deviceOrientation()
     }
   }
   init()

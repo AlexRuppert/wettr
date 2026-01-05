@@ -58,10 +58,6 @@
           {/each}
         {/each}
       </g>
-      <g transform={`translate(${logoDimension} ${logoDimension})`}>
-        <rect rx=".5" class="fill-white/80" width="10.01" height="10.01" />
-        <image href={wettrIcon} width="10.01" height="10.01" />
-      </g>
     </svg>
     <div class="self-center p-2 font-semibold text-black">Wettr-Link</div>
   </div>

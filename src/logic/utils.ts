@@ -113,6 +113,7 @@ function toGermanLocalDate(date: Date) {
   return new Intl.DateTimeFormat('de-DE', {
     timeZone: 'Europe/Berlin',
     hour: '2-digit',
+    minute: '2-digit',
     day: '2-digit',
   }).formatToParts(date)
 }
@@ -123,4 +124,12 @@ export function getGermanHour(date: Date): number {
 
 export function getGermanDate(date: Date): number {
   return +toGermanLocalDate(date).find(part => part.type === 'day').value + 1
+}
+export function getGermanTimeString(date: Date): string {
+  const localDate = toGermanLocalDate(date)
+  return (
+    localDate.find(part => part.type === 'hour').value +
+    ':' +
+    localDate.find(part => part.type === 'minute').value
+  )
 }
