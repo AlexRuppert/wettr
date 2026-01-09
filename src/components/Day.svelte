@@ -12,11 +12,11 @@
   import { getMostRelevantIcon } from '@/logic/weather'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { onDestroy } from 'svelte'
-  import CustomDigits from './icons/CustomDigits.svelte'
-  import MoonPhase from './icons/MoonPhase.svelte'
-  import WeatherIcon from './icons/WeatherIcon.svelte'
-  import Button from './common/Button.svelte'
-  import SvgCorner from './icons/SvgCorner.svelte'
+  import CustomDigits from '@/components/icons/CustomDigits.svelte'
+  import MoonPhase from '@/components/icons/MoonPhase.svelte'
+  import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
+  import Button from '@/components/common/Button.svelte'
+  import SvgCorner from '@/components/icons/SvgCorner.svelte'
   import { slide } from 'svelte/transition'
 
   interface Props extends CustomElement {

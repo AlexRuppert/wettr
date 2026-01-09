@@ -40,7 +40,7 @@ export default defineConfig({
       },
     }),
     svelte({}),
-    visualizer(),
+    visualizer({ gzipSize: true }),
     createHtmlPlugin({ minify: true }),
     tailwindcss(),
     cssMinify(),
