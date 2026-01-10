@@ -27,7 +27,7 @@
   const iconLookup: { [key in WeatherIconType]: string[] } = {
     'clear-day': [weatherSun, weatherSunRays],
     'clear-night': [weatherSun],
-    'partly-cloudy-day': [weatherCloudOpen, weatherSunPart, weatherSunRays],
+    'partly-cloudy-day': [weatherCloudOpen, weatherSunPart, weatherSunPartRays],
     'partly-cloudy-night': [weatherCloudOpen, weatherSunPart],
     cloudy: [weatherCloud],
     fog: [weatherFog],
