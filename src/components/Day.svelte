@@ -336,7 +336,10 @@
             class={[
               'text-text-soft w-5',
               {
-                'text-warning/70! scale-120': data.windGust >= 40,
+                'text-warning/50! scale-120':
+                  data.windGust >= 40 && data.windGust < 60,
+                'text-warning! scale-150 -rotate-30 animate-pulse':
+                  data.windGust >= 60,
               },
             ]}
           ></WeatherIcon>
