@@ -149,6 +149,9 @@ button {
   touch-action: manipulation;
   color: inherit;
 }
+path {
+  vector-effect: non-scaling-stroke;
+}
 
 .clickable {
   @apply active:bg-primary/50 cursor-pointer;

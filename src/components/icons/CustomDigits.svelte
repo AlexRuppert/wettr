@@ -38,11 +38,7 @@
   stroke="currentColor"
   stroke-width="1"
 >
-  <path
-    d={getDigits(number)}
-    vector-effect="non-scaling-stroke"
-    class={[className]}
-  />
+  <path d={getDigits(number)} class={[className]} />
 </svg>
 
 <style>

@@ -36,7 +36,6 @@
 
 {#snippet iconBody()}
   <g
-    vector-effect="non-scaling-stroke"
     class={[
       {
         'stroke-rain': colorClass === 'rain',
