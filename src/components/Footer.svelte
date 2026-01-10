@@ -1,10 +1,8 @@
 <script lang="ts">
-  import AppInstall from '@/components/AppInstall.svelte'
   import Button from './common/Button.svelte'
+  import Lazy from './common/Lazy.svelte'
   import { shareIcon } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
-  import Lazy from './common/Lazy.svelte'
-  import { setContext } from 'svelte'
   const links = [
     {
       label: 'Datenquelle',
@@ -31,7 +29,10 @@
   }}
 />
 <footer class="flex flex-col items-center space-y-8 py-10 text-sm">
-  <AppInstall />
+  <Lazy
+    loadIsTriggered={true}
+    loadFn={() => import('@/components/AppInstall.svelte')}
+  />
   <table>
     <tbody>
       {#each links as { label, name, href }}

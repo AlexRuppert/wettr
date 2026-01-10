@@ -35,7 +35,7 @@
       class="bg-surface-500 dark:bg-surface-100 pointer-events-auto relative mx-5 mt-8 h-fit max-w-md min-w-20 rounded-md"
     >
       <div
-        class="max-h-[calc(100dvh_-_10rem)] max-w-dvw overflow-y-auto rounded-md"
+        class="max-h-[calc(100dvh-10rem)] max-w-dvw overflow-y-auto rounded-md"
       >
         {@render children()}
       </div>

@@ -11,7 +11,7 @@
   } = $props<{
     loadFn: () => Promise<{ default: TComponent }>
     loadIsTriggered: boolean
-    params: ComponentProps<TComponent>
+    params?: ComponentProps<TComponent>
     children?: Snippet
     loaderElement?: Snippet
   }>()
