@@ -1,45 +1,14 @@
 <script lang="ts">
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { getStrokeFill, getWeatherIconClass } from '@/logic/utils'
+  import { weatherIconList } from '@/logic/weather'
   import type { WeatherIconType } from '@/logic/weatherTypes'
-  import {
-    weatherSun,
-    weatherCloudOpen,
-    weatherRain,
-    weatherFog,
-    weatherSunRays,
-    weatherCloud,
-    weatherHail,
-    weatherSleet,
-    weatherSnow,
-    weatherSunPart,
-    weatherSunPartRays,
-    weatherThunderstorm,
-    weatherWind,
-  } from '../icons/icons'
 
   interface Props extends CustomElement {
     icon: WeatherIconType
     strokeWidth?: number
   }
   let { icon, strokeWidth = 1, class: className, ...other }: Props = $props()
-
-  const iconLookup: { [key in WeatherIconType]: string[] } = {
-    'clear-day': [weatherSun, weatherSunRays],
-    'clear-night': [weatherSun],
-    'partly-cloudy-day': [weatherCloudOpen, weatherSunPart, weatherSunPartRays],
-    'partly-cloudy-night': [weatherCloudOpen, weatherSunPart],
-    cloudy: [weatherCloud],
-    fog: [weatherFog],
-    hail: [weatherCloudOpen, weatherHail],
-    rain: [weatherCloudOpen, weatherRain],
-    sleet: [weatherCloudOpen, weatherSleet],
-    snow: [weatherCloudOpen, weatherSnow],
-    thunderstorm: [weatherCloudOpen, weatherThunderstorm],
-    wind: [weatherWind],
-  }
-  let colorClass = $derived(getWeatherIconClass(icon))
-  let iconData = $derived(iconLookup[icon])
+  let iconData = $derived(weatherIconList[icon])
 </script>
 
 <svg
@@ -49,16 +18,19 @@
   stroke-width={strokeWidth}
   stroke="currentColor"
   fill="none"
-  class={[
-    className,
-    {
-      'stroke-rain': colorClass === 'rain',
-      'stroke-sun': colorClass === 'sun',
-    },
-  ]}
   {...other}
 >
-  {#each iconData as d}
-    <path {d} />
+  {#each iconData.parts as { path, type }}
+    <path
+      d={path}
+      class={[
+        className,
+        {
+          'stroke-rain': type === 'rain',
+          'stroke-sun': type === 'sun',
+          'stroke-ice': type === 'ice',
+        },
+      ]}
+    />
   {/each}
 </svg>

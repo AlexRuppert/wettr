@@ -11,10 +11,9 @@
     getGermanDate,
     getGermanHour,
     getGermanTimeString,
-    getWeatherIconClass,
     minThreshold,
   } from '@/logic/utils'
-  import { getMostRelevantIcon } from '@/logic/weather'
+  import { getMostRelevantIcon, weatherIconList } from '@/logic/weather'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { onDestroy } from 'svelte'
   import { scale, slide } from 'svelte/transition'
@@ -131,7 +130,7 @@
         isLowestTemperature,
         isHighestTemperature,
         icon,
-        iconClass: getWeatherIconClass(icon),
+        iconClass: weatherIconList[icon].type,
         sameTemperatureStreak: 0,
         sameIconStreak: 0,
       }
@@ -335,7 +334,7 @@
           <WeatherIcon
             icon={'wind'}
             class={[
-              'text-text-soft w-5 -translate-y-1/2',
+              'text-text-soft w-5',
               {
                 'text-warning/70! scale-120': data.windGust >= 40,
               },
@@ -371,10 +370,7 @@
         {/if}
         {#if data.sameIconStreak > 0 && data.sameIconStreak != 5 && !isCurrentHour(data.hour)}
           <div
-            class={[
-              'h-5 tracking-widest opacity-40',
-              'text-' + getWeatherIconClass(data.icon),
-            ]}
+            class={['h-5 tracking-widest opacity-40', 'text-' + data.iconClass]}
           >
             <sup>•</sup>
           </div>

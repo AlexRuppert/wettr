@@ -17,6 +17,7 @@
   --color-text-primary: var(--color-tw-text-primary);
   --color-rain: var(--color-tw-rain);
   --color-sun: var(--color-tw-sun);
+  --color-ice: var(--color-tw-ice);
   --drop-shadow-glow: 0 0 1px rgba(0, 0, 0, 0.25);
   --ease-spring: linear(
     0,
@@ -116,6 +117,7 @@
     --color-tw-text-primary: oklch(0.96 0 248);
     --color-tw-rain: oklch(0.55 0.22 259);
     --color-tw-sun: oklch(0.74 0.16 74);
+    --color-tw-ice: oklch(0.7 0.05 256);
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -133,6 +135,7 @@
       --color-tw-text-primary: oklch(0.96 0.01 248);
       --color-tw-rain: oklch(0.63 0.2 257);
       --color-tw-sun: oklch(0.86 0.16 85);
+      --color-tw-ice: oklch(0.87 0.14 256);
     }
   }
 }

@@ -1,5 +1,5 @@
 import { MinMaxSummary } from './weatherTypes'
-import { getGermanHour, getWeatherIconClass } from './utils'
+import { getGermanHour } from './utils'
 import { Coordinates } from './locations'
 import { getCachedRequest } from '@/logic/cache'
 import { getSunriseSunset } from '@/logic/time'
@@ -13,6 +13,21 @@ import {
   type WeatherDataType,
   type WeatherIconType,
 } from '@/logic/weatherTypes'
+import {
+  weatherSun,
+  weatherCloudOpen,
+  weatherRain,
+  weatherFog,
+  weatherSunRays,
+  weatherCloud,
+  weatherHail,
+  weatherSleet,
+  weatherSnow,
+  weatherSunPart,
+  weatherSunPartRays,
+  weatherThunderstorm,
+  weatherWind,
+} from '@/components/icons/icons'
 const ENDPOINT = 'https://api.brightsky.dev/'
 const MS_IN_HOUR = 1000 * 60 * 60
 
@@ -124,7 +139,6 @@ function getDayGraphData(times: WeatherDataType[]): {
           wind: wind_speed,
           windGust: wind_gust_speed,
           icon,
-          iconClass: getWeatherIconClass(icon),
         }
       },
     ),
@@ -154,7 +168,6 @@ function processWeatherData(
 
     const relevantHours = hourData.filter(h => isBetween(h.hours, 7, 21))
     const icon = getMostRelevantIcon(relevantHours.map(r => r.icon))
-    const iconClass = getWeatherIconClass(icon)
 
     let { min, max, dayGraph } = getDayGraphData(hourData)
 
@@ -164,7 +177,6 @@ function processWeatherData(
       dayLight,
       daySummary: {
         icon,
-        iconClass,
       },
       min,
       max,
@@ -229,4 +241,85 @@ function considerWinterSummerTime(weatherData: WeatherDataType[]) {
   }
 
   return weatherData.filter(data => !!data)
+}
+export type WeatherIconTypeColor = 'rain' | 'neutral' | 'sun' | 'ice'
+export const weatherIconList: {
+  [key in WeatherIconType]: {
+    parts: { path: string; type: WeatherIconTypeColor }[]
+    type: WeatherIconTypeColor
+  }
+} = {
+  'clear-day': {
+    parts: [
+      { path: weatherSun, type: 'sun' },
+      { path: weatherSunRays, type: 'sun' },
+    ],
+    type: 'sun',
+  },
+  'clear-night': {
+    parts: [{ path: weatherSun, type: 'sun' }],
+    type: 'sun',
+  },
+  'partly-cloudy-day': {
+    parts: [
+      { path: weatherCloudOpen, type: 'neutral' },
+      { path: weatherSunPart, type: 'sun' },
+      { path: weatherSunPartRays, type: 'sun' },
+    ],
+    type: 'sun',
+  },
+  'partly-cloudy-night': {
+    parts: [
+      { path: weatherCloudOpen, type: 'neutral' },
+      { path: weatherSunPart, type: 'sun' },
+    ],
+    type: 'sun',
+  },
+  cloudy: {
+    parts: [{ path: weatherCloud, type: 'neutral' }],
+    type: 'neutral',
+  },
+  fog: {
+    parts: [{ path: weatherFog, type: 'neutral' }],
+    type: 'neutral',
+  },
+  hail: {
+    parts: [
+      { path: weatherCloudOpen, type: 'rain' },
+      { path: weatherHail, type: 'ice' },
+    ],
+    type: 'rain',
+  },
+  rain: {
+    parts: [
+      { path: weatherCloudOpen, type: 'rain' },
+      { path: weatherRain, type: 'rain' },
+    ],
+    type: 'rain',
+  },
+  sleet: {
+    parts: [
+      { path: weatherCloudOpen, type: 'rain' },
+      { path: weatherSleet, type: 'ice' },
+    ],
+    type: 'rain',
+  },
+  snow: {
+    parts: [
+      { path: weatherCloudOpen, type: 'rain' },
+      { path: weatherSnow, type: 'ice' },
+    ],
+    type: 'rain',
+  },
+  thunderstorm: {
+    parts: [
+      { path: weatherCloudOpen, type: 'rain' },
+      { path: weatherThunderstorm, type: 'sun' },
+    ],
+    type: 'rain',
+  },
+  wind: {
+    parts: [{ path: weatherWind, type: 'neutral' }],
+    type: 'neutral',
+  },
 }

@@ -1,23 +1,3 @@
-import { type WeatherIconType } from '@/logic/weatherTypes'
-
-export function getWeatherIconClass(icon: WeatherIconType) {
-  switch (icon) {
-    case 'rain':
-    case 'sleet':
-    case 'hail':
-    case 'snow':
-    case 'thunderstorm':
-      return 'rain'
-    case 'clear-day':
-    case 'clear-night':
-    case 'partly-cloudy-day':
-    case 'partly-cloudy-night':
-      return 'sun'
-    default:
-      return 'other'
-  }
-}
-
 export function sortBy<T>(...sortFns: ((a: T, b: T) => number)[]) {
   return (a: T, b: T) => {
     for (const fn of sortFns) {

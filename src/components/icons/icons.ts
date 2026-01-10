@@ -22,7 +22,7 @@ export const weatherCloud = weatherCloudOpen + 'z'
 export const weatherSunPart = 'M15 15.5a3 3 90 10.001 0'
 export const weatherSunPartRays = 'M8 22.5l2-1m5 4.5v-2m7-1.5-2-1'
 export const weatherFog = 'M7 12h15M9 15h16M5 18h16'
-export const weatherWind = 'M7 13h13a2.5 2.5 0 10-2-4M5 17h17a2.5 2.5 0 11-2 4'
+export const weatherWind = 'M6 13h13a2.5 2.5 0 10-2-4M4 17h17a2.5 2.5 0 11-2 4'
 export const weatherRain = 'M12 17l-1 5m4.3-5-1.4 7m4.6-7-.8 4.2'
 export const weatherSleet =
   'M12 17l-.03.15m-.4 2-.4 2m4.13-4.15-.4 2m-.4 2-.03.15m-.4 2-.03.15m4.46-6.3-.03.25m-.4 2-.4 2'

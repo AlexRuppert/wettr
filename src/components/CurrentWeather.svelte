@@ -11,7 +11,7 @@
   } from '@/components/icons/icons'
   import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { getWeatherIconClass } from '@/logic/utils'
+  import { weatherIconList } from '@/logic/weather'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import {
     currentWeatherData,
@@ -67,8 +67,8 @@
       class={[
         'flex grow items-center',
         {
-          'bg-rain/10': getWeatherIconClass(weather.icon) == 'rain',
-          'bg-sun/10': getWeatherIconClass(weather.icon) == 'sun',
+          'bg-rain/10': weatherIconList[weather.icon].type == 'rain',
+          'bg-sun/10': weatherIconList[weather.icon].type == 'sun',
         },
       ]}
     >

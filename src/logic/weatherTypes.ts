@@ -107,7 +107,6 @@ export interface DayGraph {
   wind: number
   windGust: number
   icon: WeatherIconType
-  iconClass: string
 }
 
 export interface MinMaxSummary {
@@ -117,7 +116,6 @@ export interface DayWeatherData {
   day: Date
   daySummary: {
     icon: WeatherIconType
-    iconClass: string
   }
   max: MinMaxSummary
   min: MinMaxSummary
