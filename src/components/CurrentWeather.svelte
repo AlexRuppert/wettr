@@ -35,6 +35,7 @@
       locationState.value = await getLocationData(locationCoordinates.value)
     })()
   })
+  $inspect(weather?.icon)
 </script>
 
 <Popup bind:opened={radarFilmPopupOpened}>

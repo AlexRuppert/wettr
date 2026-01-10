@@ -18,13 +18,13 @@
   stroke-width={strokeWidth}
   stroke="currentColor"
   fill="none"
+  class={[className]}
   {...other}
 >
   {#each iconData.parts as { path, type }}
     <path
       d={path}
       class={[
-        className,
         {
           'stroke-rain': type === 'rain',
           'stroke-sun': type === 'sun',
