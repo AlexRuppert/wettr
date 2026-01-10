@@ -10,7 +10,7 @@
   } from '@/components/icons/icons'
   import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { getWeatherIconClass, toLocalDecimal } from '@/logic/utils'
+  import { getWeatherIconClass } from '@/logic/utils'
   import { type CurrentWeatherDataType } from '@/logic/weatherTypes'
   import {
     currentWeatherData,
@@ -18,12 +18,9 @@
     locationState,
   } from '@/stores/store.svelte'
   import { fade } from 'svelte/transition'
-  import SvgCorner from './icons/SvgCorner.svelte'
   import Button from './common/Button.svelte'
-  let lazyRadar = $state(null)
-  function loadRadar() {
-    lazyRadar = import('./Radar.svelte')
-  }
+  import Lazy from './common/Lazy.svelte'
+  import SvgCorner from './icons/SvgCorner.svelte'
 
   interface Props extends CustomElement {}
   let { ...other }: Props = $props()
@@ -37,20 +34,14 @@
       locationState.value = await getLocationData(locationCoordinates.value)
     })()
   })
-
-  $effect(() => {
-    if (radarFilmPopupOpened && !lazyRadar) {
-      loadRadar()
-    }
-  })
 </script>
 
 <Popup bind:opened={radarFilmPopupOpened}>
-  {#if lazyRadar}
-    {#await lazyRadar then { default: Radar }}
-      <Radar coordinates={locationCoordinates.value} />
-    {/await}
-  {/if}
+  <Lazy
+    loadIsTriggered={radarFilmPopupOpened}
+    loadFn={() => import('./Radar.svelte')}
+    params={{ coordinates: locationCoordinates.value }}
+  />
 </Popup>
 
 {#snippet indicator(
