@@ -13,13 +13,6 @@
 
 <div class="grid gap-1.5 select-none">
   {#each weatherDays as weather, i}
-    <div
-      class={[
-        'relative flex h-32 w-full gap-0.5 rounded-md',
-        !weatherData?.value?.length ? 'skeleton bg-surface-500' : '',
-      ]}
-    >
-      <Day {weather}></Day>
-    </div>
+    <Day {weather}></Day>
   {/each}
 </div>

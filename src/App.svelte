@@ -1,13 +1,9 @@
 <script lang="ts">
   import './app.css'
-
   import CurrentWeather from './components/CurrentWeather.svelte'
   import Location from './components/Location.svelte'
-
   import Days from './components/Days.svelte'
   import Footer from './components/Footer.svelte'
-
-  import './logic/colorScheme'
   import Lazy from './components/common/Lazy.svelte'
   import { weatherWarningData } from './stores/store.svelte'
 

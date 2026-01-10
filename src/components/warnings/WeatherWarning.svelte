@@ -3,13 +3,14 @@
   import WarningItem from '@/components/warnings/WarningItem.svelte'
 
   import { weatherWarningData } from '@/stores/store.svelte'
-  import { fade } from 'svelte/transition'
+  import { fade, fly, scale } from 'svelte/transition'
   import Popup from '../common/Popup.svelte'
   import Button from '../common/Button.svelte'
   import SvgCorner from '../icons/SvgCorner.svelte'
   import { getGermanHour } from '@/logic/utils'
 
   let opened = $state(false)
+  let fadeIn = $state(false)
   const hintText = 'ACHTUNG! Hinweis auf mögliche Gefahren: '
 
   let warnings = $derived(getWarnings(weatherWarningData.value ?? []))
@@ -60,6 +61,13 @@
 
     return timeString
   }
+  $effect(() => {
+    if (warnings?.length > 0) {
+      fadeIn = true
+    } else {
+      fadeIn = false
+    }
+  })
 </script>
 
 <Popup bind:opened>
@@ -69,14 +77,16 @@
   {/each}
 </Popup>
 
-{#if warnings.length > 0}
-  <Button class="bg-surface-500 relative shadow-md select-none">
-    <WarningItem
-      onclick={() => (opened = true)}
-      event={warnings[0].event +
-        (warnings.length > 1 ? ` +${warnings.length - 1}` : '')}
-      time={warnings[0].time}
-    />
-    <SvgCorner class="text-warning"></SvgCorner>
-  </Button>
+{#if fadeIn}
+  <div class="content" transition:fly={{ duration: 500 }}>
+    <Button class="bg-surface-500 relative w-full shadow-md select-none">
+      <WarningItem
+        onclick={() => (opened = true)}
+        event={warnings[0].event +
+          (warnings.length > 1 ? ` +${warnings.length - 1}` : '')}
+        time={warnings[0].time}
+      />
+      <SvgCorner class="text-warning"></SvgCorner>
+    </Button>
+  </div>
 {/if}

@@ -1,4 +1,9 @@
 <script lang="ts">
+  import Button from '@/components/common/Button.svelte'
+  import CustomDigits from '@/components/icons/CustomDigits.svelte'
+  import MoonPhase from '@/components/icons/MoonPhase.svelte'
+  import SvgCorner from '@/components/icons/SvgCorner.svelte'
+  import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import { type CustomElement } from '@/logic/svelte.svelte'
   import {
     chunk,
@@ -12,12 +17,7 @@
   import { getMostRelevantIcon } from '@/logic/weather'
   import { type DayWeatherData } from '@/logic/weatherTypes'
   import { onDestroy } from 'svelte'
-  import CustomDigits from '@/components/icons/CustomDigits.svelte'
-  import MoonPhase from '@/components/icons/MoonPhase.svelte'
-  import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
-  import Button from '@/components/common/Button.svelte'
-  import SvgCorner from '@/components/icons/SvgCorner.svelte'
-  import { slide } from 'svelte/transition'
+  import { scale, slide } from 'svelte/transition'
 
   interface Props extends CustomElement {
     weather: DayWeatherData
@@ -32,6 +32,7 @@
   )
 
   let formattedDay = $derived.by(() => {
+    if (!weather?.day) return null
     const formatted = new Intl.DateTimeFormat('de-DE', {
       day: 'numeric',
       weekday: 'short',
@@ -81,7 +82,6 @@
         precipitationFraction,
         windGust,
         icon,
-        iconClass,
       }) => {
         const hour = getGermanHour(timestamp)
         return {
@@ -215,168 +215,183 @@
   </div>
 {/snippet}
 
-<Button
+<div
   class={[
-    'bg-surface-500 relative flex h-full w-1/13 flex-col items-center justify-center gap-1 overflow-hidden rounded-md shadow-md ring-inset',
+    'relative flex h-32 w-full gap-0.5 rounded-md transition-all duration-300',
+    !weather?.dayGraph ? 'skeleton bg-surface-500' : 'bg-transparent',
   ]}
-  onclick={() => (infoOverlayOpened = !infoOverlayOpened)}
 >
-  <SvgCorner></SvgCorner>
-  <div>{formattedDay?.day}</div>
-  <div class="text-sm" class:text-highlight={formattedDay?.isWeekend}>
-    {formattedDay?.weekday}
-  </div>
-</Button>
-{#if infoOverlayOpened && weather?.dayLight}
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div
-    transition:slide={{ axis: 'x', duration: 150 }}
-    class="bg-surface-400 absolute left-1/13 z-2 h-full w-8/13 rounded-md text-sm shadow-lg"
-    onclick={() => (infoOverlayOpened = false)}
-    use:clickOutside
-    onoutsideclick={() => (infoOverlayOpened = false)}
-  >
-    <div class="flex size-full place-content-center place-items-center">
-      <table class="">
-        <tbody>
-          <tr>
-            <td class="text-text-soft pr-2 text-right">Sonnenaufgang</td>
-            <td>⇡ {getGermanTimeString(weather.dayLight.sunrise)} </td>
-          </tr>
-          <tr>
-            <td class="text-text-soft pr-2 text-right">Sonnenuntergang</td>
-            <td>⇣ {getGermanTimeString(weather.dayLight.sunset)} </td>
-          </tr>
-          <tr>
-            <td class="text-text-soft pr-2 text-right">Mondphase</td>
-            <td
-              ><MoonPhase
-                class="text-text-soft -mb-1 size-4"
-                timestamp={weather.day}
-              /></td
-            >
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-{/if}
+  {#if formattedDay?.day}
+    <div class="content w-1/13" transition:scale={{ duration: 200 }}>
+      <Button
+        class={[
+          'bg-surface-500 relative flex h-full w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-md shadow-md ring-inset',
+        ]}
+        onclick={() => (infoOverlayOpened = !infoOverlayOpened)}
+      >
+        <SvgCorner></SvgCorner>
 
-{#each mergedHours as data, h}
-  <div
-    class={[
-      'divide-surface-100/30 flex h-full w-1/13 flex-col items-center divide-y rounded-md shadow-md dark:divide-gray-950',
-      {
-        ' drop-shadow-glow drop-shadow-highlight z-1 scale-110': isCurrentHour(
-          data.hour,
-        ),
-      },
-    ]}
-  >
+        <div>{formattedDay?.day}</div>
+        <div class="text-sm" class:text-highlight={formattedDay?.isWeekend}>
+          {formattedDay?.weekday ?? ''}
+        </div>
+      </Button>
+    </div>
+  {/if}
+  {#if infoOverlayOpened && weather?.dayLight}
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+      transition:slide={{ axis: 'x', duration: 150 }}
+      class="bg-surface-400 absolute left-1/13 z-2 h-full w-8/13 rounded-md text-sm shadow-lg"
+      onclick={() => (infoOverlayOpened = false)}
+      use:clickOutside
+      onoutsideclick={() => (infoOverlayOpened = false)}
+    >
+      <div class="flex size-full place-content-center place-items-center">
+        <table class="">
+          <tbody>
+            <tr>
+              <td class="text-text-soft pr-2 text-right">Sonnenaufgang</td>
+              <td>⇡ {getGermanTimeString(weather.dayLight.sunrise)} </td>
+            </tr>
+            <tr>
+              <td class="text-text-soft pr-2 text-right">Sonnenuntergang</td>
+              <td>⇣ {getGermanTimeString(weather.dayLight.sunset)} </td>
+            </tr>
+            <tr>
+              <td class="text-text-soft pr-2 text-right">Mondphase</td>
+              <td
+                ><MoonPhase
+                  class="text-text-soft -mb-1 size-4"
+                  timestamp={weather.day}
+                /></td
+              >
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {/if}
+
+  {#if mergedHours.length <= 1}
+    <div class="w-full rounded-md"></div>
+  {/if}
+  {#each mergedHours as data, h}
     <div
       class={[
-        'bg-surface-500 relative flex w-full grow flex-col overflow-hidden rounded-t-md',
+        'divide-surface-100/30 flex h-full w-1/13 flex-col items-center divide-y rounded-md shadow-md dark:divide-gray-950',
+        {
+          ' drop-shadow-glow drop-shadow-highlight z-1 scale-110':
+            isCurrentHour(data.hour),
+        },
       ]}
+      transition:scale={{ duration: 200, delay: (h + 1) * 10 }}
     >
       <div
         class={[
-          'dark:bg-sun/15 bg-sun/20 ring-sun/20 ring-offset-sun/30 absolute top-0 flex w-full items-start justify-center rounded-b-sm ring-1 ring-offset-1 transition-all',
-          {
-            'ring-0! ring-offset-0!':
-              data.sunninessFraction > 0.95 || data.sunninessFraction < 0.05,
-            'rounded-none!': data.sunninessFraction > 0.95,
-          },
+          'bg-surface-500 relative flex w-full grow flex-col overflow-hidden rounded-t-md',
         ]}
-        style:height={data.sunninessFraction * 100 + '%'}
-        style:transition-delay={h * 10 + 'ms'}
-      >
-        <WeatherIcon
-          icon={'clear-day'}
-          class={[
-            'w-5 -translate-y-1/2 opacity-40 dark:opacity-20 ',
-            {
-              'opacity-0!': data.sunninessFraction < 0.15,
-            },
-          ]}
-        ></WeatherIcon>
-      </div>
-      <div
-        class={[
-          ' ease-spring absolute bottom-0 flex w-full justify-end transition-all duration-700',
-        ]}
-        style:height={data.temperatureFraction * 100 + '%'}
-        style:transition-delay={h * 10 + 'ms'}
       >
         <div
-          class="bg-text-hard/50 ring-surface-500 z-1 mx-auto -mt-px size-1.5 rounded-full opacity-50 ring-2"
+          class={[
+            'dark:bg-sun/15 bg-sun/20 ring-sun/20 ring-offset-sun/30 absolute top-0 flex w-full items-start justify-center rounded-b-sm ring-1 ring-offset-1 transition-all',
+            {
+              'ring-0! ring-offset-0!':
+                data.sunninessFraction > 0.95 || data.sunninessFraction < 0.05,
+              'rounded-none!': data.sunninessFraction > 0.95,
+            },
+          ]}
+          style:height={data.sunninessFraction * 100 + '%'}
+          style:transition-delay={h * 10 + 'ms'}
+        >
+          <WeatherIcon
+            icon={'clear-day'}
+            class={[
+              'w-5 -translate-y-1/2 opacity-40 dark:opacity-20 ',
+              {
+                'opacity-0!': data.sunninessFraction < 0.15,
+              },
+            ]}
+          ></WeatherIcon>
+        </div>
+        <div
+          class={[
+            ' ease-spring absolute bottom-0 flex w-full justify-end transition-all duration-700',
+          ]}
+          style:height={data.temperatureFraction * 100 + '%'}
+          style:transition-delay={h * 10 + 'ms'}
+        >
+          <div
+            class="bg-text-hard/50 ring-surface-500 z-1 mx-auto -mt-px size-1.5 rounded-full opacity-50 ring-2"
+          ></div>
+        </div>
+        <div
+          class={[
+            'absolute top-1/2 flex h-5 w-full justify-center self-center',
+            { hidden: !data.isWindy },
+          ]}
+        >
+          <WeatherIcon
+            icon={'wind'}
+            class={[
+              'text-text-soft w-5 -translate-y-1/2',
+              {
+                'text-warning/70! scale-120': data.windGust >= 40,
+              },
+            ]}
+          ></WeatherIcon>
+        </div>
+        <div
+          class="bg-rain/50 border-rain absolute bottom-0 w-full rounded-t-sm transition-all"
+          style:height={data.precipitationFraction * 100 + '%'}
+          style:transition-delay={h * 10 + 'ms'}
         ></div>
       </div>
       <div
         class={[
-          'absolute top-1/2 flex h-5 w-full justify-center self-center',
-          { hidden: !data.isWindy },
+          'bg-surface-500 relative flex h-1/2 w-full flex-col items-center  gap-0.5 rounded-b-md pt-1 pb-0.5 ring-inset',
         ]}
       >
-        <WeatherIcon
-          icon={'wind'}
-          class={[
-            'text-text-soft w-5 -translate-y-1/2',
-            {
-              'text-warning/70! scale-120': data.windGust >= 40,
-            },
-          ]}
-        ></WeatherIcon>
-      </div>
-      <div
-        class="bg-rain/50 border-rain absolute bottom-0 w-full rounded-t-sm transition-all"
-        style:height={data.precipitationFraction * 100 + '%'}
-        style:transition-delay={h * 10 + 'ms'}
-      ></div>
-    </div>
-    <div
-      class={[
-        'bg-surface-500 relative flex h-1/2 w-full flex-col items-center  gap-0.5 rounded-b-md pt-1 pb-0.5 ring-inset',
-      ]}
-    >
-      {#if data.sameTemperatureStreak > 0 && data.sameTemperatureStreak != 5 && !isCurrentHour(data.hour)}
-        <div
-          class={[
-            'h-5 tracking-widest opacity-40',
-            { 'text-rain': data.temperature < 0 },
-          ]}
-        >
-          <sup>•</sup>
-        </div>
-      {:else}
-        {@render temperatureValue(
-          data.temperature,
-          data.isLowestTemperature,
-          data.isHighestTemperature,
-        )}
-      {/if}
-      {#if data.sameIconStreak > 0 && data.sameIconStreak != 5 && !isCurrentHour(data.hour)}
-        <div
-          class={[
-            'h-5 tracking-widest opacity-40',
-            'text-' + getWeatherIconClass(data.icon),
-          ]}
-        >
-          <sup>•</sup>
-        </div>
-      {:else}
-        <div class="contents">
-          <WeatherIcon icon={data.icon} class="w-5"></WeatherIcon>
-        </div>
-      {/if}
+        {#if data.sameTemperatureStreak > 0 && data.sameTemperatureStreak != 5 && !isCurrentHour(data.hour)}
+          <div
+            class={[
+              'h-5 tracking-widest opacity-40',
+              { 'text-rain': data.temperature < 0 },
+            ]}
+          >
+            <sup>•</sup>
+          </div>
+        {:else}
+          {@render temperatureValue(
+            data.temperature,
+            data.isLowestTemperature,
+            data.isHighestTemperature,
+          )}
+        {/if}
+        {#if data.sameIconStreak > 0 && data.sameIconStreak != 5 && !isCurrentHour(data.hour)}
+          <div
+            class={[
+              'h-5 tracking-widest opacity-40',
+              'text-' + getWeatherIconClass(data.icon),
+            ]}
+          >
+            <sup>•</sup>
+          </div>
+        {:else}
+          <div class="contents">
+            <WeatherIcon icon={data.icon} class="w-5"></WeatherIcon>
+          </div>
+        {/if}
 
-      <CustomDigits
-        number={data.hour}
-        class={{
-          'text-rain': data.iconClass === 'rain',
-          'text-sun': data.iconClass === 'sun',
-        }}
-      ></CustomDigits>
+        <CustomDigits
+          number={data.hour}
+          class={{
+            'text-rain': data.iconClass === 'rain',
+            'text-sun': data.iconClass === 'sun',
+          }}
+        ></CustomDigits>
+      </div>
     </div>
-  </div>
-{/each}
+  {/each}
+</div>
