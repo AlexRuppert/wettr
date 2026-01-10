@@ -216,9 +216,7 @@
       class="absolute top-0 left-0 opacity-30"
       icon={gps}
       onclick={getGeoLocation}
-    >
-      <SvgCorner></SvgCorner>
-    </IconButton>
+    ></IconButton>
 
     {#if openedSuggestions}
       <div

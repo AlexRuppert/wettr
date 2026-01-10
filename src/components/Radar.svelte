@@ -9,14 +9,14 @@
   import olImageStatic from 'ol/source/ImageStatic'
 
   import { type Coordinates } from '@/logic/locations'
-  import { type CustomElement } from '@/logic/svelte.svelte'
-  import { weatherPrecipitation } from '@/stores/store.svelte'
-  import { defaults } from 'ol/interaction/defaults.js'
   import { drawImage, GRID_CONSTANTS } from '@/logic/radar'
   import { reloadPercipitation } from '@/logic/reloader'
+  import { type CustomElement } from '@/logic/svelte.svelte'
   import { clamp, isDarkMode } from '@/logic/utils'
+  import { weatherPrecipitation } from '@/stores/store.svelte'
   import Feature from 'ol/Feature'
   import Point from 'ol/geom/Point'
+  import { defaults } from 'ol/interaction/defaults.js'
   import VectorLayer from 'ol/layer/Vector'
   import VectorSource from 'ol/source/Vector'
   import Circle from 'ol/style/Circle'
@@ -27,7 +27,7 @@
   import Button from './common/Button.svelte'
   import IconButton from './common/IconButton.svelte'
   import SvgIcon from './icons/SvgIcon.svelte'
-  import { overlapAll, pause, play } from './icons/icons'
+  import { pause, play, weatherCloudOpen, weatherRain } from './icons/icons'
 
   interface Props extends CustomElement {
     coordinates: Coordinates
@@ -313,7 +313,7 @@
       <Button
         class="clickable flex h-14 w-full space-x-2"
         onclick={() => showSuperFrame()}
-        ><SvgIcon d={overlapAll} class="mr-1 size-5"
+        ><SvgIcon d={weatherCloudOpen + weatherRain} class="mt-1 mr-1 size-6"
         ></SvgIcon>Überlagern</Button
       >
     </div>

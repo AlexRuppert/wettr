@@ -5,8 +5,9 @@
   import WeatherIcon from '@/components/icons/WeatherIcon.svelte'
   import {
     humidity,
-    weatherIconPaths,
-    windDirection,
+    weatherCloudOpen,
+    weatherRain,
+    weatherWind,
   } from '@/components/icons/icons'
   import { getLocationData } from '@/logic/locations'
   import { type CustomElement } from '@/logic/svelte.svelte'
@@ -85,7 +86,7 @@
 
       <div class="flex size-full justify-end space-x-2">
         {@render indicator(humidity, '%', '%', weather.relative_humidity)}
-        {@render indicator(windDirection, 'km', 'h', weather.wind_speed_10, {
+        {@render indicator(weatherWind, 'km', 'h', weather.wind_speed_10, {
           'text-warning font-semibold':
             weather.wind_speed_10 > SHOW_WINDSPEED_WARNING_AFTER,
         })}
@@ -96,7 +97,7 @@
         >
           <SvgCorner></SvgCorner>
           {@render indicator(
-            weatherIconPaths['cloud-open'] + weatherIconPaths['rain'],
+            weatherCloudOpen + weatherRain,
             'mm',
             'h',
             weather.precipitation_60,
