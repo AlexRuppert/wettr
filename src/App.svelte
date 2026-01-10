@@ -6,8 +6,10 @@
 
   import Days from './components/Days.svelte'
   import Footer from './components/Footer.svelte'
-  import WeatherWarning from './components/warnings/WeatherWarning.svelte'
+
   import './logic/colorScheme'
+  import Lazy from './components/common/Lazy.svelte'
+  import { weatherWarningData } from './stores/store.svelte'
 
   async function init() {
     try {
@@ -26,7 +28,10 @@
 >
   <Location />
   <CurrentWeather />
-  <WeatherWarning />
+  <Lazy
+    loadFn={() => import('./components/warnings/WeatherWarning.svelte')}
+    loadIsTriggered={weatherWarningData.value?.length > 0}
+  ></Lazy>
   <Days />
 </main>
 <Footer />
