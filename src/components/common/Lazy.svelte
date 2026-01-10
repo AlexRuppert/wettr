@@ -2,7 +2,13 @@
   import type { Component, ComponentProps, Snippet } from 'svelte'
 
   let lazyComponent: Promise<{ default: TComponent }> = $state(null)
-  let { loadFn, loadIsTriggered, params, children, loaderElement } = $props<{
+  let {
+    loadFn,
+    loadIsTriggered,
+    params = $bindable(),
+    children,
+    loaderElement,
+  } = $props<{
     loadFn: () => Promise<{ default: TComponent }>
     loadIsTriggered: boolean
     params: ComponentProps<TComponent>

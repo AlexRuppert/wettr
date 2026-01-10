@@ -3,7 +3,8 @@
   import Button from './common/Button.svelte'
   import { shareIcon } from './icons/icons'
   import SvgIcon from './icons/SvgIcon.svelte'
-  import ShareScreen from './ShareScreen.svelte'
+  import Lazy from './common/Lazy.svelte'
+  import { setContext } from 'svelte'
   const links = [
     {
       label: 'Datenquelle',
@@ -21,7 +22,14 @@
   let showShareScreen = $state(false)
 </script>
 
-<ShareScreen bind:opened={showShareScreen}></ShareScreen>
+<Lazy
+  loadIsTriggered={showShareScreen}
+  loadFn={() => import('./ShareScreen.svelte')}
+  params={{
+    opened: showShareScreen,
+    onclosed: () => (showShareScreen = false),
+  }}
+/>
 <footer class="flex flex-col items-center space-y-8 py-10 text-sm">
   <AppInstall />
   <table>
@@ -43,7 +51,7 @@
   </table>
 
   <Button
-    class="border-surface-100 flex border pr-4 pl-2"
+    class="border-surface-100 ring-highlight flex border pr-4 pl-2 ring-1"
     onclick={() => (showShareScreen = true)}
   >
     <SvgIcon d={shareIcon} class="size-6 pt-1"></SvgIcon>

@@ -1,22 +1,26 @@
 <script lang="ts">
-  import wettrIcon from '@/assets/icon.svg?url'
   import { type CustomElement } from '@/logic/svelte.svelte'
-  import { getMatrix, renderPath } from 'qr-code-generator-lib'
+  import { getMatrix } from 'qr-code-generator-lib'
   import Popup from './common/Popup.svelte'
 
   interface Props extends CustomElement {
     opened: boolean
   }
-  let { opened = $bindable(false), ...other }: Props = $props()
+  let {
+    opened = $bindable(false),
+    onclosed = () => 0,
+    ...other
+  }: Props = $props()
   let matrix: boolean[][] = $state([])
   const MATRIX_MARGIN = 6
   let matrixDimension = $derived(matrix.length + MATRIX_MARGIN)
-  let logoDimension = $derived(matrixDimension / 2 - 5)
 
   $effect(() => {
     if (opened) {
       renderQrCode()
       showOSShare()
+    } else {
+      onclosed()
     }
   })
 

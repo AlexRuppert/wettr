@@ -20,5 +20,5 @@
   {...getStrokeFill(outline)}
   {...other}
 >
-  <path {d} />
+  <path {d} vector-effect="non-scaling-stroke" />
 </svg>
