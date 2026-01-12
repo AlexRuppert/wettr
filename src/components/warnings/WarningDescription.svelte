@@ -26,7 +26,7 @@
     <strong class="leading-5 underline">{!!texts ? hintText : ''}</strong>
     {#each texts as text, i}
       <p>
-        {text.trim()}
+        {text?.trim() ?? ''}
         {#if links[i]}
           <a class="underline" href={links[i]} target="_blank">{links[i]}</a>
         {/if}
