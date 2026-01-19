@@ -322,7 +322,7 @@
           style:transition-delay={h * 10 + 'ms'}
         >
           <div
-            class="bg-text-hard/50 ring-surface-500 z-1 mx-auto -mt-px size-1.5 rounded-full opacity-50 ring-2"
+            class="bg-text-hard/50 ring-surface-500 z-1 mx-auto -mt-px size-1.5 rounded-full opacity-40 ring-2"
           ></div>
         </div>
         <div
@@ -358,7 +358,7 @@
         {#if data.sameTemperatureStreak > 0 && data.sameTemperatureStreak != 5 && !isCurrentHour(data.hour)}
           <div
             class={[
-              'h-5 tracking-widest opacity-40',
+              'h-5  w-full text-center opacity-40',
               { 'text-rain': data.temperature < 0 },
             ]}
           >
@@ -373,7 +373,10 @@
         {/if}
         {#if data.sameIconStreak > 0 && data.sameIconStreak != 5 && !isCurrentHour(data.hour)}
           <div
-            class={['h-5 tracking-widest opacity-40', 'text-' + data.iconClass]}
+            class={[
+              'h-5  w-full text-center opacity-40',
+              'text-' + data.iconClass,
+            ]}
           >
             <sup>•</sup>
           </div>
@@ -385,10 +388,12 @@
 
         <CustomDigits
           number={data.hour}
-          class={{
-            'text-rain': data.iconClass === 'rain',
-            'text-sun': data.iconClass === 'sun',
-          }}
+          class={[
+            {
+              'text-rain': data.iconClass === 'rain',
+              'text-sun': data.iconClass === 'sun',
+            },
+          ]}
         ></CustomDigits>
       </div>
     </div>
